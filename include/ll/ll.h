@@ -4,6 +4,12 @@
 #include "../token/token.h"
 
 
+typedef struct Node {
+    token *tok_data;
+    struct Node *tok_next;
+} Node ;
+
+
 // @brief displays the linked list
 // @param *head - the head of the linked list
 void display(token *head);
