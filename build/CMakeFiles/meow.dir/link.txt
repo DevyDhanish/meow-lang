@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/meow.dir/src/main.c.o -o meow  libcore.a libll.a 

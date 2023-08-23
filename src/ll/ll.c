@@ -1,11 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 #include "../include/ll/ll.h"
 
-void display(Node *head){
-    Node *temp = head;
+void display(Node *temp){
 
     if(temp == NULL){
         printf("[]\n");
@@ -14,8 +12,8 @@ void display(Node *head){
 
     printf("[");
     while(temp != NULL){
-        printf("%d", temp->data);
-        temp = temp->next;
+        printf("[%s]", temp->tok_data->type);
+        temp = temp->tok_next;
 
         if(temp != NULL){
             printf(",");
@@ -27,74 +25,74 @@ void display(Node *head){
     printf("\n");
 }
 
-Node *append(Node *head, int value){
+Node *append(Node *head, token *toattatch){
     Node *newNode = (void*)malloc(sizeof(Node));
-    newNode->data = value;
-    newNode->next = NULL;
+    newNode->tok_data = toattatch;
+    newNode->tok_next = NULL;
 
     if(head == NULL){
         head = newNode;
         return head;
     }
 
-    while(head->next != NULL){
-         head = head->next;
+    while(head->tok_next != NULL){
+         head = head->tok_next;
     }
 
-    head->next = newNode;
+    head->tok_next = newNode;
 
     return head;
 }
 
-void insert(Node **head, int position, int value){
-    Node *newNode = (void *)malloc(sizeof(Node));
-    newNode->data = value;
-    newNode->next = NULL;
+// void insert(Node **head, token *to, int value){
+//     Node *newNode = (void *)malloc(sizeof(Node));
+//     newNode->data = value;
+//     newNode->next = NULL;
 
-    if(position == 0){
-        newNode->next = *head;
-        *head = newNode;
-        return;
-    }
+//     if(position == 0){
+//         newNode->next = *head;
+//         *head = newNode;
+//         return;
+//     }
 
-    Node *temp = *head;
+//     Node *temp = *head;
 
-    for(int i = 0; i < position - 1 && temp != NULL; i++){
-        temp = temp->next;
-    }
+//     for(int i = 0; i < position - 1 && temp != NULL; i++){
+//         temp = temp->next;
+//     }
 
-    if(temp == NULL)
-    {
-        printf("Out of bounds\n");
-        free(newNode);
-        return;
-    }
+//     if(temp == NULL)
+//     {
+//         printf("Out of bounds\n");
+//         free(newNode);
+//         return;
+//     }
 
-    newNode->next = temp->next;
-    temp->next = newNode;
-}
+//     newNode->next = temp->next;
+//     temp->next = newNode;
+// }
 
-Node *removeN(Node *head, int value) {
-    if (head == NULL)
-        return head;
+// Node *removeN(Node *head, int position) {
+//     if (head == NULL)
+//         return head;
 
-    if (head->data == value) {
-        Node *newHead = head->next;
-        free(head);
-        return newHead;
-    }
+//     if (head->tok_data == value) {
+//         Node *newHead = head->next;
+//         free(head);
+//         return newHead;
+//     }
 
-    Node *temp = head;
+//     Node *temp = head;
 
-    while (temp->next != NULL) {
-        if (temp->next->data == value) {
-            Node *toRemove = temp->next;
-            temp->next = temp->next->next;
-            free(toRemove);
-            return head;
-        }
-        temp = temp->next;
-    }
+//     while (temp->next != NULL) {
+//         if (temp->next->data == value) {
+//             Node *toRemove = temp->next;
+//             temp->next = temp->next->next;
+//             free(toRemove);
+//             return head;
+//         }
+//         temp = temp->next;
+//     }
 
-    return head;
-}
+//     return head;
+// }
