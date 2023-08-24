@@ -18,9 +18,12 @@ int main(int argc, char **argv){
     char *Wbuffer = NULL;
     int start = 0;
 
+    list *l = NULL;
+
     for (int i = 0; i <= FILE_SIZE; i++) {
         if (fileBuffer[i] == ' ' || fileBuffer[i] == ';' || fileBuffer[i] == '\n' || fileBuffer[i] == '\0') {
             if (i > start) {
+
                 int wordLength = i - start;
                 Wbuffer = (char *)malloc(wordLength + 1); // Allocate memory for the word
                 
@@ -37,7 +40,21 @@ int main(int argc, char **argv){
                 Wbuffer[wordLength] = '\0';
 
                 // TODO Write the tokenizer here
-                
+                if(strcmp(Wbuffer, "return") == 0){
+                    l = append(l, "RETR");
+                }
+
+                else if(strcmp(Wbuffer, "=") == 0){
+                    l = append(l, "EQU");
+                }
+
+                else if(strcmp(Wbuffer, "null") == 0){
+                    l = append(l, "NULL");
+                }
+
+                else if(strcmp(Wbuffer, "x") == 0){
+                    l = append(l, "INTLITERAL");
+                }
 
                 free(Wbuffer); // Free the allocated memory
                 Wbuffer = NULL; // Reset Wbuffer to NULL
@@ -45,5 +62,7 @@ int main(int argc, char **argv){
             start = i + 1;
         }
     }
+
+    display(l);
 
 }

@@ -9,7 +9,7 @@ void display(list *head){
     }
 
     while(head != NULL){
-        printf("%s->", (char*)head->data);
+        printf("%s,", (char*)head->data);
         head = head->next;
     }
 }

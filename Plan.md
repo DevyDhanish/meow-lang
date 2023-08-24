@@ -5,5 +5,5 @@ step 2 - Lexer will work with this buffer to produce tokens
 
 
 # TODO
-[ ] - Read the whole file and put it into buffer for easy operations
-[ ] - Read the buffer and tokenize it
+[ DONE ] - Read the whole file and put it into buffer for easy operations
+[ PARTIALLY DONE ] - Read the buffer and tokenize it
