@@ -50,4 +50,7 @@ CMakeFiles/meow.dir/src/main.c.o: /home/dan/Coding/MeowLan/src/main.c \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/strings.h \
- /home/dan/Coding/MeowLan/src/../include/core/core.h
+ /home/dan/Coding/MeowLan/src/../include/core/core.h \
+ /home/dan/Coding/MeowLan/src/../include/core/../DS/ll/ll.h \
+ /home/dan/Coding/MeowLan/src/../include/core/../DS/ll/../../token/token.h \
+ /home/dan/Coding/MeowLan/src/../include/DS/ll/ll.h

@@ -55,11 +55,13 @@ CMakeFiles/ll.dir/src/ll/ll.c.o: ../src/ll/ll.c \
   /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
   /usr/include/alloca.h \
   /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
-  ../include/ll/ll.h \
+  ../include/DS/ll/ll.h \
   ../include/token/token.h
 
 
 ../include/token/token.h:
+
+../include/DS/ll/ll.h:
 
 /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
 
@@ -100,8 +102,6 @@ CMakeFiles/ll.dir/src/ll/ll.c.o: ../src/ll/ll.c \
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
 
 /usr/include/features-time64.h:
-
-../include/ll/ll.h:
 
 ../src/ll/ll.c:
 

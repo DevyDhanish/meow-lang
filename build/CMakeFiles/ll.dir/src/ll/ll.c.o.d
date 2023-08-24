@@ -47,5 +47,5 @@ CMakeFiles/ll.dir/src/ll/ll.c.o: /home/dan/Coding/MeowLan/src/ll/ll.c \
  /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
- /home/dan/Coding/MeowLan/include/../include/ll/ll.h \
- /home/dan/Coding/MeowLan/include/../include/ll/../token/token.h
+ /home/dan/Coding/MeowLan/include/../include/DS/ll/ll.h \
+ /home/dan/Coding/MeowLan/include/../include/DS/ll/../../token/token.h
