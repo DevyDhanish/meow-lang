@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/dan/Coding/MeowLan/src/ll/ll.c" "CMakeFiles/ll.dir/src/ll/ll.c.o" "gcc" "CMakeFiles/ll.dir/src/ll/ll.c.o.d"
+  "/home/dan/Coding/MeowLan/src/lexer/lexer.c" "CMakeFiles/lexer.dir/src/lexer/lexer.c.o" "gcc" "CMakeFiles/lexer.dir/src/lexer/lexer.c.o.d"
   )
 
 # Targets to which this target links.

@@ -1,5 +1,7 @@
-CMakeFiles/meow.dir/src/main.c.o: /home/dan/Coding/MeowLan/src/main.c \
- /usr/include/stdc-predef.h /usr/include/stdio.h \
+CMakeFiles/DS.dir/src/DS/list.c.o: /home/dan/Coding/MeowLan/src/DS/list.c \
+ /usr/include/stdc-predef.h \
+ /home/dan/Coding/MeowLan/src/DS/../../include/DS/list.h \
+ /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -46,11 +48,4 @@ CMakeFiles/meow.dir/src/main.c.o: /home/dan/Coding/MeowLan/src/main.c \
  /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
  /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h /usr/include/alloca.h \
- /usr/include/x86_64-linux-gnu/bits/stdlib-float.h /usr/include/string.h \
- /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
- /usr/include/strings.h \
- /home/dan/Coding/MeowLan/src/../include/core/core.h \
- /home/dan/Coding/MeowLan/src/../include/core/../DS/ll/ll.h \
- /home/dan/Coding/MeowLan/src/../include/core/../DS/ll/../../token/token.h \
- /home/dan/Coding/MeowLan/src/../include/DS/ll/ll.h
+ /usr/include/x86_64-linux-gnu/bits/stdlib-float.h

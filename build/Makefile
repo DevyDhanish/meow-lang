@@ -117,19 +117,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named ll
-
-# Build rule for target.
-ll: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ll
-.PHONY : ll
-
-# fast build rule for target.
-ll/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ll.dir/build.make CMakeFiles/ll.dir/build
-.PHONY : ll/fast
-
-#=============================================================================
 # Target rules for targets named core
 
 # Build rule for target.
@@ -143,6 +130,32 @@ core/fast:
 .PHONY : core/fast
 
 #=============================================================================
+# Target rules for targets named DS
+
+# Build rule for target.
+DS: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 DS
+.PHONY : DS
+
+# fast build rule for target.
+DS/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/DS.dir/build.make CMakeFiles/DS.dir/build
+.PHONY : DS/fast
+
+#=============================================================================
+# Target rules for targets named lexer
+
+# Build rule for target.
+lexer: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 lexer
+.PHONY : lexer
+
+# fast build rule for target.
+lexer/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lexer.dir/build.make CMakeFiles/lexer.dir/build
+.PHONY : lexer/fast
+
+#=============================================================================
 # Target rules for targets named meow
 
 # Build rule for target.
@@ -154,6 +167,30 @@ meow: cmake_check_build_system
 meow/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/meow.dir/build.make CMakeFiles/meow.dir/build
 .PHONY : meow/fast
+
+src/DS/list.o: src/DS/list.c.o
+.PHONY : src/DS/list.o
+
+# target to build an object file
+src/DS/list.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/DS.dir/build.make CMakeFiles/DS.dir/src/DS/list.c.o
+.PHONY : src/DS/list.c.o
+
+src/DS/list.i: src/DS/list.c.i
+.PHONY : src/DS/list.i
+
+# target to preprocess a source file
+src/DS/list.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/DS.dir/build.make CMakeFiles/DS.dir/src/DS/list.c.i
+.PHONY : src/DS/list.c.i
+
+src/DS/list.s: src/DS/list.c.s
+.PHONY : src/DS/list.s
+
+# target to generate assembly for a file
+src/DS/list.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/DS.dir/build.make CMakeFiles/DS.dir/src/DS/list.c.s
+.PHONY : src/DS/list.c.s
 
 src/core/core.o: src/core/core.c.o
 .PHONY : src/core/core.o
@@ -179,53 +216,53 @@ src/core/core.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/core.dir/build.make CMakeFiles/core.dir/src/core/core.c.s
 .PHONY : src/core/core.c.s
 
-src/ll/ll.o: src/ll/ll.c.o
-.PHONY : src/ll/ll.o
+src/lexer/lexer.o: src/lexer/lexer.c.o
+.PHONY : src/lexer/lexer.o
 
 # target to build an object file
-src/ll/ll.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ll.dir/build.make CMakeFiles/ll.dir/src/ll/ll.c.o
-.PHONY : src/ll/ll.c.o
+src/lexer/lexer.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lexer.dir/build.make CMakeFiles/lexer.dir/src/lexer/lexer.c.o
+.PHONY : src/lexer/lexer.c.o
 
-src/ll/ll.i: src/ll/ll.c.i
-.PHONY : src/ll/ll.i
+src/lexer/lexer.i: src/lexer/lexer.c.i
+.PHONY : src/lexer/lexer.i
 
 # target to preprocess a source file
-src/ll/ll.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ll.dir/build.make CMakeFiles/ll.dir/src/ll/ll.c.i
-.PHONY : src/ll/ll.c.i
+src/lexer/lexer.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lexer.dir/build.make CMakeFiles/lexer.dir/src/lexer/lexer.c.i
+.PHONY : src/lexer/lexer.c.i
 
-src/ll/ll.s: src/ll/ll.c.s
-.PHONY : src/ll/ll.s
+src/lexer/lexer.s: src/lexer/lexer.c.s
+.PHONY : src/lexer/lexer.s
 
 # target to generate assembly for a file
-src/ll/ll.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ll.dir/build.make CMakeFiles/ll.dir/src/ll/ll.c.s
-.PHONY : src/ll/ll.c.s
+src/lexer/lexer.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lexer.dir/build.make CMakeFiles/lexer.dir/src/lexer/lexer.c.s
+.PHONY : src/lexer/lexer.c.s
 
-src/main.o: src/main.c.o
-.PHONY : src/main.o
+src/meow.o: src/meow.c.o
+.PHONY : src/meow.o
 
 # target to build an object file
-src/main.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/meow.dir/build.make CMakeFiles/meow.dir/src/main.c.o
-.PHONY : src/main.c.o
+src/meow.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/meow.dir/build.make CMakeFiles/meow.dir/src/meow.c.o
+.PHONY : src/meow.c.o
 
-src/main.i: src/main.c.i
-.PHONY : src/main.i
+src/meow.i: src/meow.c.i
+.PHONY : src/meow.i
 
 # target to preprocess a source file
-src/main.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/meow.dir/build.make CMakeFiles/meow.dir/src/main.c.i
-.PHONY : src/main.c.i
+src/meow.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/meow.dir/build.make CMakeFiles/meow.dir/src/meow.c.i
+.PHONY : src/meow.c.i
 
-src/main.s: src/main.c.s
-.PHONY : src/main.s
+src/meow.s: src/meow.c.s
+.PHONY : src/meow.s
 
 # target to generate assembly for a file
-src/main.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/meow.dir/build.make CMakeFiles/meow.dir/src/main.c.s
-.PHONY : src/main.c.s
+src/meow.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/meow.dir/build.make CMakeFiles/meow.dir/src/meow.c.s
+.PHONY : src/meow.c.s
 
 # Help Target
 help:
@@ -235,18 +272,22 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... DS"
 	@echo "... core"
-	@echo "... ll"
+	@echo "... lexer"
 	@echo "... meow"
+	@echo "... src/DS/list.o"
+	@echo "... src/DS/list.i"
+	@echo "... src/DS/list.s"
 	@echo "... src/core/core.o"
 	@echo "... src/core/core.i"
 	@echo "... src/core/core.s"
-	@echo "... src/ll/ll.o"
-	@echo "... src/ll/ll.i"
-	@echo "... src/ll/ll.s"
-	@echo "... src/main.o"
-	@echo "... src/main.i"
-	@echo "... src/main.s"
+	@echo "... src/lexer/lexer.o"
+	@echo "... src/lexer/lexer.i"
+	@echo "... src/lexer/lexer.s"
+	@echo "... src/meow.o"
+	@echo "... src/meow.i"
+	@echo "... src/meow.s"
 .PHONY : help
 
 

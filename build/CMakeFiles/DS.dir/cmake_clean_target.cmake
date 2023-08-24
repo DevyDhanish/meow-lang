@@ -1,3 +1,3 @@
 file(REMOVE_RECURSE
-  "libll.a"
+  "libDS.a"
 )

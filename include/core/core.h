@@ -1,28 +1,16 @@
 #ifndef CORE_H
 #define CORE_H
 
-
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../DS/ll/ll.h"
+extern size_t FILE_SIZE;
 
-#define bufferSize 16
+// Reads the whole file and puts it in a buffer
+// @param `FILE *file` file to be converted into buffer
+// @returns the whole file as buffer does not removes white spaces
+char *filetobuffer(FILE *file);
 
-extern short int FILE_HAS_ENDED;
-
-// @brief Reads a line from given file stream
-// @param file stream ` *file `
-// @returns a pointer pointing to a array of characters (a line)
-char *readLine(FILE *file);
-
-// @brief reads a word from a file stream
-// @param file stream to read from
-// @return returns null terminated word
-char *getWord(char *file);
-
-size_t getFileLength(FILE *file);
-
-char *removeWhitespaceFromFile(FILE *file);
+char getcharfrombuffer(char *buffer, size_t index);
 
 #endif

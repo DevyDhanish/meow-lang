@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/meow.dir/src/main.c.o"
-  "CMakeFiles/meow.dir/src/main.c.o.d"
+  "CMakeFiles/meow.dir/src/meow.c.o"
+  "CMakeFiles/meow.dir/src/meow.c.o.d"
   "meow"
   "meow.pdb"
 )

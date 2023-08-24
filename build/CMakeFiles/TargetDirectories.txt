@@ -1,5 +1,6 @@
-/home/dan/Coding/MeowLan/build/CMakeFiles/ll.dir
 /home/dan/Coding/MeowLan/build/CMakeFiles/core.dir
+/home/dan/Coding/MeowLan/build/CMakeFiles/DS.dir
+/home/dan/Coding/MeowLan/build/CMakeFiles/lexer.dir
 /home/dan/Coding/MeowLan/build/CMakeFiles/meow.dir
 /home/dan/Coding/MeowLan/build/CMakeFiles/edit_cache.dir
 /home/dan/Coding/MeowLan/build/CMakeFiles/rebuild_cache.dir

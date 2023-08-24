@@ -1,4 +1,4 @@
-CMakeFiles/ll.dir/src/ll/ll.c.o: /home/dan/Coding/MeowLan/src/ll/ll.c \
+CMakeFiles/meow.dir/src/meow.c.o: /home/dan/Coding/MeowLan/src/meow.c \
  /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -46,6 +46,11 @@ CMakeFiles/ll.dir/src/ll/ll.c.o: /home/dan/Coding/MeowLan/src/ll/ll.c \
  /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
  /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h /usr/include/alloca.h \
- /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
- /home/dan/Coding/MeowLan/include/../include/DS/ll/ll.h \
- /home/dan/Coding/MeowLan/include/../include/DS/ll/../../token/token.h
+ /usr/include/x86_64-linux-gnu/bits/stdlib-float.h /usr/include/string.h \
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+ /usr/include/strings.h \
+ /home/dan/Coding/MeowLan/src/../include/core/core.h \
+ /home/dan/Coding/MeowLan/src/../include/DS/list.h \
+ /home/dan/Coding/MeowLan/src/../include/lexer/lexer.h \
+ /home/dan/Coding/MeowLan/src/../include/lexer/../DS/list.h

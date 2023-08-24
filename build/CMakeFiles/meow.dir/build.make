@@ -69,31 +69,32 @@ include CMakeFiles/meow.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/meow.dir/flags.make
 
-CMakeFiles/meow.dir/src/main.c.o: CMakeFiles/meow.dir/flags.make
-CMakeFiles/meow.dir/src/main.c.o: ../src/main.c
-CMakeFiles/meow.dir/src/main.c.o: CMakeFiles/meow.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dan/Coding/MeowLan/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/meow.dir/src/main.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/meow.dir/src/main.c.o -MF CMakeFiles/meow.dir/src/main.c.o.d -o CMakeFiles/meow.dir/src/main.c.o -c /home/dan/Coding/MeowLan/src/main.c
+CMakeFiles/meow.dir/src/meow.c.o: CMakeFiles/meow.dir/flags.make
+CMakeFiles/meow.dir/src/meow.c.o: ../src/meow.c
+CMakeFiles/meow.dir/src/meow.c.o: CMakeFiles/meow.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dan/Coding/MeowLan/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/meow.dir/src/meow.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/meow.dir/src/meow.c.o -MF CMakeFiles/meow.dir/src/meow.c.o.d -o CMakeFiles/meow.dir/src/meow.c.o -c /home/dan/Coding/MeowLan/src/meow.c
 
-CMakeFiles/meow.dir/src/main.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/meow.dir/src/main.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/dan/Coding/MeowLan/src/main.c > CMakeFiles/meow.dir/src/main.c.i
+CMakeFiles/meow.dir/src/meow.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/meow.dir/src/meow.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/dan/Coding/MeowLan/src/meow.c > CMakeFiles/meow.dir/src/meow.c.i
 
-CMakeFiles/meow.dir/src/main.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/meow.dir/src/main.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/dan/Coding/MeowLan/src/main.c -o CMakeFiles/meow.dir/src/main.c.s
+CMakeFiles/meow.dir/src/meow.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/meow.dir/src/meow.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/dan/Coding/MeowLan/src/meow.c -o CMakeFiles/meow.dir/src/meow.c.s
 
 # Object files for target meow
 meow_OBJECTS = \
-"CMakeFiles/meow.dir/src/main.c.o"
+"CMakeFiles/meow.dir/src/meow.c.o"
 
 # External object files for target meow
 meow_EXTERNAL_OBJECTS =
 
-meow: CMakeFiles/meow.dir/src/main.c.o
+meow: CMakeFiles/meow.dir/src/meow.c.o
 meow: CMakeFiles/meow.dir/build.make
 meow: libcore.a
-meow: libll.a
+meow: libDS.a
+meow: liblexer.a
 meow: CMakeFiles/meow.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dan/Coding/MeowLan/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable meow"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/meow.dir/link.txt --verbose=$(VERBOSE)
