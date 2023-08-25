@@ -64,5 +64,5 @@ int main(int argc, char **argv){
     }
 
     display(l);
-
+    printf("\n");
 }
