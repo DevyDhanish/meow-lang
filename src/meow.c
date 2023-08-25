@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../include/core/core.h"
 #include "../include/DS/list.h"
+#include "../include/DS/dict.h"
+
+#include "../include/core/core.h"
 #include "../include/lexer/lexer.h"
 
 FILE *fileptr;
@@ -64,5 +66,14 @@ int main(int argc, char **argv){
     }
 
     display(l);
+
+    char *key = "return";
+    char *value = "_RETURN_";
+
+    list *dictlist = NULL;
+    dictlist = additem(dictlist, key, value);
+
+    displaydict(dictlist);
+
     printf("\n");
 }
