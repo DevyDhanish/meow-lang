@@ -58,6 +58,10 @@ CMakeFiles/main.dir/src/DS/dict.c.o
  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h
  /usr/include/alloca.h
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h
+ /usr/include/string.h
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h
+ /usr/include/strings.h
 
 CMakeFiles/main.dir/src/DS/list.c.o
  /home/dan/Coding/MeowLan/src/DS/list.c
@@ -205,7 +209,16 @@ CMakeFiles/main.dir/src/lexer/lexer.c.o
  /usr/include/x86_64-linux-gnu/bits/floatn.h
  /usr/include/x86_64-linux-gnu/bits/floatn-common.h
  /home/dan/Coding/MeowLan/include/DS/list.h
- /home/dan/Coding/MeowLan/include/core/core.h
+ /home/dan/Coding/MeowLan/include/DS/list.h
+ /home/dan/Coding/MeowLan/include/DS/dict.h
+ /home/dan/Coding/MeowLan/include/DS/list.h
+ /home/dan/Coding/MeowLan/include/token/tokendef.h
+ /home/dan/Coding/MeowLan/include/DS/dict.h
+ /home/dan/Coding/MeowLan/include/DS/list.h
+ /usr/include/string.h
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h
+ /usr/include/strings.h
  /usr/include/stdlib.h
  /usr/include/x86_64-linux-gnu/bits/waitflags.h
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h
@@ -234,5 +247,4 @@ CMakeFiles/main.dir/src/lexer/lexer.c.o
  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h
  /usr/include/alloca.h
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h
- /home/dan/Coding/MeowLan/include/DS/list.h
 

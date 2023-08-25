@@ -4,6 +4,6 @@
 #include <stdio.h>
 #include "../DS/list.h"
 
-list *tokenize(char *buffer);
+list *tokenize(list *head, char *buffer);
 
 #endif

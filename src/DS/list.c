@@ -30,6 +30,5 @@ list *append(list *head, void *value_to_append){
     }
 
     temp->next = newNode;
-
     return head;
 }

@@ -13,7 +13,7 @@ typedef struct dict{
 void displaydict(list *head);
 
 // add item
-list *additem(list *dictlist, void *key, void *value);
+dict *creatitem(void *key, void *value);
 
 // get value from key
 void *getvaluefromkey(list *dictlist, void *key);

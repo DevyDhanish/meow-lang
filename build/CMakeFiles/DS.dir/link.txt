@@ -1,2 +1,0 @@
-/usr/bin/ar qc libDS.a CMakeFiles/DS.dir/src/DS/list.c.o
-/usr/bin/ranlib libDS.a

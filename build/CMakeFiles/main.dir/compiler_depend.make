@@ -56,7 +56,11 @@ CMakeFiles/main.dir/src/DS/dict.c.o: ../src/DS/dict.c \
   /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
   /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
   /usr/include/alloca.h \
-  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h
+  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
+  /usr/include/string.h \
+  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+  /usr/include/strings.h
 
 CMakeFiles/main.dir/src/DS/list.c.o: ../src/DS/list.c \
   /usr/include/stdc-predef.h \
@@ -201,7 +205,16 @@ CMakeFiles/main.dir/src/lexer/lexer.c.o: ../src/lexer/lexer.c \
   /usr/include/x86_64-linux-gnu/bits/floatn.h \
   /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
   ../include/DS/list.h \
-  ../include/core/core.h \
+  ../include/DS/list.h \
+  ../include/DS/dict.h \
+  ../include/DS/list.h \
+  ../include/token/tokendef.h \
+  ../include/DS/dict.h \
+  ../include/DS/list.h \
+  /usr/include/string.h \
+  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+  /usr/include/strings.h \
   /usr/include/stdlib.h \
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
   /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
@@ -229,17 +242,22 @@ CMakeFiles/main.dir/src/lexer/lexer.c.o: ../src/lexer/lexer.c \
   /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
   /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
   /usr/include/alloca.h \
-  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
-  ../include/DS/list.h
+  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h
 
+
+../include/token/tokendef.h:
 
 ../include/lexer/lexer.h:
 
 ../src/lexer/lexer.c:
 
-/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
+../src/core/core.c:
+
+/usr/include/strings.h:
 
 /usr/include/stdlib.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
 
 /usr/include/x86_64-linux-gnu/bits/floatn.h:
 
@@ -251,7 +269,15 @@ CMakeFiles/main.dir/src/lexer/lexer.c.o: ../src/lexer/lexer.c \
 
 /usr/include/x86_64-linux-gnu/bits/types/FILE.h:
 
+../src/DS/list.c:
+
+/usr/include/features.h:
+
 /usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
+
+/usr/include/ctype.h:
+
+/usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
 
 /usr/include/x86_64-linux-gnu/bits/typesizes.h:
 
@@ -303,10 +329,6 @@ CMakeFiles/main.dir/src/lexer/lexer.c.o: ../src/lexer/lexer.c \
 
 ../include/DS/list.h:
 
-/usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
-
-/usr/include/ctype.h:
-
 /usr/include/features-time64.h:
 
 /usr/include/x86_64-linux-gnu/bits/waitflags.h:
@@ -326,6 +348,8 @@ CMakeFiles/main.dir/src/lexer/lexer.c.o: ../src/lexer/lexer.c \
 /usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
 
 /usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
+
+/usr/include/string.h:
 
 /usr/include/x86_64-linux-gnu/bits/endian.h:
 
@@ -354,9 +378,3 @@ CMakeFiles/main.dir/src/lexer/lexer.c.o: ../src/lexer/lexer.c \
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
 
 /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
-
-/usr/include/features.h:
-
-../src/DS/list.c:
-
-../src/core/core.c:
