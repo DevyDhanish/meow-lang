@@ -117,43 +117,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named core
+# Target rules for targets named main
 
 # Build rule for target.
-core: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core
-.PHONY : core
+main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main
+.PHONY : main
 
 # fast build rule for target.
-core/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/core.dir/build.make CMakeFiles/core.dir/build
-.PHONY : core/fast
-
-#=============================================================================
-# Target rules for targets named DS
-
-# Build rule for target.
-DS: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 DS
-.PHONY : DS
-
-# fast build rule for target.
-DS/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/DS.dir/build.make CMakeFiles/DS.dir/build
-.PHONY : DS/fast
-
-#=============================================================================
-# Target rules for targets named lexer
-
-# Build rule for target.
-lexer: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 lexer
-.PHONY : lexer
-
-# fast build rule for target.
-lexer/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/lexer.dir/build.make CMakeFiles/lexer.dir/build
-.PHONY : lexer/fast
+main/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
+.PHONY : main/fast
 
 #=============================================================================
 # Target rules for targets named meow
@@ -168,12 +142,36 @@ meow/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/meow.dir/build.make CMakeFiles/meow.dir/build
 .PHONY : meow/fast
 
+src/DS/dict.o: src/DS/dict.c.o
+.PHONY : src/DS/dict.o
+
+# target to build an object file
+src/DS/dict.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/DS/dict.c.o
+.PHONY : src/DS/dict.c.o
+
+src/DS/dict.i: src/DS/dict.c.i
+.PHONY : src/DS/dict.i
+
+# target to preprocess a source file
+src/DS/dict.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/DS/dict.c.i
+.PHONY : src/DS/dict.c.i
+
+src/DS/dict.s: src/DS/dict.c.s
+.PHONY : src/DS/dict.s
+
+# target to generate assembly for a file
+src/DS/dict.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/DS/dict.c.s
+.PHONY : src/DS/dict.c.s
+
 src/DS/list.o: src/DS/list.c.o
 .PHONY : src/DS/list.o
 
 # target to build an object file
 src/DS/list.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/DS.dir/build.make CMakeFiles/DS.dir/src/DS/list.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/DS/list.c.o
 .PHONY : src/DS/list.c.o
 
 src/DS/list.i: src/DS/list.c.i
@@ -181,7 +179,7 @@ src/DS/list.i: src/DS/list.c.i
 
 # target to preprocess a source file
 src/DS/list.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/DS.dir/build.make CMakeFiles/DS.dir/src/DS/list.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/DS/list.c.i
 .PHONY : src/DS/list.c.i
 
 src/DS/list.s: src/DS/list.c.s
@@ -189,7 +187,7 @@ src/DS/list.s: src/DS/list.c.s
 
 # target to generate assembly for a file
 src/DS/list.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/DS.dir/build.make CMakeFiles/DS.dir/src/DS/list.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/DS/list.c.s
 .PHONY : src/DS/list.c.s
 
 src/core/core.o: src/core/core.c.o
@@ -197,7 +195,7 @@ src/core/core.o: src/core/core.c.o
 
 # target to build an object file
 src/core/core.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/core.dir/build.make CMakeFiles/core.dir/src/core/core.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/core/core.c.o
 .PHONY : src/core/core.c.o
 
 src/core/core.i: src/core/core.c.i
@@ -205,7 +203,7 @@ src/core/core.i: src/core/core.c.i
 
 # target to preprocess a source file
 src/core/core.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/core.dir/build.make CMakeFiles/core.dir/src/core/core.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/core/core.c.i
 .PHONY : src/core/core.c.i
 
 src/core/core.s: src/core/core.c.s
@@ -213,7 +211,7 @@ src/core/core.s: src/core/core.c.s
 
 # target to generate assembly for a file
 src/core/core.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/core.dir/build.make CMakeFiles/core.dir/src/core/core.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/core/core.c.s
 .PHONY : src/core/core.c.s
 
 src/lexer/lexer.o: src/lexer/lexer.c.o
@@ -221,7 +219,7 @@ src/lexer/lexer.o: src/lexer/lexer.c.o
 
 # target to build an object file
 src/lexer/lexer.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/lexer.dir/build.make CMakeFiles/lexer.dir/src/lexer/lexer.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/lexer/lexer.c.o
 .PHONY : src/lexer/lexer.c.o
 
 src/lexer/lexer.i: src/lexer/lexer.c.i
@@ -229,7 +227,7 @@ src/lexer/lexer.i: src/lexer/lexer.c.i
 
 # target to preprocess a source file
 src/lexer/lexer.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/lexer.dir/build.make CMakeFiles/lexer.dir/src/lexer/lexer.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/lexer/lexer.c.i
 .PHONY : src/lexer/lexer.c.i
 
 src/lexer/lexer.s: src/lexer/lexer.c.s
@@ -237,7 +235,7 @@ src/lexer/lexer.s: src/lexer/lexer.c.s
 
 # target to generate assembly for a file
 src/lexer/lexer.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/lexer.dir/build.make CMakeFiles/lexer.dir/src/lexer/lexer.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/lexer/lexer.c.s
 .PHONY : src/lexer/lexer.c.s
 
 src/meow.o: src/meow.c.o
@@ -272,10 +270,11 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... DS"
-	@echo "... core"
-	@echo "... lexer"
+	@echo "... main"
 	@echo "... meow"
+	@echo "... src/DS/dict.o"
+	@echo "... src/DS/dict.i"
+	@echo "... src/DS/dict.s"
 	@echo "... src/DS/list.o"
 	@echo "... src/DS/list.i"
 	@echo "... src/DS/list.s"

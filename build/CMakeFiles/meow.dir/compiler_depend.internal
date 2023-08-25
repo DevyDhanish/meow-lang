@@ -60,8 +60,10 @@ CMakeFiles/meow.dir/src/meow.c.o
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h
  /usr/include/strings.h
- /home/dan/Coding/MeowLan/include/core/core.h
  /home/dan/Coding/MeowLan/include/DS/list.h
+ /home/dan/Coding/MeowLan/include/DS/dict.h
+ /home/dan/Coding/MeowLan/include/DS/list.h
+ /home/dan/Coding/MeowLan/include/core/core.h
  /home/dan/Coding/MeowLan/include/lexer/lexer.h
  /home/dan/Coding/MeowLan/include/DS/list.h
 

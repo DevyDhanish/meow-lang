@@ -43,8 +43,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/core.dir/DependInfo.cmake"
-  "CMakeFiles/DS.dir/DependInfo.cmake"
-  "CMakeFiles/lexer.dir/DependInfo.cmake"
+  "CMakeFiles/main.dir/DependInfo.cmake"
   "CMakeFiles/meow.dir/DependInfo.cmake"
   )

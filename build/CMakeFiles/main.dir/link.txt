@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmain.a CMakeFiles/main.dir/src/core/core.c.o CMakeFiles/main.dir/src/DS/list.c.o CMakeFiles/main.dir/src/DS/dict.c.o CMakeFiles/main.dir/src/lexer/lexer.c.o
+/usr/bin/ranlib libmain.a

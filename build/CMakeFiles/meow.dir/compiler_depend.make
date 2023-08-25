@@ -59,8 +59,10 @@ CMakeFiles/meow.dir/src/meow.c.o: ../src/meow.c \
   /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
   /usr/include/strings.h \
-  ../include/core/core.h \
   ../include/DS/list.h \
+  ../include/DS/dict.h \
+  ../include/DS/list.h \
+  ../include/core/core.h \
   ../include/lexer/lexer.h \
   ../include/DS/list.h
 
@@ -70,6 +72,8 @@ CMakeFiles/meow.dir/src/meow.c.o: ../src/meow.c \
 /usr/include/x86_64-linux-gnu/bits/waitstatus.h:
 
 /usr/include/stdlib.h:
+
+../include/DS/dict.h:
 
 /usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
@@ -85,10 +89,6 @@ CMakeFiles/meow.dir/src/meow.c.o: ../src/meow.c \
 
 /usr/include/features.h:
 
-../include/DS/list.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
-
 /usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
 
 /usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
@@ -102,6 +102,10 @@ CMakeFiles/meow.dir/src/meow.c.o: ../src/meow.c \
 /usr/include/x86_64-linux-gnu/bits/endianness.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h:
+
+../include/core/core.h:
+
+/usr/include/x86_64-linux-gnu/bits/timesize.h:
 
 /usr/include/x86_64-linux-gnu/bits/floatn-common.h:
 
@@ -163,10 +167,6 @@ CMakeFiles/meow.dir/src/meow.c.o: ../src/meow.c \
 
 /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
 
-/usr/include/x86_64-linux-gnu/bits/timesize.h:
-
-../include/core/core.h:
-
 /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h:
@@ -186,3 +186,7 @@ CMakeFiles/meow.dir/src/meow.c.o: ../src/meow.c \
 /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:
 
 /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
+
+../include/DS/list.h:

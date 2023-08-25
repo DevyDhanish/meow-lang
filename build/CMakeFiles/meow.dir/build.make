@@ -92,9 +92,7 @@ meow_EXTERNAL_OBJECTS =
 
 meow: CMakeFiles/meow.dir/src/meow.c.o
 meow: CMakeFiles/meow.dir/build.make
-meow: libcore.a
-meow: libDS.a
-meow: liblexer.a
+meow: libmain.a
 meow: CMakeFiles/meow.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dan/Coding/MeowLan/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable meow"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/meow.dir/link.txt --verbose=$(VERBOSE)
