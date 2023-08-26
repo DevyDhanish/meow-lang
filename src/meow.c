@@ -12,15 +12,6 @@
 FILE *fileptr;
 char *fileBuffer;
 
-void freeList(list *head) {
-    while (head != NULL) {
-        list *temp = head;
-        head = head->next;
-        free(temp->data); // Free the dict structure
-        free(temp);       // Free the list node
-    }
-}
-
 int main(int argc, char **argv){
 
     fileptr = fopen(argv[1], "r");
@@ -77,40 +68,71 @@ int main(int argc, char **argv){
 
     //freeList(token_list);
 
-    FILE *asmfile = fopen(argv[2], "w");
+    // FILE *asmfile = fopen(argv[2], "w");
 
-const char *tex1 = "section .text\n\nglobal _start\n_start:\n";
-fputs(tex1, asmfile);
+    // const char *tex1 = "section .text\n\nglobal _start\n_start:\n";
+    // fputs(tex1, asmfile);
 
-while (token_list != NULL && token_list->data != NULL) {
-    dict *item = (dict *)token_list->data;
+    // while (token_list != NULL && token_list->data != NULL) {
+    //     dict *item = (dict *)token_list->data;
 
-    if (strcmp(item->key, "__RETURN__") == 0) {
-        const char *text2 = "\tmov rax, 60\n";
+    //     if (strcmp(item->key, "__RETURN__") == 0) {
+    //         const char *text2 = "\tmov rax, 60\n";
+    //         fputs(text2, asmfile);
+    //     }
 
-        // Write the text to the file
-        fputs(text2, asmfile);
-    }
+    //     if(strcmp(item->key, "__INT__") == 0){
+    //         char *text6 = "\tmov rdi, ";
+    //         fputs(text6, asmfile);
+    //         fputs((const char *)item->value, asmfile);
+    //         fputs((const char *)"\n", asmfile);
+    //     }
 
-    if (strcmp(item->key, "__VAR__") == 0) {
-        const char *text3 = "\tmov rdi, 4\n";
-        fputs(text3, asmfile);
-    }
+    //     if (strcmp(item->key, "__VAR__") == 0) {
+    //         const char *text3 = "\tmov rdi, 4\n";
+    //         fputs(text3, asmfile);
+    //     }
 
-    if(strcmp(item->key, "__NULL__") == 0){
-        const char *text5 = "\tmov rdi, 0\n";
-        fputs(text5, asmfile);
-    }
+    //     if(strcmp(item->key, "__NULL__") == 0){
+    //         const char *text5 = "\tmov rdi, 0\n";
+    //         fputs(text5, asmfile);
+    //     }
 
-    token_list = token_list->next;
-}
+    //     token_list = token_list->next;
+    // }
 
-const char *text = "\tsyscall";
-fputs(text, asmfile);
+    // const char *text = "\tsyscall";
+    // fputs(text, asmfile);
 
-fclose(asmfile);
+    // fclose(asmfile);
 
-    printf("\n");
+    // printf("Meow lang Compiling.... Done\n");
+
+    // list *l = NULL;
+
+    // l = append(l, (char *)"first");
+    // l = append(l, (char *)"second");
+    // l = append(l, (char *)"third");
+
+    // printf("front\n");
+    // while(l->next != NULL){
+    //     printf("%s,", (char *)l->data);
+    //     l = l->next;
+    // }
+
+    // printf("%s,", (char *)l->data);
+
+    // printf("\n");
+
+    // printf("back\n");
+    // while (l != NULL)
+    // {
+    //     printf("%s,", (char *)l->data);
+
+    //     l = l->back;
+    // }
+    
+    // printf("\n");
 
     return 0;
 }

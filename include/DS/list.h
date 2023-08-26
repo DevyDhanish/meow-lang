@@ -7,6 +7,7 @@
 typedef struct list{
     void *data;
     struct list *next;
+    struct list *back;
 }list;
 
 // Displays the given list
@@ -18,5 +19,8 @@ void display(list *head);
 // @param `value_to_append` the value to append make sure to give it as &variable
 // @returns the head of list with the new item attatched
 list *append(list *head, void *value_to_append);
+
+
+int contains(list *head, void *type, void *value);
 
 #endif

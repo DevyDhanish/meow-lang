@@ -14,6 +14,8 @@ void displaydict(list *head){
         printf("(key : %s, value : %s)", (char *)item->key, (char *)item->value);
         head = head->next;
     }
+
+    printf("\n");
 }
 
 dict *creatitem(void *key, void *value){
