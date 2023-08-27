@@ -11,11 +11,9 @@ void displaydict(list *head){
 
     while(head != NULL){
         dict *item = (dict *)head->data;
-        printf("(key : %s, value : %s)", (char *)item->key, (char *)item->value);
+        printf("(key : %s, value : %s)\n", (char *)item->key, (char *)item->value);
         head = head->next;
     }
-
-    printf("\n");
 }
 
 dict *creatitem(void *key, void *value){
@@ -48,6 +46,6 @@ void *getvaluefromkey(list *dictlist, void *key){
         dictlist = dictlist->next;
     }
 
-    printf("No key found for %s", (char *)key);
+    printf("No key found for %s\n", (char *)key);
     return NULL;
 }
