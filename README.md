@@ -7,18 +7,18 @@ I might finish this idk, here are all the details if you want to contribute
 # BUILD DEV (very early stages)
 
 # GETTING STARTED
-currently the program cannot compile it can only show the generated tokens
+currently the program cannot compile it can only show the generated tokens<br />
 if you want to run the program then follow these steps.
 
 # Caution
 I use ubuntu, this steps might not work on windows or mac systems.
 
-`fork this repo`
-`git clone https://github.com/<your-user-name>/meow-lang`
-`cd build`
-`cmake ../`
-`make`
-`./meow ../example/main.meow`
+`fork this repo`<br />
+`git clone https://github.com/<your-user-name>/meow-lang`<br />
+`cd build`<br />
+`cmake ../`<br />
+`make`<br />
+`./meow ../example/main.meow`<br />
 
 # Prerequisites
 `cmake`
