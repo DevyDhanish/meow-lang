@@ -21,6 +21,7 @@ I use ubuntu, this steps might not work on windows or mac systems.
 `./meow ../example/main.meow`<br />
 
 # Prerequisites
-`cmake`
-`nasm` my plan it to read the source file and generate the asm file then leave it up to nasm/masm or other assembler to turn the asm file to binary file
-`gcc`
+`cmake` <br />
+`make` <br />
+`nasm` my plan it to read the source file and generate the assembly file according to the system it's compiling on then leave it up to nasm/masm or other assembler to turn the asm file to binary file <br />
+`gcc` <br />
