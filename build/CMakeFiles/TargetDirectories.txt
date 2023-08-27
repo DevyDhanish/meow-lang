@@ -1,4 +1,0 @@
-/home/dan/Coding/MeowLan/build/CMakeFiles/main.dir
-/home/dan/Coding/MeowLan/build/CMakeFiles/meow.dir
-/home/dan/Coding/MeowLan/build/CMakeFiles/edit_cache.dir
-/home/dan/Coding/MeowLan/build/CMakeFiles/rebuild_cache.dir

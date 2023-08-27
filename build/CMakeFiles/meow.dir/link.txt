@@ -1,1 +1,0 @@
-/usr/bin/cc -rdynamic CMakeFiles/meow.dir/src/meow.c.o -o meow  libmain.a 
