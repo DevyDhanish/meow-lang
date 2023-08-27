@@ -13,12 +13,12 @@ if you want to run the program then follow these steps.
 # Caution
 I use ubuntu, this steps might not work on windows or mac systems.
 
-`fork this repo`
-`git clone https://github.com/<your-user-name>/meow-lang`
-`cd build`
-`cmake ../`
-`make`
-`./meow ../example/main.meow`
+`fork this repo`\n
+`git clone https://github.com/<your-user-name>/meow-lang`\n
+`cd build`\n
+`cmake ../`\n
+`make`\n
+`./meow ../example/main.meow`\n
 
 # Prerequisites
 `cmake`
