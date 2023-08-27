@@ -1,0 +1,28 @@
+// This file is a example of how the meow lang should look & behave like
+
+// This is a comment
+
+/(
+    This is a multiline
+    comment
+)\
+
+@add "meowio"       // A simple lib for input and output "meowio.meow"
+
+x = 100;
+
+show(x)
+
+if x > 5 {
+    show("x is greater than 5")
+}
+else{
+    show("x is less than 5")
+}
+
+while x < 5{
+    show(x)
+    x -= 1
+}
+
+return 0

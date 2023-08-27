@@ -36,6 +36,7 @@ step 4 - read the AST and generate code according to it
 # TODO
 [ DONE ] - Read the whole file and put it into buffer for easy operations <br />
 [ DONE ] - Read the buffer and tokenize it <br />
+[ ] - Write all the tokes<br />
 [ ] - Make a tree structure for the AST (Abstract syntax tree)<br />
 [ ] - Make a parser thats read the tokenized list and generates a AST <br />
 [ ] - Syntax check and all <br />
