@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Datastructures
 #include "../include/DS/list.h"
 #include "../include/DS/dict.h"
 
+// Libraries
 #include "../include/core/core.h"
 #include "../include/lexer/lexer.h"
 //#include "../include/token/tokendef.h"
@@ -19,7 +21,7 @@ int main(int argc, char **argv){
     // Read the file and put it in buffer
     fileBuffer = filetobuffer(fileptr);
 
-    char *Wbuffer = NULL;
+    char *Wbuffer = NULL;               // stores single words
     int start = 0;
 
     list *token_list = NULL;
@@ -44,15 +46,12 @@ int main(int argc, char **argv){
                 for (int j = 0; j < wordLength; j++) {
                     Wbuffer[j] = fileBuffer[start + j];
                 }
-                Wbuffer[wordLength] = '\0';
-
-                //token_list = append(token_list, creatitem(getvaluefromkey(_token_def_list, Wbuffer), Wbuffer));
-
+                Wbuffer[wordLength] = '\0';                 // NULL terminate everyword
 
                 //break;
 
                 // Tokenize
-                token_list = tokenize(token_list, Wbuffer);
+                token_list = tokenize(token_list, Wbuffer);         // Tokenize it
 
                 //free(Wbuffer); // Free the allocated memory
                 Wbuffer = NULL; // Reset Wbuffer to NULL
@@ -132,7 +131,23 @@ int main(int argc, char **argv){
     //     l = l->back;
     // }
     
-    // printf("\n");
 
+    // free everthing
+    free(Wbuffer);
+
+    while(token_list->next != NULL){
+        dict *item = (dict *) token_list->data;
+
+        free(item);
+
+        list *temp = token_list;
+        token_list = token_list->next;
+        free(temp);
+    } 
+
+    freefilebuffer();
+    freetokenlist();
+    
+    printf("\n");
     return 0;
 }

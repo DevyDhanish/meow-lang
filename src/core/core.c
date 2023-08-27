@@ -5,9 +5,9 @@
 #include "../../include/core/core.h"
 
 size_t FILE_SIZE = 0;
+char *buffer = NULL;
 
 char *filetobuffer(FILE *file){
-    char *buffer = NULL;
     size_t i = 0;
 
     // Get the file length
@@ -24,7 +24,7 @@ char *filetobuffer(FILE *file){
         return NULL;
     }
 
-    size_t byte_read = fread(buffer, 1, FILE_SIZE, file);
+    size_t byte_read = fread(buffer, 1, FILE_SIZE, file);   // keeps track of the byte read
 
     if(byte_read != FILE_SIZE){
         printf("Error reading file into buffer\n");
@@ -35,6 +35,7 @@ char *filetobuffer(FILE *file){
     return buffer;
 }
 
+// Useless function
 char getcharfrombuffer(char *buffer, size_t index){
     int i = 0;
 
@@ -48,4 +49,8 @@ char getcharfrombuffer(char *buffer, size_t index){
         }
         i++;
     }
+}
+
+void freefilebuffer(){
+    free(buffer);
 }

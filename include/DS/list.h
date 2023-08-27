@@ -20,7 +20,9 @@ void display(list *head);
 // @returns the head of list with the new item attatched
 list *append(list *head, void *value_to_append);
 
-
+/*
+    Not using this function anywhere
+*/
 int contains(list *head, void *type, void *value);
 
 #endif

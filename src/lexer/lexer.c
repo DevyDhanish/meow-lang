@@ -7,22 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int isNum(char *word){
-    char *nums = "0123456789";
-
-    for(int i = 0; i < 10; i++){
-        if(nums[i] == word[0]){
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-
 list *tokenize(list *head, char *buffer){
-    // TODO check if the word is a int, string, variable
-
     if(_token_def_list == NULL){
         //printf("Created the token list\n");
         addtoken();
@@ -39,4 +24,8 @@ list *tokenize(list *head, char *buffer){
     }
 
     return head;
+}
+
+void freetokenlist(){
+    freetokendeflist();
 }

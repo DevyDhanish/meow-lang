@@ -1,6 +1,7 @@
 *.out
 *.o
 *.asm
+*.sh
 
 .vscode/
 asmoutput/
