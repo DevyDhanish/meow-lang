@@ -16,6 +16,15 @@ char *__EQU__ = "__EQU__";
 char *__PLUS__ = "__PLUS__";
 char *__MINUS__ = "__MINUS__";
 char *__INT__ = "__INT__";
+char *__IMPORT__ = "__IMPORT__";
+char *__IF__ = "__IF__";
+char *__ELSE__ = "__ELSE__";
+char *__ELSEIF__ = "__ELSEIF__";
+char *__WHILE__ = "__WHILE__";
+char *__PLUSEQU__ = "__PLUSEQU__";
+char *__MINUSEQU__ = "__MINUSEQU__";
+char *__STRING__ = "__STRING__";
+char *__FUNC__ = "__FUNC__";
 
 list *_token_def_list = NULL;               // stores all the token with there respective value example {(key : __NULL__, value : null)}
 
@@ -38,6 +47,24 @@ void addtoken(){
     _token_def_list = append(_token_def_list, creatitem((char *)"-", __MINUS__));
 
     _token_def_list = append(_token_def_list, creatitem((char *)"int", __INT__));
+
+    _token_def_list = append(_token_def_list, creatitem((char *)"@add", __IMPORT__));
+
+    _token_def_list = append(_token_def_list, creatitem((char *)"if", __IF__));
+
+    _token_def_list = append(_token_def_list, creatitem((char *)"else", __ELSE__));
+
+    _token_def_list = append(_token_def_list, creatitem((char *)"elif", __ELSEIF__));
+
+    _token_def_list = append(_token_def_list, creatitem((char *)"while", __WHILE__));
+
+    _token_def_list = append(_token_def_list, creatitem((char *)"+=", __PLUSEQU__));
+
+    _token_def_list = append(_token_def_list, creatitem((char *)"-=", __MINUSEQU__));
+
+    _token_def_list = append(_token_def_list, creatitem((char *)"str", __STRING__));
+
+    _token_def_list = append(_token_def_list, creatitem((char *)"fnc", __FUNC__));
 }
 
 /*
@@ -79,22 +106,6 @@ void freetokendeflist(){
         free(temp);
     } 
 
-}
-
-/*
-Checks if the first letter of the provided buffer is a number not not, variable in the meow lang should not start with a number else they will be considered as a number this migth break the compiling
-return 1 if it is and 0 it not
-*/
-int isNum(char *word){
-    char *nums = "0123456789";
-
-    for(int i = 0; i < 10; i++){
-        if(nums[i] == word[0]){
-            return 1;
-        }
-    }
-
-    return 0;
 }
 
 #endif

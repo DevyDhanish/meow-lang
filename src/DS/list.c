@@ -15,29 +15,29 @@ void display(list *head){
     }
 }
 
-int contains(list *head, void *type, void *value){
-    if(head == NULL){
-        printf("Given list is empty");
-        return 0;
-    }
+// int contains(list *head, void *type, void *value){
+//     if(head == NULL){
+//         printf("Given list is empty");
+//         return 0;
+//     }
 
-    while(head != NULL){
-        if(strcmp(type, "%c") == 0){
-            char a = *(char *)value;
-            printf("%c", a);
-            if((char)head->data == a){
-                return 1;
-            }
-        }
-        if(strcmp(type, "%d") == 0){
-            if(head->data == (size_t *) value) return 1;
-        }
+//     while(head != NULL){
+//         if(strcmp(type, "%c") == 0){
+//             char a = *(char *)value;
+//             printf("%c", a);
+//             if((char)head->data == a){
+//                 return 1;
+//             }
+//         }
+//         if(strcmp(type, "%d") == 0){
+//             if(head->data == (size_t *) value) return 1;
+//         }
 
-        head = head->next;
-    }
+//         head = head->next;
+//     }
 
-    return 0;
-}
+//     return 0;
+// }
 
 list *append(list *head, void *value_to_append){
     list *newNode = (list *) malloc(sizeof(list));

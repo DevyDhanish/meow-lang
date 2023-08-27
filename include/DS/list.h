@@ -23,6 +23,6 @@ list *append(list *head, void *value_to_append);
 /*
     Not using this function anywhere
 */
-int contains(list *head, void *type, void *value);
+//int contains(list *head, void *type, void *value);
 
 #endif

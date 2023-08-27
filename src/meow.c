@@ -21,43 +21,17 @@ int main(int argc, char **argv){
     // Read the file and put it in buffer
     fileBuffer = filetobuffer(fileptr);
 
-    char *Wbuffer = NULL;               // stores single words
-    int start = 0;
-
+    // List to store the tokens
     list *token_list = NULL;
     //addtoken();
 
     // Get each word from the buffer
     // And tokenize it
-    for (int i = 0; i <= FILE_SIZE; i++) {
-        if (fileBuffer[i] == ' ' || fileBuffer[i] == ';' || fileBuffer[i] == '\n' || fileBuffer[i] == '\0') {
-            if (i > start) {
+    token_list = tokenize(token_list, fileBuffer);
 
-                int wordLength = i - start;
-                Wbuffer = (char *)malloc(wordLength + 1); // Allocate memory for the word
-                
-                if (Wbuffer == NULL) {
-                    // Handle allocation failure
-                    fprintf(stderr, "Memory allocation failed\n");
-                    exit(1);
-                }
-
-                // Copy the characters from fileBuffer to Wbuffer
-                for (int j = 0; j < wordLength; j++) {
-                    Wbuffer[j] = fileBuffer[start + j];
-                }
-                Wbuffer[wordLength] = '\0';                 // NULL terminate everyword
-
-                //break;
-
-                // Tokenize
-                token_list = tokenize(token_list, Wbuffer);         // Tokenize it
-
-                //free(Wbuffer); // Free the allocated memory
-                Wbuffer = NULL; // Reset Wbuffer to NULL
-            }
-            start = i + 1;
-        }
+    if(token_list == NULL){
+        printf("Failed to tokenize the contents\n");
+        return 1;
     }
 
     //token_list = gettokenizedlist();
@@ -133,8 +107,6 @@ int main(int argc, char **argv){
     
 
     // free everthing
-    free(Wbuffer);
-
     while(token_list->next != NULL){
         dict *item = (dict *) token_list->data;
 

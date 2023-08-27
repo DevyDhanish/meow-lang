@@ -1,2 +1,22 @@
-x = 1;
-return x;
+@add "meowio"
+
+x = "a string"
+
+show(x)
+
+if x > 5 {
+    show(200)
+}
+elif x < 0{
+    show(100)
+}
+else{
+    show(x)
+}
+
+while x < 5{
+    show(x)
+    x -= 1
+}
+
+return 0

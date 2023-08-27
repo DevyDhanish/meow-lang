@@ -1,7 +1,13 @@
 *.out
 *.o
 *.asm
-*.sh
+*.a
 
-.vscode/
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+meow
+
+.vscode/    
 asmoutput/
+CMakeFiles/
