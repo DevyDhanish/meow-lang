@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 extern size_t FILE_SIZE;
+extern size_t REDUSED_SIZE;
 
 // Reads the whole file and puts it in a buffer
 // @param `FILE *file` file to be converted into buffer

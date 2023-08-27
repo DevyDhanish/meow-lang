@@ -30,47 +30,27 @@ int isNum(char *word){
     return 0;
 }
 
+// Needs improvement
 char *getStrings(char *word, int line_length){
-    char *wordbuffer = NULL;
 
-    for(int i = 0; i <= line_length; i ++){
-        if((char)word[i] == _DOUBLE_START_QUOTE){
-
-            int wordLenght = (line_length - i) - 2;
-
-            wordbuffer = (char *) malloc(wordLenght);
-
-            for(int j = 0; j < wordLenght; j++){
-                //if((char)word[i] == _DOUBLE_END_QUOTE) break;
-                wordbuffer[j] = word[i + j + 1];
-            }
-            wordbuffer[wordLenght] = '\0';
-            return wordbuffer;
-        }
-    }
-
-    return NULL;
 }
 
 int isString(char *word, int wordLength){
-    if((char)word[0] == _DOUBLE_START_QUOTE || (char)word[wordLength - 1] == _DOUBLE_END_QUOTE)return 1;
-
-    return 0;
 }
 
 list *tokenize(list *head, char *fileBuffer){
-    int lineStart = 0;
+int lineStart = 0;
 
     if(_token_def_list == NULL){
         addtoken();
     }
 
-    for(int i = 0; i < FILE_SIZE; i++){
+    for(int i = 0; i < REDUSED_SIZE; i++){
 
         if((char)fileBuffer[i] == _EOL_CHAR){
             if(i > lineStart){
                 lineLength = i - lineStart;
-                lineBuffer = (char *)malloc(lineLength + 1);
+                lineBuffer = (char *)malloc(lineLength);
 
                 if(lineBuffer == NULL){
                     printf("Failed to malloc line buffer\n");
@@ -80,8 +60,6 @@ list *tokenize(list *head, char *fileBuffer){
                 for(int j = 0; j < lineLength; j ++){
                     lineBuffer[j] = fileBuffer[lineStart + j];
                 }
-
-                lineBuffer[lineLength] = _EOL_CHAR;
 
                 int wordStart = 0;
                 int wordLenght = 0;

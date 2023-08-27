@@ -30,7 +30,7 @@ int main(int argc, char **argv){
     token_list = tokenize(token_list, fileBuffer);
 
     if(token_list == NULL){
-        printf("\nFailed to tokenize the contents\n");
+        //printf("\nFailed to tokenize the contents\n");
         return 1;
     }
 

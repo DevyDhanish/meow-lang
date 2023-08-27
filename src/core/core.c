@@ -5,6 +5,7 @@
 #include "../../include/core/core.h"
 
 size_t FILE_SIZE = 0;
+size_t REDUSED_SIZE = 0;
 char *buffer = NULL;
 
 char *filetobuffer(FILE *file){
@@ -16,21 +17,28 @@ char *filetobuffer(FILE *file){
     fseek(file, 0, SEEK_SET);
 
     // Allocate memory for the buffer
-    printf("File size :- %ld bytes.\n", FILE_SIZE);
-    buffer = (void *) malloc (FILE_SIZE);
-
+    char *buffer = (char *)malloc(FILE_SIZE * sizeof(char));
     if(buffer == NULL){
         printf("Failed to create buffer to store the file\n");
         return NULL;
     }
 
-    size_t byte_read = fread(buffer, 1, FILE_SIZE, file);   // keeps track of the byte read
+    int counter = 0;
+    char ch;
 
-    if(byte_read != FILE_SIZE){
-        printf("Error reading file into buffer\n");
-        free(buffer);
-        return NULL;
+    while ((ch = getc(file)) != EOF) {
+        if (ch != '\n') {
+            buffer[counter] = ch;
+            counter++;
+        }
     }
+
+    REDUSED_SIZE = counter + 1;
+
+    printf("File size :- %ld bytes.\n", FILE_SIZE);
+    printf("Redused size :- %ld bytes\n", REDUSED_SIZE);
+
+    fclose(file);
 
     return buffer;
 }
