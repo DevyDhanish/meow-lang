@@ -6,6 +6,4 @@
 
 meowlang
 
-.vscode/    
-asmoutput/
-CMakeFiles/
+.vscode/
