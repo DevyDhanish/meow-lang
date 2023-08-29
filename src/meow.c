@@ -107,16 +107,6 @@ int main(int argc, char **argv){
     
 
     // free everthing
-    while(token_list->next != NULL){
-        dict *item = (dict *) token_list->data;
-
-        free(item);
-
-        list *temp = token_list;
-        token_list = token_list->next;
-        free(temp);
-    } 
-
     freefilebuffer();
     freetokenlist();
     

@@ -15,6 +15,9 @@ char *__VAR__ = "__VAR__";
 char *__EQU__ = "__EQU__";
 char *__PLUS__ = "__PLUS__";
 char *__MINUS__ = "__MINUS__";
+char *__DIVIDE__ = "__DIVIDE__";
+char *__MULTIPLY__ = "__MULTIPLY__";
+char *__MOD__ = "__MOD__";
 char *__INT__ = "__INT__";
 char *__IMPORT__ = "__IMPORT__";
 char *__IF__ = "__IF__";
@@ -43,6 +46,12 @@ void addtoken(){
     _token_def_list = append(_token_def_list, creatitem((char *)"=", __EQU__));
 
     _token_def_list = append(_token_def_list, creatitem((char *)"+", __PLUS__));
+
+    _token_def_list = append(_token_def_list, creatitem((char *)"/", __DIVIDE__));
+
+    _token_def_list = append(_token_def_list, creatitem((char *)"*", __MULTIPLY__));
+
+    _token_def_list = append(_token_def_list, creatitem((char *)"%", __MOD__));
 
     _token_def_list = append(_token_def_list, creatitem((char *)"-", __MINUS__));
 

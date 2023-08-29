@@ -1,3 +1,1 @@
-@add "meowio";
-
-return "a string" ;
+return 1 + 2 * 2 % 4;

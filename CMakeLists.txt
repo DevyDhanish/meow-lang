@@ -9,6 +9,7 @@ add_library(
     src/DS/dict.c
     src/lexer/lexer.c
 )
+
 # add_library(DS src/DS/list.c)
 # add_library(lexer src/lexer/lexer.c)
 add_executable(meow src/meow.c)

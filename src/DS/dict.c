@@ -46,6 +46,6 @@ void *getvaluefromkey(list *dictlist, void *key){
         dictlist = dictlist->next;
     }
 
-    printf("No key found for %s\n", (char *)key);
+    //printf("No key found for %s\n", (char *)key);
     return NULL;
 }

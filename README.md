@@ -1,3 +1,5 @@
+![Meow gif](./Meow.gif)
+
 # [Meow Lang]
 
 I might finish this idk, here are all the details if you want to contribute
