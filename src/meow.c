@@ -8,6 +8,7 @@
 
 // Libraries
 #include "../include/core/core.h"
+#include "../include/AST_GEN/ast_gen.h"
 #include "../include/lexer/lexer.h"
 //#include "../include/token/tokendef.h"
 
@@ -36,6 +37,10 @@ int main(int argc, char **argv){
 
     //token_list = gettokenizedlist();
     displaydict(token_list);
+
+    tree *ast = generateAST(token_list);
+
+    freeTree(ast);
 
     //printf("%s", (char *)getvaluefromkey(dictlist, key));
 

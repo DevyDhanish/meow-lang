@@ -9,7 +9,6 @@ size_t REDUSED_SIZE = 0;
 char *buffer = NULL;
 
 char *filetobuffer(FILE *file){
-    size_t i = 0;
 
     // Get the file length
     fseek(file, 0, SEEK_END);

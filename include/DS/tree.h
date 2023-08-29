@@ -5,12 +5,14 @@
 
 typedef struct tree{
     void *data;
-    struct tree **child_nodes;
+    struct tree **childs;
     size_t child_size;
 } tree;
 
-void display(tree *root);
+void displayTree(tree *root, int c);
 
 tree *attach(tree *, void *);
+
+void freeTree(tree *);
 
 #endif
