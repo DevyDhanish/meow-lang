@@ -4,6 +4,8 @@
 
 #include "../../include/core/core.h"
 
+char *_OP_PRECEDENCE = "/*+-";
+
 size_t FILE_SIZE = 0;
 size_t REDUSED_SIZE = 0;
 char *buffer = NULL;

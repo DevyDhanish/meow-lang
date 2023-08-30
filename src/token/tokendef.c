@@ -33,7 +33,7 @@ the key will the word the meow lang might have exaple return, fnc, null etc
 the value will be the defined token for each word
 */
 void addtoken(){
-    _token_def_list = append(_token_def_list, creatitem((char *)"return", __RETURN__));
+    _token_def_list = append(_token_def_list, creatitem((char *)"show", __RETURN__));
 
     _token_def_list = append(_token_def_list, creatitem((char *)"null", __NULL__));
 

@@ -24,22 +24,21 @@ void displayTree(tree *root, int c) {
 }
 
 tree *attach(tree *node, void *value){
-     tree *newNode = (tree *)malloc(sizeof(tree));
-     newNode->data = value;
-     newNode->child_size = 0;
-     newNode->childs = NULL;
+    tree *newNode = (tree *)malloc(sizeof(tree));
+    newNode->data = value;
+    newNode->child_size = 0;
+    newNode->childs = NULL;
 
-     if(node == NULL){
-          node = newNode;
-          return node;
-     }
+    if(node == NULL){
+       node = newNode;
+       return node;
+    }
 
-     node->childs = (tree **) realloc(node->childs, node->child_size * sizeof(tree));
-     node->childs[node->child_size] = newNode;
-
-     node->child_size++;
-
-     return node;
+    node->childs = (tree **) realloc(node->childs, node->child_size * sizeof(tree));
+    node->childs[node->child_size] = newNode;
+    node->child_size++;
+    
+    return node;
 }
 
 void freeTree(tree *root){

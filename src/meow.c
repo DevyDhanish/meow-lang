@@ -10,14 +10,71 @@
 #include "../include/core/core.h"
 #include "../include/AST_GEN/ast_gen.h"
 #include "../include/lexer/lexer.h"
-//#include "../include/token/tokendef.h"
+#include "../include/token/tokendef.h"
 
 FILE *fileptr;
 char *fileBuffer;
+FILE *asmfile;
+
+void generator(tree *root){
+    if (root->data == __RETURN__){
+        const char *text0 = "section .data\n";
+        fputs(text0, asmfile);
+        const char *text1 = "hello db "; 
+        fputs(text1, asmfile);
+        fputs((const char *)root->childs[0]->data, asmfile);
+
+        const char *nullT = ",0xa";
+        fputs(nullT, asmfile);
+
+        const char *text23 = "\nlen equ $ - hello\n";
+        fputs(text23, asmfile);
+
+        const char *text2 = "\nsection .text\n";
+        fputs(text2, asmfile);
+
+        const char *text3 = "global _start\n";
+        fputs(text3, asmfile);
+
+        const char *text4 = "_start:\n";
+        fputs(text4, asmfile);
+
+        const char *text5 = "\tmov rax, 4\n";
+        fputs(text5, asmfile);
+
+        const char *text6 = "\tmov rbx, 1\n";  
+        fputs(text6, asmfile);      
+
+        const char *text7 = "\tmov rcx, hello\n";  
+        fputs(text7, asmfile);      
+
+        const char *text8 = "\tmov rdx, len\n";   
+        fputs(text8, asmfile);          
+
+        const char *text9 = "\tint 0x80\n";    
+        fputs(text9, asmfile);        
+
+        const char *text10 = "\tmov rax, 1\n";
+        fputs(text10, asmfile);           
+
+        const char *text11 = "\txor rbx, rbx\n"; 
+        fputs(text11, asmfile);          
+
+        const char *text12 = "\tint 0x80\n";
+        fputs(text12, asmfile);
+    }
+
+    for(int i = 0; i < root->child_size; i++){
+        generator(root->childs[i]);
+    }
+}
 
 int main(int argc, char **argv){
 
+    if(argc < 1) return 0;
+
     fileptr = fopen(argv[1], "r");
+    asmfile = fopen(argv[2], "w");
 
     // Read the file and put it in buffer
     fileBuffer = filetobuffer(fileptr);
@@ -36,53 +93,24 @@ int main(int argc, char **argv){
     }
 
     //token_list = gettokenizedlist();
-    displaydict(token_list);
+    //displaydict(token_list);
 
     tree *ast = generateAST(token_list);
 
+    generator(ast);
+
     freeTree(ast);
+
+    // system("nasm -f elf64 main.asm -o main.o");
+    // system("ld main.o -o main");
+    //system("ld main.o -o main");
+
 
     //printf("%s", (char *)getvaluefromkey(dictlist, key));
 
     //freeList(token_list);
 
-    // FILE *asmfile = fopen(argv[2], "w");
-
-    // const char *tex1 = "section .text\n\nglobal _start\n_start:\n";
-    // fputs(tex1, asmfile);
-
-    // while (token_list != NULL && token_list->data != NULL) {
-    //     dict *item = (dict *)token_list->data;
-
-    //     if (strcmp(item->key, "__RETURN__") == 0) {
-    //         const char *text2 = "\tmov rax, 60\n";
-    //         fputs(text2, asmfile);
-    //     }
-
-    //     if(strcmp(item->key, "__INT__") == 0){
-    //         char *text6 = "\tmov rdi, ";
-    //         fputs(text6, asmfile);
-    //         fputs((const char *)item->value, asmfile);
-    //         fputs((const char *)"\n", asmfile);
-    //     }
-
-    //     if (strcmp(item->key, "__VAR__") == 0) {
-    //         const char *text3 = "\tmov rdi, 4\n";
-    //         fputs(text3, asmfile);
-    //     }
-
-    //     if(strcmp(item->key, "__NULL__") == 0){
-    //         const char *text5 = "\tmov rdi, 0\n";
-    //         fputs(text5, asmfile);
-    //     }
-
-    //     token_list = token_list->next;
-    // }
-
-    // const char *text = "\tsyscall";
-    // fputs(text, asmfile);
-
-    // fclose(asmfile);
+    
 
     // printf("Meow lang Compiling.... Done\n");
 
@@ -114,6 +142,8 @@ int main(int argc, char **argv){
     // free everthing
     freefilebuffer();
     freetokenlist();
+
+    printf("Meow lang compiling done......\n");
     
     return 0;
 }

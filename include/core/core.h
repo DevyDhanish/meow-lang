@@ -6,6 +6,7 @@
 
 extern size_t FILE_SIZE;
 extern size_t REDUSED_SIZE;
+extern char *_OP_PRECEDENCE;
 
 // Reads the whole file and puts it in a buffer
 // @param `FILE *file` file to be converted into buffer
