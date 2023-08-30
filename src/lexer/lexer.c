@@ -47,7 +47,7 @@ list *toLine(char *buffer){
                 line[i] = buffer[start + i];
             }
 
-            line[line_lenght] = ';';
+            line[line_lenght] = _EOL_CHAR;
             line = (char *) realloc(line, line_lenght + 1);
             line[line_lenght + 1] = '\0';
 
@@ -139,7 +139,6 @@ list *convertWordsToToken(list *words){
 
         // if it is not a token then it is a variable
         else if(token == NULL){
-            // if a token then append that token
             token_list = append(token_list, creatitem((char *)"var", word));
         }
 
@@ -147,7 +146,7 @@ list *convertWordsToToken(list *words){
             token_list = append(token_list, creatitem(token, word));
         }
     }
-
+    
     return token_list;
 }
 
