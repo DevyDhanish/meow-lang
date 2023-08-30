@@ -1,0 +1,8 @@
+show "hello, world!";
+
+x = 4;
+
+if x > 2:
+    show "x is greater than 2";
+else:
+    show "x is less than 2";

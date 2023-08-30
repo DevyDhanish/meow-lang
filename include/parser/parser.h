@@ -1,5 +1,5 @@
-#ifndef AST_GEN_H
-#define AST_GEN_H
+#ifndef PARSER_H
+#define PARSER_H
 
 #include "../DS/tree.h"
 #include "../DS/list.h"

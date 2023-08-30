@@ -9,6 +9,7 @@
 All the defined tokens
 */
 char *__RETURN__ = "__RETURN__";
+char *__SHOW__ = "__SHOW__";
 char *__NULL__ = "__NULL__";
 char *__VAR__ = "__VAR__";
 char *__EQU__ = "__EQU__";
@@ -33,7 +34,9 @@ the key will the word the meow lang might have exaple return, fnc, null etc
 the value will be the defined token for each word
 */
 void addtoken(){
-    _token_def_list = append(_token_def_list, creatitem((char *)"show", __RETURN__));
+    _token_def_list = append(_token_def_list, creatitem((char *)"show", __SHOW__));
+
+    _token_def_list = append(_token_def_list, creatitem((char *)"return", __RETURN__));
 
     _token_def_list = append(_token_def_list, creatitem((char *)"null", __NULL__));
 

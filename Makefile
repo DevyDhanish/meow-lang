@@ -13,7 +13,7 @@ LEXER_FILE 	:= src/lexer/lexer.c
 LIST_FILES 	:= src/DS/list.c 
 DICT_FILES  := src/DS/dict.c 
 TREE_FILES  := src/DS/tree.c
-AST_FILES 	:= src/AST_GEN/ast_gen.c
+AST_FILES 	:= src/parser/parser.c
 
 create_libs:
 	$(CC) -c $(CORE_FILE) $(CFLAGS) -o $(LIBS_DIR)/core.o
@@ -22,7 +22,7 @@ create_libs:
 	$(CC) -c $(LIST_FILES)  $(CFLAGS) -o $(LIBS_DIR)/list.o
 	$(CC) -c $(DICT_FILES)  $(CFLAGS) -o $(LIBS_DIR)/dict.o
 	$(CC) -c $(TREE_FILES)  $(CFLAGS) -o $(LIBS_DIR)/tree.o
-	$(CC) -c $(AST_FILES) $(CFLAGS) -o $(LIBS_DIR)/ast_gen.o
+	$(CC) -c $(AST_FILES) $(CFLAGS) -o $(LIBS_DIR)/parser.o
 
 	ar rcs $(LIBS_DIR)/libmeow.a $(LIBS_DIR)/*.o
 

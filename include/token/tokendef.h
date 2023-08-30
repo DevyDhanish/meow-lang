@@ -10,6 +10,7 @@
 All the defined tokens
 */
 extern char *__RETURN__;
+extern char *__SHOW__;
 extern char *__NULL__;
 extern char *__VAR__;
 extern char *__EQU__;
