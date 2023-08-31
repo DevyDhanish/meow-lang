@@ -12,3 +12,5 @@ meow.c is the entry point (the main.c file if you will). <br/>
 My plan is to make every data structure that will be used in this project from stratch.<br/>
 all my build data structure is in `src/DS/`.<br/>
 They work but can be improved.
+
+going to take some break from this and work on something else
