@@ -82,19 +82,21 @@ tree *parser(list *tokens) {
             tree *valueNode = attach(showNode, next_node_data->value);
 
             tokens = tokens->next->next;
-        } else if (strcmp(current_node_data->key, __OPERATOR__) == 0) {
-            tree *operatorNode = attach(root, current_node_data->value);
-
-            dict *next_node_data = (dict *)tokens->next->data;
-            dict *prev_node_data = (dict *)tokens->back->data;
-
-            root = attach(operatorNode, next_node_data->value);
-            root = attach(operatorNode, prev_node_data->value);
-
-            tokens = tokens->next;
         }
+        
+        //else if (strcmp(current_node_data->key, __OPERATOR__) == 0) {
+        //     tree *operatorNode = attach(root, current_node_data->value);
 
-        tokens = tokens->next;
+        //     dict *next_node_data = (dict *)tokens->next->data;
+        //     dict *prev_node_data = (dict *)tokens->back->data;
+
+        //     root = attach(operatorNode, next_node_data->value);
+        //     root = attach(operatorNode, prev_node_data->value);
+
+        //     tokens = tokens->next;
+        // }
+
+        //tokens = tokens->next;
     }
 
     return root;
