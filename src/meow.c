@@ -25,8 +25,6 @@ int main(int argc, char **argv){
         printf("\x1b[31mFatal\x1b[0m : No input files\n");
         return 1;
     }
-    
-    asmfile = fopen("a.asm", "w");
 
     // Read the file and put it in buffer
     fileBuffer = filetobuffer(fileptr);
@@ -44,16 +42,13 @@ int main(int argc, char **argv){
         return 1;
     }
 
-    //token_list = gettokenizedlist();
-    //displaydict(token_list);
+    tree *ast = generateAST(token_list);
 
-    tree *ast = generateAST(token_list);    
-
-    displayTree(ast, 0);
+    displaydict(token_list);
 
     // free everthing
-    freefilebuffer();
-    freetokenlist();
+    // freefilebuffer();
+    // freetokenlist();
 
     printf("Meow lang compiling \x1b[32mDone...\x1b[0m\n");
     

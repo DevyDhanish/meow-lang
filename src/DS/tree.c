@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 void displayTree(tree *root, int c) {
+
     if (root == NULL) {
         printf("Root is empty.\n");
         return;
@@ -21,6 +22,7 @@ void displayTree(tree *root, int c) {
     for (size_t i = 0; i < root->child_size; i++) {
         displayTree(root->childs[i], c + 1);
     }
+    
 }
 
 tree *attach(tree *node, void *value){
@@ -34,7 +36,7 @@ tree *attach(tree *node, void *value){
        return node;
     }
 
-    node->childs = (tree **) realloc(node->childs, node->child_size * sizeof(tree));
+    node->childs = (tree **) realloc(node->childs, (node->child_size + 1) * sizeof(tree));
     node->childs[node->child_size] = newNode;
     node->child_size++;
     
