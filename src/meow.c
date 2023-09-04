@@ -44,6 +44,8 @@ int main(int argc, char **argv){
 
     tree *ast = generateAST(token_list);
 
+    // Transfer this to c++
+
     free everthing
     freefilebuffer();
     freetokenlist();
