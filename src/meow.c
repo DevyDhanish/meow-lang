@@ -44,11 +44,9 @@ int main(int argc, char **argv){
 
     tree *ast = generateAST(token_list);
 
-    displaydict(token_list);
-
-    // free everthing
-    // freefilebuffer();
-    // freetokenlist();
+    free everthing
+    freefilebuffer();
+    freetokenlist();
 
     printf("Meow lang compiling \x1b[32mDone...\x1b[0m\n");
     
