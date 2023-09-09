@@ -18,9 +18,9 @@ I use ubuntu, this steps might not work on windows or mac systems.
 `fork this repo`<br />
 `git clone https://github.com/<your-user-name>/meow-lang`<br />
 `mkdir build`<br />
-`mkdir libs`<br />
-`make create_libs`<br />
-`make create_main`<br />
+`mkdir lib`<br />
+`make create_lib`<br />
+`make create_bin`<br />
 `cd build`<br />
 `./meowlang ../example/main.meow`<br />
 
