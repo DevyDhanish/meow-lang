@@ -1,3 +1,2 @@
-show 1 + 2;
-
+show;
 return 0;
