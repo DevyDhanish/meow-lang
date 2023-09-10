@@ -3,8 +3,10 @@
 #include <vector>
 #include <string>
 
+#define END_NODE "__END__"
+
 typedef struct _STRUCT_MEOW_LINE{
-    std::string _line;
+    std::string line;
     size_t line_number;
 } meow_line;
 

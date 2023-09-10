@@ -17,99 +17,29 @@ int _helper_isOperator(char ch){
     return 0;
 }
 
-void _helper_increment(size_t *counter){
-    *counter += 1;
-}
+std::vector<std::string> _helper_disassemble_line(meow_line line){
 
-std::vector<std::string> _helper_disassemble_line(std::string line){
+    std::vector<std::string> output;
+    std::string curr_line = line.line;
+    size_t curr_line_lenght = curr_line.size();
 
-    std::vector<std::string> words;
-
-    size_t curr_counter = 0;
-
-    std::string word;
-
-    char curr_ch;
-    while(curr_ch != ';'){
-
-        curr_ch = line[curr_counter];
-
-        if(curr_ch == ' '){
-            words.push_back(word);
-            word = "";
-        }
-
-        else if(_helper_isOperator(curr_ch)){
-            words.push_back(word);
-            word = "";
-        }
-        
-        word += curr_ch;
-
-        _helper_increment(&curr_counter);
-    }
-
-    words.push_back(";");
-    return words;
+    return output;
 }
 
 void Lexer::_rt_None_tokenize(std::vector<meow_line> _prog_lines_vect){
-    size_t lenght = _prog_lines_vect.size();
-    size_t l_counter = 0;
+    size_t counter = 0;
 
-    while(l_counter < lenght){
-        std::vector<std::string> words_in_line = _helper_disassemble_line(_prog_lines_vect[l_counter]._line);
+    while(_prog_lines_vect[counter].line != END_NODE){
 
-        for(std::string word : words_in_line){
+        std::vector<std::string> words = _helper_disassemble_line(_prog_lines_vect[counter]);
 
-            std::cout << word << "\n";
-            
-            // if(word == "show"){
-            //     this->_prog_token_list.push_back(
-            //         _rt_struct_makeToken(
-            //             _TOKEN_SHOW,
-            //             word,
-            //             _prog_lines_vect[l_counter]._line,
-            //             _prog_lines_vect[l_counter].line_number
-            //         )
-            //     );
-            // }
-
-            // else if(word == "return"){
-            //     this->_prog_token_list.push_back(
-            //         _rt_struct_makeToken(
-            //             _TOKEN_RETURN,
-            //             word,
-            //             _prog_lines_vect[l_counter]._line,
-            //             _prog_lines_vect[l_counter].line_number
-            //         )
-            //     );
-            // }
-
-            // else if(word == ";"){
-            //     this->_prog_token_list.push_back(
-            //         _rt_struct_makeToken(
-            //             _TOKEN_SEMI_COL,
-            //             word,
-            //             _prog_lines_vect[l_counter]._line,
-            //             _prog_lines_vect[l_counter].line_number
-            //         )
-            //     );
-            // }
-
-            // else if(word == "0"){
-            //     this->_prog_token_list.push_back(
-            //         _rt_struct_makeToken(
-            //             _TOKEN_INT,
-            //             word,
-            //             _prog_lines_vect[l_counter]._line,
-            //             _prog_lines_vect[l_counter].line_number
-            //         )
-            //     );
-            // }
+        for(std::string i : words){
+            std::cout << i << "\n";
         }
 
-        _helper_increment(&l_counter);
+        counter++;
+
+        break;
     }
 }
 

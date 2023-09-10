@@ -1,3 +1,7 @@
-x="dhanish";
+x="12";
+
+if x > 4{
+    show x;
+}
 
 show x;

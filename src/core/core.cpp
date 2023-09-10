@@ -15,7 +15,7 @@ std::vector<meow_line> file_to_vect(std::string _prog_filename){
 
         if(!_prog_line.empty()){
             meow_line _line;
-            _line._line = _prog_line;
+            _line.line = _prog_line;
             _line.line_number = line_number;
             _prog_lines_vect.push_back(_line);
         }
@@ -24,5 +24,9 @@ std::vector<meow_line> file_to_vect(std::string _prog_filename){
         line_number += 1;
     }
 
+    meow_line END;
+    END.line = END_NODE;
+    END.line_number = line_number+1;
+    _prog_lines_vect.push_back(END);
     return _prog_lines_vect;
 }
