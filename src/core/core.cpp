@@ -3,20 +3,25 @@
 #include <fstream>
 #include <iostream>
 
-std::vector<std::string> Core::file_to_vect(std::string _prog_filename){
+std::vector<meow_line> file_to_vect(std::string _prog_filename){
 
     std::ifstream _prog_file (_prog_filename);
-    std::vector<std::string> _prog_lines_vect;
+    std::vector<meow_line> _prog_lines_vect;
+    size_t line_number = 1;
 
     std::string _prog_line;
     while(_prog_file){
         getline(_prog_file, _prog_line);
 
         if(!_prog_line.empty()){
-            _prog_lines_vect.push_back(_prog_line);
+            meow_line _line;
+            _line._line = _prog_line;
+            _line.line_number = line_number;
+            _prog_lines_vect.push_back(_line);
         }
 
         _prog_line = "";
+        line_number += 1;
     }
 
     return _prog_lines_vect;

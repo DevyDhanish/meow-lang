@@ -20,17 +20,16 @@ int main(int argc, char **argv){
         return 0;
     }
 
-    Core core;
     Lexer lex;
 
-    vector<string> _prog_lines = core.file_to_vect(argv[1]);
+    vector<meow_line> _prog_lines = file_to_vect(argv[1]);
     lex._rt_None_tokenize(_prog_lines);
     vector<Token>  _prog_token_list = lex._rt_token_gettokenizedlist();
 
 
-    for(Token t : _prog_token_list){
-        cout << t._TOKEN_TYPE << ", " << t._TOKEN_LINE << ", " << t._TOKEN_VALUE << ", " << t._TOKEN_LINE_NUMBER << "\n";
-    }
+    // for(Token t : _prog_token_list){
+    //     cout << t._TOKEN_TYPE << ", " << t._TOKEN_LINE << ", " << t._TOKEN_VALUE << ", " << t._TOKEN_LINE_NUMBER << "\n";
+    // }
 
     return 0;
 }

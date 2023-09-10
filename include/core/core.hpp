@@ -3,7 +3,10 @@
 #include <vector>
 #include <string>
 
-class Core{
-    public:
-    std::vector<std::string> file_to_vect(std::string);
-};
+typedef struct _STRUCT_MEOW_LINE{
+    std::string _line;
+    size_t line_number;
+} meow_line;
+
+
+std::vector<meow_line> file_to_vect(std::string);

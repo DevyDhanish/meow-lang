@@ -1,2 +1,3 @@
-show;
-return 0;
+x="dhanish";
+
+show x;
