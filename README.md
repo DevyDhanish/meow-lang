@@ -27,7 +27,7 @@ I use ubuntu, this steps might not work on windows or mac systems.
 # Prerequisites
 1 - `make` <br />
 2 - `nasm` my plan it to read the source file and generate the assembly file according to the system it's compiling on then leave it up to nasm/masm or other assembler to turn the asm file to binary file <br />
-3 - `gcc` <br />
+3 - `g++/clang++` <br />
 
 # PLAN
 step 1 - Put the whole file in buffer so it is easier to work with.
