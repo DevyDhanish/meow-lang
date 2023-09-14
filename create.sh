@@ -1,7 +1,7 @@
 #!/bin/bash
 
-make create_lib
-make create_bin
+make Lib
+make Bin
 cd build
 ./meowlang ../exampleProg/main.meow
 cd ..

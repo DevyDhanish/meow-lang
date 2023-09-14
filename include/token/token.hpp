@@ -9,7 +9,6 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_DIV,
     _TOKEN_MUL,
     _TOKEN_MOD,
-
     _TOKEN_VAR,
     _TOKEN_SHOW,
     _TOKEN_RETURN,

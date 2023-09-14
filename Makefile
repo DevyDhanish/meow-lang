@@ -11,15 +11,14 @@ OUTPUT_DIR := build
 CORE_DIR = src/core
 LEXER_DIR = src/lexer
 TOKEN_DIR = src/token
+DS = src/DS
 
-create_lib:
+Lib:
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(CORE_DIR)/*.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/core.o
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(LEXER_DIR)/*.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/lexer.o
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(TOKEN_DIR)/*.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/token.o
+	$(CC) $(CPPFLAGS) $(EFLAGS) $(DS)/*.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/DS.o
 	ar rcs $(LIB_DIR)/libmeow.a $(LIB_DIR)/*.o
 
-create_bin:
+Bin:
 	$(CC) $(CPPFLAGS) $(SRC_DIR)/*.cpp -I$(INCLUDE_DIR) -L$(LIB_DIR) -lmeow -o $(OUTPUT_DIR)/$(PROJECT_NAME)
-
-exe:
-	./$(OUTPUT_DIR)/$(PROJECT_NAME) ../exampleProg/main.meow

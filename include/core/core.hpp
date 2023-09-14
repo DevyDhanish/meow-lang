@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 
+#define START_NODE "__MAIN__"
 #define END_NODE "__END__"
 
 typedef struct _STRUCT_MEOW_LINE{
