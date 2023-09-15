@@ -1,26 +1,17 @@
 #pragma once
 
+#include "../token/token.hpp"
 #include <vector>
 #include <string>
 #include <any>
 
 class Tree{
 public:
-    std::any data;
+    Token data;
     Tree *parent;
     std::vector<Tree> childs;
 
-    Tree(){
-        this->data = nullptr;
-        this->parent = nullptr;
-    }
-
-    Tree(std::string value){
-        this->data = value;
-        this->parent = nullptr;
-    }
-
-    Tree(int value){
+    Tree(Token value){
         this->data = value;
         this->parent = nullptr;
     }

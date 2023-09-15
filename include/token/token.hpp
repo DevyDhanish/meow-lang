@@ -15,8 +15,8 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_STRING,
     _TOKEN_INT,
     _TOKEN_NULL,
-    _TOKEN_SEMI_COL
-    
+    _TOKEN_SEMI_COL,
+    _TOKEN_START
 }TOKEN_T;
 
 typedef struct _STRUCT_TOKEN{
