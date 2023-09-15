@@ -18,11 +18,15 @@ int _helper_isNum(std::string val){
     return 0;
 }
 
-int _helper_isVar(std::string val){
+int _helper_isToken(std::string val){
     std::vector<std::string> knows_tokens = {
         "show",
         "return",
-        "null"
+        "null",
+        "if",
+        "else",
+        "while",
+        "for"
     };
 
     for(size_t i = 0 ; i < knows_tokens.size(); i++){
@@ -133,10 +137,51 @@ void Lexer::_rt_None_tokenize(std::vector<meow_line> _prog_lines_vect){
             
             if(curr_word == "show"){
                 this->_prog_token_list.push_back(_rt_struct_makeToken(
-                    _TOKEN_SHOW, curr_word, 
+                    _TOKEN_SHOW, 
+                    curr_word, 
                     _prog_lines_vect[counter].line, 
                     _prog_lines_vect[counter].line_number
                     ));
+            }
+            else if(curr_word == "return"){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_RETURN, 
+                    curr_word, 
+                    _prog_lines_vect[counter].line, 
+                    _prog_lines_vect[counter].line_number
+                    ));
+            }
+            else if(curr_word == "null"){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_NULL, 
+                    curr_word, 
+                    _prog_lines_vect[counter].line, 
+                    _prog_lines_vect[counter].line_number
+                    ));
+            }
+            else if(curr_word == "="){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_EQU,
+                    curr_word,
+                    _prog_lines_vect[counter].line,
+                    _prog_lines_vect[counter].line_number
+                ));
+            }
+            else if(curr_word == "<"){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_LESSTHAN,
+                    curr_word,
+                    _prog_lines_vect[counter].line,
+                    _prog_lines_vect[counter].line_number
+                ));
+            }
+            else if(curr_word == ">"){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_GREATERTHAN,
+                    curr_word,
+                    _prog_lines_vect[counter].line,
+                    _prog_lines_vect[counter].line_number
+                ));
             }
             else if(curr_word == "+"){
                 this->_prog_token_list.push_back(_rt_struct_makeToken(
@@ -178,6 +223,38 @@ void Lexer::_rt_None_tokenize(std::vector<meow_line> _prog_lines_vect){
                     _prog_lines_vect[counter].line_number
                 ));
             }
+            else if(curr_word == "("){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_BRAOPEN,
+                    curr_word,
+                    _prog_lines_vect[counter].line,
+                    _prog_lines_vect[counter].line_number
+                ));
+            }
+            else if(curr_word == ")"){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_BRACLOSE,
+                    curr_word,
+                    _prog_lines_vect[counter].line,
+                    _prog_lines_vect[counter].line_number
+                ));
+            }
+            else if(curr_word == "{"){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_CURLOPEN,
+                    curr_word,
+                    _prog_lines_vect[counter].line,
+                    _prog_lines_vect[counter].line_number
+                ));
+            }
+            else if(curr_word == "}"){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_CURLCLOSE,
+                    curr_word,
+                    _prog_lines_vect[counter].line,
+                    _prog_lines_vect[counter].line_number
+                ));
+            }
             else if(_helper_isString(curr_word)){
                 this->_prog_token_list.push_back(_rt_struct_makeToken(
                     _TOKEN_STRING,
@@ -194,6 +271,38 @@ void Lexer::_rt_None_tokenize(std::vector<meow_line> _prog_lines_vect){
                     _prog_lines_vect[counter].line_number
                 ));
             }
+            else if(curr_word == "while"){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_WHILE,
+                    curr_word,
+                    _prog_lines_vect[counter].line,
+                    _prog_lines_vect[counter].line_number
+                ));
+            }
+            else if(curr_word == "if"){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_IF,
+                    curr_word,
+                    _prog_lines_vect[counter].line,
+                    _prog_lines_vect[counter].line_number
+                ));
+            }
+            else if(curr_word == "elif"){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_ELIF,
+                    curr_word,
+                    _prog_lines_vect[counter].line,
+                    _prog_lines_vect[counter].line_number
+                ));
+            }
+            else if(curr_word == "else"){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_ELSE,
+                    curr_word,
+                    _prog_lines_vect[counter].line,
+                    _prog_lines_vect[counter].line_number
+                ));
+            }
             else if(curr_word == ";"){
                 this->_prog_token_list.push_back(_rt_struct_makeToken(
                     _TOKEN_SEMI_COL,
@@ -202,7 +311,7 @@ void Lexer::_rt_None_tokenize(std::vector<meow_line> _prog_lines_vect){
                     _prog_lines_vect[counter].line_number
                 ));
             }
-            else{
+            else if(!_helper_isToken(curr_word)){
                 this->_prog_token_list.push_back(_rt_struct_makeToken(
                     _TOKEN_VAR,
                     curr_word,
@@ -211,7 +320,6 @@ void Lexer::_rt_None_tokenize(std::vector<meow_line> _prog_lines_vect){
                 ));
             }
         }
-
         counter++;
     }
 }

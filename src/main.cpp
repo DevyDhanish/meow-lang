@@ -23,10 +23,13 @@ int main(int argc, char **argv){
 
     vector<meow_line> _prog_lines = file_to_vect(argv[1]);
     lex._rt_None_tokenize(_prog_lines);
-    std::vector<_STRUCT_TOKEN> tokenized_list = lex._rt_token_gettokenizedlist();
+    std::vector<Token> tokenized_list = lex._rt_token_gettokenizedlist();
+
     Tree AST = _rt_Tree_parse(tokenized_list);
 
-    AST._rt_None_print_tree();
+    // for(Token i : tokenized_list){
+    //     std::cout << i._TOKEN_TYPE << "\t" << i._TOKEN_VALUE << "\n";
+    // }
 
     return 0;
 }

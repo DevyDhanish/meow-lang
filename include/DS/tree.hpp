@@ -11,6 +11,8 @@ public:
     Tree *parent;
     std::vector<Tree> childs;
 
+    Tree(){};
+
     Tree(Token value){
         this->data = value;
         this->parent = nullptr;
