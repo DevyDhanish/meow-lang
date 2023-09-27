@@ -6,6 +6,18 @@
 #include <vector>
 #include <iostream>
 
+// x = 1 + 2;
+// show x;
+// AST of this code 
+//                  program
+//                  /     \ 
+//            assignment  display
+//             /     \       |
+//            X      +       X
+//                 /   \
+//                1     2
+// 
+
 Token _helper_create_start_node(){
     Token start;
     start._TOKEN_TYPE = _TOKEN_START;
