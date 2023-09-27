@@ -67,6 +67,10 @@ std::vector<std::string> _helper_disassemble_line(meow_line line){
             output.push_back(std::string(1,lookAhead));
             curr_pos += 1;
         }
+        else if ( lookAhead == ':'){
+            output.push_back(std::string(1, lookAhead));
+            curr_pos += 1;
+        }
         else if (lookAhead == '"'){
             std::string word;
             word += '"';
@@ -298,6 +302,14 @@ void Lexer::_rt_None_tokenize(std::vector<meow_line> _prog_lines_vect){
             else if(curr_word == "else"){
                 this->_prog_token_list.push_back(_rt_struct_makeToken(
                     _TOKEN_ELSE,
+                    curr_word,
+                    _prog_lines_vect[counter].line,
+                    _prog_lines_vect[counter].line_number
+                ));
+            }
+            else if(curr_word == ":"){
+                this->_prog_token_list.push_back(_rt_struct_makeToken(
+                    _TOKEN_COLON,
                     curr_word,
                     _prog_lines_vect[counter].line,
                     _prog_lines_vect[counter].line_number

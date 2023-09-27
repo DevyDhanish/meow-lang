@@ -33,6 +33,7 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_CURLCLOSE,       // 26
     _TOKEN_BRAOPEN,         // 27
     _TOKEN_BRACLOSE,        // 28
+    _TOKEN_COLON,           // 29
 
 }TOKEN_T;
 
