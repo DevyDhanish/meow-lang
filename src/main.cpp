@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <string.h>
 
 #include "../include/core/core.hpp"
 #include "../include/lexer/lexer.hpp"
@@ -16,23 +17,6 @@ vector<int> var_val;
 
 std::unordered_map<string, int> var_map;
 
-int s_i(string i){
-    std::unordered_map<string, int> ints = {
-        {"0", 0},
-        {"1", 1},
-        {"2", 2},
-        {"3", 3},
-        {"4", 4},
-        {"5", 5},
-        {"6", 6},
-        {"7", 7},
-        {"8", 8},
-        {"9", 9},
-    };
-
-    return ints[i];
-}
-
 void execute(Tree root){
 
     if(root.data._TOKEN_TYPE == _TOKEN_SHOW){
@@ -46,7 +30,7 @@ void execute(Tree root){
 
     else if (root.data._TOKEN_TYPE == _TOKEN_PLUS){
         //std::cout << root.childs[1].data._TOKEN_VALUE;
-        var_map[root.parent->data._TOKEN_VALUE] = (s_i(root.childs[0].data._TOKEN_VALUE) + s_i(root.childs[1].data._TOKEN_VALUE));
+        var_map[root.parent->data._TOKEN_VALUE] = (stoi(root.childs[0].data._TOKEN_VALUE) + stoi(root.childs[1].data._TOKEN_VALUE));
     }
 
     else if (root.data._TOKEN_TYPE == _TOKEN_VAR){
@@ -87,10 +71,22 @@ int main(int argc, char **argv){
     //     }
     // }
 
-    Tree AST = _rt_Tree_parse(tokenized_list);
+    Parser parser;
+    parser.setProg_Tokens(tokenized_list);
+    Tree AST = parser.Parse();
 
-    //AST._rt_None_print_tree();
+    // This is for debuging purposes remove it when actually compiling.
+    std::cout << "=================DEBUG==================\n";
+    
+    for(size_t i = 0; i < tokenized_list.size(); i ++){
+        std:: cout << "Token Type = " << tokenized_list[i]._TOKEN_TYPE << "\t\t" << "Token value = " << tokenized_list[i]._TOKEN_VALUE << "\t\t" << "Line Number = " << tokenized_list[i]._TOKEN_LINE_NUMBER << "\n";
+    }
 
+    // print the ast tree
+    AST._rt_None_print_tree();
+    
+    std::cout << "\n================ACTUAL EXECUTION============\n";
+    
     execute(AST);
 
     return 0;

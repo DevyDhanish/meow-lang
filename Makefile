@@ -24,3 +24,6 @@ Lib:
 
 Bin:
 	$(CC) $(CPPFLAGS) $(SRC_DIR)/*.cpp -I$(INCLUDE_DIR) -L$(LIB_DIR) -lmeow -o $(OUTPUT_DIR)/$(PROJECT_NAME)
+
+Run:
+	./build/meowlang example/main.meow
