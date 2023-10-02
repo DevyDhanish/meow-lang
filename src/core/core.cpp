@@ -1,4 +1,5 @@
 #include "../../include/core/core.hpp"
+#include "../../include/token/token.hpp"
 #include <vector>
 #include <fstream>
 #include <iostream>
@@ -30,3 +31,15 @@ std::vector<meow_line> file_to_vect(std::string _prog_filename){
     _prog_lines_vect.push_back(END);
     return _prog_lines_vect;
 }
+
+// void VariableMap::add_var(Token key, Token val){
+//     this->var_map[key] = val;
+// }
+
+// Token VariableMap::get_var(Token key){
+//     return this->var_map[key];
+// }
+
+// void VariableMap::update_var(Token key, Token val){
+//     this->var_map[key] = val;
+// }
