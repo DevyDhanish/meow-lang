@@ -9,10 +9,14 @@
 class Parser{
     public:
         Tree Parse();
-        void Eat();
+        void Eat(int amount);
+        Token vomit();
         void setProg_Tokens(std::vector<Token> prog_tokes);
     private:
-        size_t prog_token_counter = 0;
         Token current_token;
+        size_t prog_token_counter = 0;
         std::vector<Token> meow_prog_tokens;
+
+        Tree parse_var();
+        Tree parse_equ();
 };

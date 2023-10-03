@@ -30,15 +30,18 @@ Token _helper_create_start_node(){
 
 Token _helper_create_empty_node(){
     Token empty;
-    empty._TOKEN_TYPE = _TOKEN_NULL;
+    empty._TOKEN_TYPE = _TOKEN_EMPTY;
     empty._TOKEN_VALUE = "im empty bruh";
     empty._TOKEN_LINE = "adjfa";
     empty._TOKEN_LINE_NUMBER = 0;
+
+    return empty;
 }
 
-void Parser::Eat(){
-    if(this->prog_token_counter + 1 < this->meow_prog_tokens.size()){
+void Parser::Eat(int amount = 1){
+    if(this->prog_token_counter < this->meow_prog_tokens.size()){
         this->current_token = this->meow_prog_tokens[prog_token_counter];
+        this->prog_token_counter += amount;
     }
     else{
         this->current_token = _helper_create_empty_node();
@@ -49,8 +52,61 @@ void Parser::setProg_Tokens(std::vector<Token> prog_tokes){
     this->meow_prog_tokens = prog_tokes;
 }
 
+Token Parser::vomit(){
+    if(this->prog_token_counter > 0){
+        return this->meow_prog_tokens[this->prog_token_counter - 1];
+    }
+
+    else{
+        return _helper_create_empty_node();
+    }
+}
+
+Tree createBiNode(Tree a, Token op, Tree b){
+    Tree biNode(op);
+    biNode._rt_None_add_child(a);
+    biNode._rt_None_add_child(b);
+
+    return biNode;
+}
+
+Tree Parser::parse_equ(){
+    Tree equ(this->current_token);
+    Eat(2);
+
+    if(current_token._TOKEN_TYPE == _TOKEN_PLUS){
+        Token left_token = vomit();
+        Token cur_tok = this->current_token;
+        equ._rt_None_add_child(createBiNode(Tree(left_token), cur_tok, createBiNode(Tree(left_token), cur_tok, Tree(this->current_token))));
+    }
+
+    return equ;
+}
+
+Tree Parser::parse_var(){
+    Tree var(this->current_token);
+    Eat();
+
+    if(this->current_token._TOKEN_TYPE == _TOKEN_EQU){
+        // parse =
+        var._rt_None_add_child(parse_equ());
+    }
+
+    return var;
+}
+
 Tree Parser::Parse(){
     Tree start_node(_helper_create_start_node());
+
+    Eat(); // Comsume the first token
+    while(this->current_token._TOKEN_TYPE != _TOKEN_EMPTY){
+
+        if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
+            // parse var
+            start_node._rt_None_add_child(parse_var());
+        }
+        Eat();
+    }
 
     return start_node;
 }

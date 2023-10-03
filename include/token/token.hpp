@@ -34,6 +34,7 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_BRAOPEN,         // 27
     _TOKEN_BRACLOSE,        // 28
     _TOKEN_COLON,           // 29
+    _TOKEN_EMPTY,           // 30
 
 }TOKEN_T;
 
