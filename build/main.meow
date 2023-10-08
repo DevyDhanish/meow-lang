@@ -1,4 +1,4 @@
-x = 5 + 60;
+ y = 5;
+ y = 10;
 
-show "val of x is";
-show x;
+ show y;
