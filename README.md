@@ -17,30 +17,29 @@ I use ubuntu, this steps might not work on windows or mac systems.
 
 `fork this repo`<br />
 `git clone https://github.com/<your-user-name>/meow-lang`<br />
-`mkdir build`<br />
-`mkdir lib`<br />
-`make create_lib`<br />
-`make create_bin`<br />
+`make create`<br />
+`make libs`<br />
+`make bin-debug` with debug info<br />
+`make bin-release` without debug info<br />
 `cd build`<br />
-`./meowlang ../example/main.meow`<br />
+`./meowlang main.meow`<br />
 
 # Prerequisites
 1 - `make` <br />
-2 - `nasm` my plan it to read the source file and generate the assembly file according to the system it's compiling on then leave it up to nasm/masm or other assembler to turn the asm file to binary file <br />
 3 - `g++/clang++` <br />
 
 # PLAN
 step 1 - Put the whole file in buffer so it is easier to work with.
 step 2 - Lexer will work with this buffer to produce tokens
 step 3 - read the tokenized list and generate a AST and check of syntax errors
-step 4 - read the AST and generate code according to it
+step 4 - read the AST and execute code according to it
 
 
 # TODO
-[ DONE ] - Read the whole file and put it into buffer for easy operations <br />
-[ DONE ] - Read the buffer and tokenize it <br />
+[ PARTIALLY DONE ] - Read the whole file and put it into buffer for easy operations <br />
+[ PARTIALLY DONE ] - Read the buffer and tokenize it <br />
 [ PARTIALLY DONE ] - Write all the tokes<br />
-[ DONE ] - Make a tree structure for the AST (Abstract syntax tree)<br />
+[ PARTIALLY DONE ] - Make a tree structure for the AST (Abstract syntax tree)<br />
 [ ] - Make a parser thats read the tokenized list and generates a AST <br />
 [ ] - Syntax check and all <br />
-[ ] - traverse the AST and generate the equivalent asm code <br />
+[ ] - traverse the AST and execute it <br />

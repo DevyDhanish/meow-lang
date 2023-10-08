@@ -1,7 +1,7 @@
-#include "../../include/token/token.hpp"
+#include "../include/token.hpp"
 #include <string>
 
-Token _rt_struct_makeToken(TOKEN_T _token_type, std::string _token_value, std::string _token_line, size_t _token_line_number){
+Token makeToken(TOKEN_T _token_type, std::string _token_value, std::string _token_line, size_t _token_line_number){
     Token _new_token;
 
     _new_token._TOKEN_TYPE          = _token_type;
@@ -11,4 +11,3 @@ Token _rt_struct_makeToken(TOKEN_T _token_type, std::string _token_value, std::s
 
     return _new_token;
 }
-

@@ -7,23 +7,24 @@ SRC_DIR := src
 LIB_DIR := lib
 OUTPUT_DIR := build
 
-# LIB FILES
-CORE_DIR = src/core
-LEXER_DIR = src/lexer
-TOKEN_DIR = src/token
-DS = src/DS
-PARSER_DIR = src/parser
+create:
+	mkdir lib build
 
-Lib:
-	$(CC) $(CPPFLAGS) $(EFLAGS) $(CORE_DIR)/*.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/core.o
-	$(CC) $(CPPFLAGS) $(EFLAGS) $(LEXER_DIR)/*.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/lexer.o
-	$(CC) $(CPPFLAGS) $(EFLAGS) $(TOKEN_DIR)/*.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/token.o
-	$(CC) $(CPPFLAGS) $(EFLAGS) $(DS)/*.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/DS.o
-	$(CC) $(CPPFLAGS) $(EFLAGS) $(PARSER_DIR)/*.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/parser.o
+libs:
+	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/core.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/core.o
+	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/token.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/token.o
+	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/lexer.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/lexer.o
+	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/parser.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/parser.o
+	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/tree.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/tree.o
+
 	ar rcs $(LIB_DIR)/libmeow.a $(LIB_DIR)/*.o
 
-Bin:
-	$(CC) $(CPPFLAGS) $(SRC_DIR)/*.cpp -I$(INCLUDE_DIR) -L$(LIB_DIR) -lmeow -o $(OUTPUT_DIR)/$(PROJECT_NAME)
+bin-debug:
+	$(CC) $(CPPFLAGS) -DDEBUG=1 main.cpp -I$(INCLUDE_DIR) -L$(LIB_DIR) -lmeow -o $(OUTPUT_DIR)/$(PROJECT_NAME)
+	
+bin-release:
+	$(CC) $(CPPFLAGS) -DDEBUG=0 main.cpp -I$(INCLUDE_DIR) -L$(LIB_DIR) -lmeow -o $(OUTPUT_DIR)/$(PROJECT_NAME)
 
-Run:
-	./build/meowlang example/main.meow
+clean:
+	rm -r build
+	rm -r lib

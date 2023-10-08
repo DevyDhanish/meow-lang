@@ -2,6 +2,8 @@
 
 #include <string>
 
+
+// ALL possible type of tokens
 typedef enum _STRUCT_TOKEN_TYPE{
 
     _TOKEN_PLUS,            // 0
@@ -46,4 +48,5 @@ typedef struct _STRUCT_TOKEN{
 }Token;
 
 
-Token _rt_struct_makeToken(TOKEN_T _token_type, std::string _token_value, std::string _token_line, size_t _token_line_number);
+// @brief returns a token made out of given arguments, `Token_type` can only have values difined in this TOKEN_T enum.
+Token makeToken(TOKEN_T _token_type, std::string _token_value, std::string _token_line, size_t _token_line_number);

@@ -2,8 +2,8 @@
 *.o
 *.asm
 *.a
+*.sh
 
 meowlang
 
 .vscode/
-backupC/
