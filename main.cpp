@@ -30,7 +30,12 @@ void execute(Tree root){
             break;
 
         case _TOKEN_SHOW:
-            std::cout << var_map[root.childs[0].data._TOKEN_VALUE] << "\n";
+
+            if(root.childs[0].data._TOKEN_TYPE == _TOKEN_INT)
+                std::cout << var_map[root.childs[0].data._TOKEN_VALUE] << "\n";
+            else if(root.childs[0].data._TOKEN_TYPE == _TOKEN_STRING)
+                std::cout << root.childs[0].data._TOKEN_VALUE << "\n";
+
         default:
             break;
     };
