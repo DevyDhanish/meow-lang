@@ -20,12 +20,14 @@ void execute(Tree root){
     switch(root.data._TOKEN_TYPE){
 
         case _TOKEN_VAR:
+
             if(var_map.find(root.data._TOKEN_VALUE) == var_map.end()){
                 var_map[root.data._TOKEN_VALUE] = 0;
             }
             break;
 
         case _TOKEN_EQU:
+
             var_map[root.parent->data._TOKEN_VALUE] = std::stoi(root.childs[0].data._TOKEN_VALUE);
             break;
 
@@ -49,7 +51,7 @@ int main(int argc, char **argv){
 
     // if .meow file is not passed
     if(argc < 2){
-        cout << "NO, input file" << "\n";
+        cout << "No, input file" << "\n";
         return 0;
     }
 
@@ -67,7 +69,7 @@ int main(int argc, char **argv){
 
     // This is for debuging purposes remove it when actually compiling.
 
-    if(DEBUG){
+    #ifdef DEBUG
 
         std::cout << "=====================[ DEBUG ]======================\n";
     
@@ -85,9 +87,9 @@ int main(int argc, char **argv){
     
         std::cout << "\n===============[ ACTUAL EXECUTION ]============\n";
 
-    }
+    #endif
     
-    execute(AST);
+    //execute(AST);
 
 
     return 0;
