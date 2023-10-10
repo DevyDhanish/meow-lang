@@ -9,6 +9,11 @@
 #define START_NODE "__MAIN__"
 #define END_NODE "__END__"
 
+extern std::string BEERUS;
+extern std::string MEOWTH;
+extern std::string PIKA;
+extern std::string AYO;
+
 // Each prog line get's converted to _STRUCT_MEOW_LINE which helps keep track of which line_number the error occured
 typedef struct _STRUCT_MEOW_LINE{
     std::string line;

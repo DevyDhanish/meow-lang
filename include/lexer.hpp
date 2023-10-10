@@ -12,8 +12,5 @@ class Lexer{
 
     public:
         // @brief the given vector of "meow_line" to a vector of respective tokens
-        void tokenize(std::vector<meow_line>);
-
-        // @breif returns the generated tokens
-        std::vector<Token> get_tokenized_vector();
+        std::vector<Token> tokenize(meow_line);
 };

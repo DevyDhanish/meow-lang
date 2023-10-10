@@ -1,1 +1,6 @@
-show "just cause 3";
+show "value of 68 + 1 is ";
+
+
+
+
+show 68 + 1;

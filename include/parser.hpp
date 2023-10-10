@@ -8,13 +8,13 @@
 
 class Parser{
     public:
-        // @brief Feed the parser with the tokenized vector
-        void setToken(std::vector<Token> progTokens){
-            this->progToken = progTokens;
-        }
+        // // @brief Feed the parser with the tokenized vector
+        // void setToken(std::vector<Token> progTokens){
+        //     this->progToken = progTokens;
+        // }
 
         // @parse The tokenized vector `use .setToken()` to give parser the token vector for it to parse
-        Tree parse();
+        Tree parse(std::vector<Token>);
 
     private:
         Token current_token;                    // holds the token the parser is looking at right now
@@ -22,6 +22,12 @@ class Parser{
         Tree parseVar();
         Tree parseEqu();
         Tree parseShow();
+        Tree parseInt();
+        Tree parseStr();
+        Tree parseBee();
+        Tree parseMeo();
+        Tree parsePika();
+        Tree parseAyo();
         std::vector<Token> progToken;           // stores the tokenized vector for the parser to use
-        size_t counter;                         // counter to keep track of where it is in the `progToken` token vector
+        size_t counter = 0;                     // counter to keep track of where it is in the `progToken` token vector
 };
