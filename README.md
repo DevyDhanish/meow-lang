@@ -10,7 +10,7 @@ I might finish this idk, here are all the details if you want to contribute
 
 # GETTING STARTED
 
-# Caution
+# ❗❗Caution❗❗
 I use ubuntu, this steps might not work on windows or mac systems.
 
 `fork this repo`<br />
@@ -33,7 +33,7 @@ step 3 - read the tokenized list and generate a AST and check of syntax errors<b
 step 4 - read the AST and execute code according to it<br>
 
 
-# TODO
+# TODO📋
 [ PARTIALLY DONE ] - Read the whole file and put it into buffer for easy operations <br />
 [ PARTIALLY DONE ] - Read the buffer and tokenize it <br />
 [ PARTIALLY DONE ] - Write all the tokes<br />
