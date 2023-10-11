@@ -37,11 +37,36 @@ size_t solveExpression(Tree root){
 
 void executeVar(Tree root){
     Token var = root.data;
-    Tree child_tok = root.childs[0].data;
+    Tree child_tok = root.childs[0];
+    Tree op_Token = root.childs[0].childs[0];
 
-    std::cout << var._TOKEN_VALUE << "\n";
+    var_map[var._TOKEN_VALUE] = 0;
+
+    // std::cout << var._TOKEN_VALUE << "\n";
+    // std::cout << child_tok.data._TOKEN_VALUE << "\n";
+    // std::cout << root.childs[0].childs[0].data._TOKEN_VALUE << "\n";
+
     if(child_tok.data._TOKEN_TYPE == _TOKEN_EQU){
-        std::cout << solveExpression(child_tok.childs[0]);
+
+        if(op_Token.data._TOKEN_TYPE == _TOKEN_PLUS){
+            size_t ans = solveExpression(op_Token);
+            var_map[var._TOKEN_VALUE] = ans;
+        }
+
+        if(op_Token.data._TOKEN_TYPE == _TOKEN_MINUS){
+            size_t ans = solveExpression(op_Token);
+            var_map[var._TOKEN_VALUE] = ans;
+        }
+
+        if(op_Token.data._TOKEN_TYPE == _TOKEN_DIV){
+            size_t ans = solveExpression(op_Token);
+            var_map[var._TOKEN_VALUE] = ans;
+        }
+
+        if(op_Token.data._TOKEN_TYPE == _TOKEN_MUL){
+            size_t ans = solveExpression(op_Token);
+            var_map[var._TOKEN_VALUE] = ans;
+        }
     }
 }
 
@@ -63,6 +88,23 @@ void executeShow(Tree root){
 
     else if(child_tok.data._TOKEN_TYPE == _TOKEN_VAR){
         std::cout << var_map[child_tok.data._TOKEN_VALUE] << "\n";
+        //std::cout << child_tok.data._TOKEN_VALUE;
+    }
+
+    else if(child_tok.data._TOKEN_TYPE == _TOKEN_BEERUS){
+        std::cout << child_tok.data._TOKEN_VALUE << "\n";
+    }
+
+    else if(child_tok.data._TOKEN_TYPE == _TOKEN_AYO){
+        std::cout << child_tok.data._TOKEN_VALUE << "\n";
+    }
+
+    else if(child_tok.data._TOKEN_TYPE == _TOKEN_MEOWTH){
+        std::cout << child_tok.data._TOKEN_VALUE << "\n"; 
+    }
+
+    else if(child_tok.data._TOKEN_TYPE == _TOKEN_PIKA){
+        std::cout << child_tok.data._TOKEN_VALUE << "\n"; 
     }
 
     else if(child_tok.data._TOKEN_TYPE == _TOKEN_INT){
@@ -137,7 +179,7 @@ int main(int argc, char **argv){
     
             std::cout << "================[ TREE ]===================\n";
 
-            AST.print_tree();
+            AST.print_tree(0);
 
             std::cout << std::endl;
             std::cout << "===============[ ACTUAL EXECUTION ]============\n";

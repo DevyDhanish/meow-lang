@@ -1,6 +1,4 @@
-show "value of 68 + 1 is ";
+bro = 1 + 299 * 2;
 
-
-
-
-show 68 + 1;
+show "value of bro is";
+show bro;

@@ -25,5 +25,5 @@ public:
     Tree get_child(size_t index);
 
     // @brief prints the tree using DFS ( DEPTH FRIST SEARCH )
-    void print_tree();
+    void print_tree(int);
 };
