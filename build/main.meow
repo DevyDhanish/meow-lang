@@ -1,4 +1,18 @@
-bro = 1 + 299 * 2;
+bruh = 5 + 5;
 
-show "value of bro is";
-show bro;
+show "value of bruh is";
+
+
+show bruh;
+
+show ".";
+
+show ".";
+
+show ".";
+
+show ".";
+
+show ".";
+
+show pika;

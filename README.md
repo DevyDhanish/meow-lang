@@ -9,8 +9,6 @@ I might finish this idk, here are all the details if you want to contribute
 # BUILD DEV (very early stages)
 
 # GETTING STARTED
-currently the program cannot compile it can only show the generated tokens<br />
-if you want to run the program then follow these steps.
 
 # Caution
 I use ubuntu, this steps might not work on windows or mac systems.
@@ -29,10 +27,10 @@ I use ubuntu, this steps might not work on windows or mac systems.
 3 - `g++/clang++` <br />
 
 # PLAN
-step 1 - Put the whole file in buffer so it is easier to work with.
-step 2 - Lexer will work with this buffer to produce tokens
-step 3 - read the tokenized list and generate a AST and check of syntax errors
-step 4 - read the AST and execute code according to it
+step 1 - Put the whole file in buffer so it is easier to work with.<br>
+step 2 - Lexer will work with this buffer to produce tokens<br>
+step 3 - read the tokenized list and generate a AST and check of syntax errors<br>
+step 4 - read the AST and execute code according to it<br>
 
 
 # TODO

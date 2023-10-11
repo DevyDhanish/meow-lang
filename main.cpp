@@ -48,6 +48,10 @@ void executeVar(Tree root){
 
     if(child_tok.data._TOKEN_TYPE == _TOKEN_EQU){
 
+        if(op_Token.data._TOKEN_TYPE == _TOKEN_INT){
+            var_map[var._TOKEN_VALUE] = std::stoi(op_Token.data._TOKEN_VALUE);
+        }
+
         if(op_Token.data._TOKEN_TYPE == _TOKEN_PLUS){
             size_t ans = solveExpression(op_Token);
             var_map[var._TOKEN_VALUE] = ans;
