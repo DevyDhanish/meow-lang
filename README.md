@@ -38,6 +38,6 @@ step 4 - read the AST and execute code according to it<br>
 [ PARTIALLY DONE ] - Read the buffer and tokenize it <br />
 [ PARTIALLY DONE ] - Write all the tokes<br />
 [ PARTIALLY DONE ] - Make a tree structure for the AST (Abstract syntax tree)<br />
-[ ] - Make a parser thats read the tokenized list and generates a AST <br />
-[ ] - Syntax check and all <br />
-[ ] - traverse the AST and execute it <br />
+[ PARTIALLY DONE ] - Make a parser thats read the tokenized list and generates a AST <br />
+[ PARTIALLY DONE ] - Syntax check and all <br />
+[ PARTIALLY DONE ] - traverse the AST and execute it <br />
