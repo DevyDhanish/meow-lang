@@ -26,11 +26,51 @@ Tree Parser::parseEqu(){
     }
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_INT){
-        equ.add_child(parseInt());
+        equ.add_child(parseAddSub());
+    }
+
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
+        equ.add_child(parseVar());
     }
 
     return equ;
 }
+
+Tree Parser::parseAddSub(){
+    Tree left = parseMulDiv();
+
+    while(this->current_token._TOKEN_TYPE == _TOKEN_PLUS || this->current_token._TOKEN_TYPE == _TOKEN_MINUS){
+        Token op_token = this->current_token;
+        advance();
+        Tree right = parseMulDiv();
+
+        Tree expression(op_token);
+        expression.add_child(left);
+        expression.add_child(right);
+
+        left = expression;
+    }
+
+    return left;
+}
+
+Tree Parser::parseMulDiv(){
+    Tree left = parseInt();
+
+    while(this->current_token._TOKEN_TYPE == _TOKEN_MUL || this->current_token._TOKEN_TYPE == _TOKEN_DIV){
+        Token op_token = this->current_token;
+        advance();
+        Tree right = parseInt();
+
+        Tree expression(op_token);
+        expression.add_child(left);
+        expression.add_child(right);
+        left = expression;
+    }
+
+    return left;
+}
+
 
 Tree Parser::parseVar(){
     Tree var(this->current_token);
@@ -38,6 +78,7 @@ Tree Parser::parseVar(){
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
+        var.add_child(this->current_token);
         return var;
     }
 
@@ -60,7 +101,38 @@ Tree Parser::parseStr(){
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
+        str.add_child(this->current_token);
         return str;
+    }
+    else{
+        std::cout << "Syntax error : in line " << this->current_token._TOKEN_LINE_NUMBER << " - " << this->current_token._TOKEN_LINE << "\n";
+        exit(0);
+    }
+
+    return str;
+}
+
+Tree Parser::parseShowStr(){
+    Tree str(this->current_token);
+
+    advance();
+
+    if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
+        str.add_child(this->current_token);
+        return str;
+    }
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
+        str.add_child(parseVar());
+    }
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_INT){
+        str.add_child(parseInt());
+    }
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_STRING){
+        str.add_child(parseShowStr());
+    }
+    else{
+        std::cout << "Syntax error : in line " << this->current_token._TOKEN_LINE_NUMBER << " - " << this->current_token._TOKEN_LINE << "\n";
+        exit(0);
     }
 
     return str;
@@ -71,51 +143,52 @@ Tree Parser::parseInt(){
 
     advance();
 
-    if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
-        return _int;
-    }
+    // if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
+    //     return _int;
+    // }
 
-    else if(this->current_token._TOKEN_TYPE == _TOKEN_DIV){
-        Tree div(this->current_token);
-        div.add_child(_int);
-        advance();
-        div.add_child(parseInt());
+    // else if(this->current_token._TOKEN_TYPE == _TOKEN_PLUS){
+    //         Tree plus(this->current_token);
+    //         plus.add_child(_int);
+    //         advance();
+    //         plus.add_child(parseInt());
 
-        return div;
-    }
+    //         return plus;
+    // }
 
-    else if(this->current_token._TOKEN_TYPE == _TOKEN_MUL){
-        Tree mul(this->current_token);
-        mul.add_child(_int);
-        advance();
-        mul.add_child(parseInt());
+    // else if(this->current_token._TOKEN_TYPE == _TOKEN_MINUS){
+    //     Tree minus(this->current_token);
+    //     minus.add_child(_int);
+    //     advance();
+    //     minus.add_child(parseInt());
 
-        return mul;
-    }
+    //     return minus;
+    // }
 
-    else if(this->current_token._TOKEN_TYPE == _TOKEN_PLUS){
-        Tree plus(this->current_token);
-        plus.add_child(_int);
-        advance();
-        plus.add_child(parseInt());
+    // else if(this->current_token._TOKEN_TYPE == _TOKEN_DIV){
+    //     Tree div(this->current_token);
+    //     div.add_child(_int);
+    //     advance();
+    //     div.add_child(parseInt());
 
-        return plus;
-    }
+    //     return div;
+    // }
 
-    else if(this->current_token._TOKEN_TYPE == _TOKEN_MINUS){
-        Tree minus(this->current_token);
-        minus.add_child(_int);
-        advance();
-        minus.add_child(parseInt());
+    // else if(this->current_token._TOKEN_TYPE == _TOKEN_MUL){
+    //     Tree mul(this->current_token);
+    //     mul.add_child(_int);
+    //     advance();
+    //     mul.add_child(parseInt());
 
-        return minus;
-    }
-    else{
-        std::cout << "Syntax error : in line " << this->current_token._TOKEN_LINE_NUMBER << " - " << this->current_token._TOKEN_LINE << "\n";
-        exit(0);
-    }
+    //     return mul;
+    // }
+    
+    // else{
+    //     std::cout << "Syntax error : in line " << this->current_token._TOKEN_LINE_NUMBER << " - " << this->current_token._TOKEN_LINE << "\n";
+    //     exit(0);
+    // }
 
-    //return _int;
+    return _int;
 }
 
 Tree Parser::parseBee(){
@@ -127,6 +200,7 @@ Tree Parser::parseBee(){
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
+        bee.add_child(this->current_token);
         return bee;
     }
 
@@ -142,6 +216,7 @@ Tree Parser::parseMeo(){
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
+        meo.add_child(this->current_token);
         return meo;
     }
 
@@ -149,15 +224,16 @@ Tree Parser::parseMeo(){
 }
 
 Tree Parser::parsePika(){
-    Tree meo(makeToken(_TOKEN_PIKA, PIKA, "pika", 0));
+    Tree pika(makeToken(_TOKEN_PIKA, PIKA, "pika", 0));
 
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
-        return meo;
+        pika.add_child(this->current_token);
+        return pika;
     }
 
-    return meo;
+    return pika;
 }
 
 Tree Parser::parseAyo(){
@@ -167,6 +243,7 @@ Tree Parser::parseAyo(){
 
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
+        ayo.add_child(this->current_token);
         return ayo;
     }
 
@@ -199,7 +276,7 @@ Tree Parser::parseShow(){
     }
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_STRING){
-        show.add_child(parseStr());
+        show.add_child(parseShowStr());
     }
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_INT){

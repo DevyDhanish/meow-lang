@@ -1,18 +1,3 @@
-bruh = 5 + 5;
+k = 1 / 10;
 
-show "value of bruh is";
-
-
-show bruh;
-
-show ".";
-
-show ".";
-
-show ".";
-
-show ".";
-
-show ".";
-
-show pika;
+show "value of k = " k;

@@ -13,9 +13,9 @@ using std::vector;
 using std::cout;
 using std::string;
 
-std::unordered_map<string, int> var_map;
+std::unordered_map<string, long double> var_map;
 
-size_t solveExpression(Tree root){
+long double solveExpression(Tree root){
     Tree child_tok = root;
     
     if(child_tok.data._TOKEN_TYPE == _TOKEN_PLUS){
@@ -31,16 +31,16 @@ size_t solveExpression(Tree root){
         return solveExpression(root.childs[0]) / solveExpression(root.childs[1]);
     }
     else{
-        return std::stoi(child_tok.data._TOKEN_VALUE);
+        return std::stold(child_tok.data._TOKEN_VALUE);
     }
 }
 
-void executeVar(Tree root){
+long double executeVar(Tree root){
     Token var = root.data;
     Tree child_tok = root.childs[0];
     Tree op_Token = root.childs[0].childs[0];
-
-    var_map[var._TOKEN_VALUE] = 0;
+    long double expression_output;
+    //var_map[var._TOKEN_VALUE] = 0;
 
     // std::cout << var._TOKEN_VALUE << "\n";
     // std::cout << child_tok.data._TOKEN_VALUE << "\n";
@@ -49,32 +49,41 @@ void executeVar(Tree root){
     if(child_tok.data._TOKEN_TYPE == _TOKEN_EQU){
 
         if(op_Token.data._TOKEN_TYPE == _TOKEN_INT){
-            var_map[var._TOKEN_VALUE] = std::stoi(op_Token.data._TOKEN_VALUE);
+            expression_output = std::stold(op_Token.data._TOKEN_VALUE);
+            var_map[var._TOKEN_VALUE] = expression_output;
         }
 
-        if(op_Token.data._TOKEN_TYPE == _TOKEN_PLUS){
-            size_t ans = solveExpression(op_Token);
-            var_map[var._TOKEN_VALUE] = ans;
+        else if(op_Token.data._TOKEN_TYPE == _TOKEN_PLUS){
+            expression_output = solveExpression(op_Token);
+            var_map[var._TOKEN_VALUE] = expression_output;
         }
 
-        if(op_Token.data._TOKEN_TYPE == _TOKEN_MINUS){
-            size_t ans = solveExpression(op_Token);
-            var_map[var._TOKEN_VALUE] = ans;
+        else if(op_Token.data._TOKEN_TYPE == _TOKEN_MINUS){
+            expression_output = solveExpression(op_Token);
+            var_map[var._TOKEN_VALUE] = expression_output;
         }
 
-        if(op_Token.data._TOKEN_TYPE == _TOKEN_DIV){
-            size_t ans = solveExpression(op_Token);
-            var_map[var._TOKEN_VALUE] = ans;
+        else if(op_Token.data._TOKEN_TYPE == _TOKEN_DIV){
+            expression_output = solveExpression(op_Token);
+            var_map[var._TOKEN_VALUE] = expression_output;
         }
 
-        if(op_Token.data._TOKEN_TYPE == _TOKEN_MUL){
-            size_t ans = solveExpression(op_Token);
-            var_map[var._TOKEN_VALUE] = ans;
+        else if(op_Token.data._TOKEN_TYPE == _TOKEN_MUL){
+            expression_output = solveExpression(op_Token);
+            var_map[var._TOKEN_VALUE] = expression_output;
+        }
+
+        else if(op_Token.data._TOKEN_TYPE == _TOKEN_VAR){
+            var_map[var._TOKEN_VALUE] = executeVar(op_Token);
         }
     }
+
+    return expression_output;
 }
 
 void executeShow(Tree root){
+    if(root.childs[0].data._TOKEN_TYPE == _TOKEN_SEMI_COL) return;
+
     Tree child_tok = root.childs[0];
 
     if(child_tok.data._TOKEN_TYPE == _TOKEN_STRING){
@@ -87,7 +96,9 @@ void executeShow(Tree root){
             }
         }
 
-        std::cout << fdata << "\n";
+        std::cout << fdata;
+        
+        executeShow(child_tok);
     }
 
     else if(child_tok.data._TOKEN_TYPE == _TOKEN_VAR){
