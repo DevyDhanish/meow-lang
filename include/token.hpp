@@ -41,7 +41,8 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_MEOWTH,          // 32
     _TOKEN_PIKA,            // 33
     _TOKEN_AYO,             // 34
-
+    _TOKEN_NAVEEN,          // 35
+    
 }TOKEN_T;
 
 typedef struct _STRUCT_TOKEN{

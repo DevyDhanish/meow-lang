@@ -259,6 +259,10 @@ Tree Parser::parseShow(){
         show.add_child(parseVar());
     }
 
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_NAVEEN){
+        show.add_child(parseNaveen());
+    }
+
     else if(this->current_token._TOKEN_TYPE == _TOKEN_BEERUS){
         show.add_child(parseBee());
     }
@@ -284,6 +288,19 @@ Tree Parser::parseShow(){
     }
 
     return show;
+}
+
+Tree Parser::parseNaveen(){
+    Tree naveen(this->current_token);
+
+    advance();
+
+    if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
+        naveen.add_child(this->current_token);
+        return naveen;
+    }
+
+    return naveen;
 }
 
 Tree Parser::parse(std::vector<Token> prog_token){

@@ -101,6 +101,10 @@ void executeShow(Tree root){
         executeShow(child_tok);
     }
 
+    else if(root.childs[0].data._TOKEN_TYPE == _TOKEN_NAVEEN){
+        std::cout << "Naveen this will delete your system" << "\n";
+    }
+
     else if(child_tok.data._TOKEN_TYPE == _TOKEN_VAR){
         std::cout << var_map[child_tok.data._TOKEN_VALUE] << "\n";
         //std::cout << child_tok.data._TOKEN_VALUE;

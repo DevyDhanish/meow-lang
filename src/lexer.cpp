@@ -53,6 +53,7 @@ int _helper_isOperator(char ch){
 
 int _helper_isString(std::string word){
     if(word[0] == '"' && word[word.size() - 1] == '"') return 1;
+
     else return 0;
 }
 
@@ -122,7 +123,7 @@ std::vector<std::string> _helper_disassemble_line(meow_line line){
                 output.push_back(word);
             else output.push_back(std::string(1,lookAhead));
         }
-        else if (lookAhead == ';'){
+        else if (lookAhead == ';'){ 
             output.push_back(std::string(1, lookAhead));
             curr_pos += 1;
         }
@@ -153,6 +154,14 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _prog_lines.line, 
                 _prog_lines.line_number
                 ));
+        }
+        else if(curr_word == "naveen"){
+            _prog_token_list.push_back(makeToken(
+                _TOKEN_NAVEEN,
+                curr_word,
+                _prog_lines.line,
+                _prog_lines.line_number
+            ));
         }
         else if(curr_word == "beerus"){
             _prog_token_list.push_back(makeToken(
