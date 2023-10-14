@@ -41,7 +41,13 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_MEOWTH,          // 32
     _TOKEN_PIKA,            // 33
     _TOKEN_AYO,             // 34
-    _TOKEN_NAVEEN,          // 35
+    _TOKEN_THEN,            // 35
+    _TOKEN_EQUALSTO,        // 36
+    _TOKEN_NOTEQUALS,       // 37
+    _TOKEN_MULEQUALS,       // 38
+    _TOKEN_DIVEQUALS,       // 39
+    _TOKEN_MODEQUALS,       // 40
+    _TOKEN_NOT,             // 41
     
 }TOKEN_T;
 
@@ -50,8 +56,9 @@ typedef struct _STRUCT_TOKEN{
     std::string     _TOKEN_VALUE;
     std::string     _TOKEN_LINE;
     size_t          _TOKEN_LINE_NUMBER;
+    int             _INDENTATION;
 }Token;
 
 
 // @brief returns a token made out of given arguments, `Token_type` can only have values difined in this TOKEN_T enum.
-Token makeToken(TOKEN_T _token_type, std::string _token_value, std::string _token_line, size_t _token_line_number);
+Token makeToken(TOKEN_T _token_type, std::string _token_value, std::string _token_line, size_t _token_line_number, int _indentation);

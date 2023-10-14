@@ -15,6 +15,9 @@ using std::string;
 
 std::unordered_map<string, long double> var_map;
 
+int LAST_LOGIC_FALG = 1;                                    // used to keep track of "if statment" if the logic was true then this will be 1 otherwise 0
+                                                            // based on this the next "then:" satement will be executed
+
 long double solveExpression(Tree root){
     Tree child_tok = root;
     
@@ -101,10 +104,6 @@ void executeShow(Tree root){
         executeShow(child_tok);
     }
 
-    else if(root.childs[0].data._TOKEN_TYPE == _TOKEN_NAVEEN){
-        std::cout << "Naveen this will delete your system" << "\n";
-    }
-
     else if(child_tok.data._TOKEN_TYPE == _TOKEN_VAR){
         std::cout << var_map[child_tok.data._TOKEN_VALUE] << "\n";
         //std::cout << child_tok.data._TOKEN_VALUE;
@@ -147,13 +146,47 @@ void executeShow(Tree root){
     }
 }
 
+void executeIf(Tree root){
+    Tree relation_op = root.childs[0];
+    Tree left_op = root.childs[1];
+    Tree right_op = root.childs[2];
+
+    // std::cout << relation_op.data._TOKEN_VALUE;
+    // std::cout << left_op.data._TOKEN_VALUE;
+    // std::cout << right_op.data._TOKEN_VALUE;
+
+    if(relation_op.data._TOKEN_TYPE == _TOKEN_EQUALSTO && LAST_LOGIC_FALG){
+        if(solveExpression(left_op) == solveExpression(right_op)){
+            LAST_LOGIC_FALG = 1;
+        }
+        else{
+            LAST_LOGIC_FALG = 0;
+        }
+    }
+}
+
 // Improve this
 void execute(Tree root){
     if(root.data._TOKEN_TYPE == _TOKEN_SHOW){
-        executeShow(root);
+        if(root.data._INDENTATION > 0 && LAST_LOGIC_FALG)
+            executeShow(root);
+
+        else if(root.data._INDENTATION == 0)
+            executeShow(root);
+    }
+    else if(root.data._TOKEN_TYPE == _TOKEN_IF){
+        if(root.data._INDENTATION > 0 && LAST_LOGIC_FALG)
+            executeIf(root);
+
+        else if(root.data._INDENTATION == 0)
+            executeIf(root);
     }
     else if(root.data._TOKEN_TYPE == _TOKEN_VAR){
-        executeVar(root);
+        if(root.data._INDENTATION > 0 && LAST_LOGIC_FALG)
+            executeVar(root);
+
+        else if(root.data._INDENTATION == 0)
+            executeVar(root);
     }
 }
 
@@ -188,7 +221,7 @@ int main(int argc, char **argv){
             std::cout << "=====================[ DEBUG ]======================\n";
 
             for(size_t i = 0; i < tokenized_vector.size(); i ++){
-                std:: cout << "Token Type = " << tokenized_vector[i]._TOKEN_TYPE << "\t\t" << "Token value = " << tokenized_vector[i]._TOKEN_VALUE << "\t\t" << "Line Number = " << tokenized_vector[i]._TOKEN_LINE_NUMBER << "\n";
+                std:: cout << "Token Type = " << tokenized_vector[i]._TOKEN_TYPE << "\t\t" << "Token value = " << tokenized_vector[i]._TOKEN_VALUE << "\t\t" << "Line Number = " << tokenized_vector[i]._TOKEN_LINE_NUMBER << " INDENTATION = " << tokenized_vector[i]._INDENTATION << "\n";
             }
 
             std::cout << "===================[ VAR MAP ] =====================\n";

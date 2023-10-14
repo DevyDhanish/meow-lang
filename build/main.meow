@@ -1,1 +1,4 @@
-show naveen;
+x = 4 + 10;
+
+if 23  + 20 - 3 == 40:
+    show x;

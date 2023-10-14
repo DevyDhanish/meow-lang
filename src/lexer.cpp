@@ -5,19 +5,11 @@
 #include <string>
 #include <vector>
 #include <map>
-
+#include <ctype.h>
 #include <iostream>
 
-// check if the current word is a number or not, if current word's first letter is a number then that word is a number
-int _helper_isNum(std::string val){
-    std::vector<char> nums = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 
-    for(size_t i = 0; i < nums.size(); i++){
-        if(val[0] == nums[i]) return 1;
-    }
-
-    return 0;
-}
+int LINE_IDENTATION = 0;
 
 // check if current words is a token or not
 int _helper_isToken(std::string val){
@@ -31,6 +23,7 @@ int _helper_isToken(std::string val){
         "for",
         "beerus",
         "meowth",
+        "then",
     };
 
     for(size_t i = 0 ; i < known_tokens.size(); i++){
@@ -42,7 +35,7 @@ int _helper_isToken(std::string val){
 
 // check if current word is a operator
 int _helper_isOperator(char ch){
-    std::string ops = "/*+-=<>{}[]()";
+    std::string ops = "{}[]()";
 
     for(int i = 0; i < (int)ops.size(); i++){
         if(ch == ops[i]) return 1;
@@ -68,11 +61,106 @@ std::vector<std::string> _helper_disassemble_line(meow_line line){
     while(curr_pos < curr_line.size()){                             // loop until it reaches the end of the line
         char lookAhead = curr_line[curr_pos];
 
+        for(char i : curr_line){
+            if(i != ' ') break;
+            if(i == ' ') LINE_IDENTATION += 1;
+        }
+
         if(lookAhead == ' '){                                       // ignore space
             curr_pos += 1;
         }
-        else if (_helper_isOperator(lookAhead)){
-            output.push_back(std::string(1,lookAhead));
+        else if (lookAhead == '='){
+            curr_pos += 1;
+
+            if(curr_line[curr_pos] == '=')
+                output.push_back("==");
+            else
+                output.push_back(std::string(1,lookAhead));
+
+            curr_pos += 1;
+        }
+        else if (lookAhead == '>'){
+            curr_pos += 1;
+
+            if(curr_line[curr_pos] == '=')
+                output.push_back(">=");
+            else
+                output.push_back(std::string(1,lookAhead));
+
+            curr_pos += 1;
+        }
+        else if (lookAhead == '<'){
+            curr_pos += 1;
+
+            if(curr_line[curr_pos] == '=')
+                output.push_back("<=");
+            else
+                output.push_back(std::string(1,lookAhead));
+
+            curr_pos += 1;
+        }
+        else if (lookAhead == '+'){
+            curr_pos += 1;
+
+            if(curr_line[curr_pos] == '=')
+                output.push_back("+=");
+            else
+                output.push_back(std::string(1,lookAhead));
+
+            curr_pos += 1;
+        }
+        else if (lookAhead == '-'){
+            curr_pos += 1;
+
+            if(curr_line[curr_pos] == '=')
+                output.push_back("-=");
+            else
+                output.push_back(std::string(1,lookAhead));
+
+            curr_pos += 1;
+        }
+        else if (lookAhead == '*'){
+            curr_pos += 1;
+
+            if(curr_line[curr_pos] == '=')
+                output.push_back("*=");
+            else
+                output.push_back(std::string(1,lookAhead));
+
+            curr_pos += 1;
+        }
+        else if (lookAhead == '/'){
+            curr_pos += 1;
+
+            if(curr_line[curr_pos] == '=')
+                output.push_back("/=");
+            else
+                output.push_back(std::string(1,lookAhead));
+
+            curr_pos += 1;
+        }
+        else if (lookAhead == '%'){
+            curr_pos += 1;
+
+            if(curr_line[curr_pos] == '=')
+                output.push_back("%=");
+            else
+                output.push_back(std::string(1,lookAhead));
+
+            curr_pos += 1;
+        }
+        else if (lookAhead == '!'){
+            curr_pos += 1;
+
+            if(curr_line[curr_pos] == '=')
+                output.push_back("!=");
+            else
+                output.push_back(std::string(1,lookAhead));
+
+            curr_pos += 1;
+        }
+        else if(_helper_isOperator(lookAhead)){
+            output.push_back(std::string(1, lookAhead));
             curr_pos += 1;
         }
         else if ( lookAhead == ':'){
@@ -101,7 +189,8 @@ std::vector<std::string> _helper_disassemble_line(meow_line line){
             };
             curr_pos += 1;
         }
-        else if (isalnum(lookAhead)){
+
+        else if (isdigit(lookAhead)){
             std::string word;
             while(curr_pos < curr_line.size() && isalnum(curr_line[curr_pos])){
                 word += curr_line[curr_pos];
@@ -110,8 +199,10 @@ std::vector<std::string> _helper_disassemble_line(meow_line line){
 
             if(word != "")
                 output.push_back(word);
+                
             else output.push_back(std::string(1,lookAhead));
         }
+
         else if (isalpha(lookAhead)){
             std::string word;
             while(curr_pos < curr_line.size() && isalpha(curr_line[curr_pos])){
@@ -142,7 +233,7 @@ std::vector<std::string> _helper_disassemble_line(meow_line line){
 std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
 
     std::vector<Token> _prog_token_list;
-
+    LINE_IDENTATION = 0;
     std::vector<std::string> words = _helper_disassemble_line(_prog_lines);
 
     for(std::string curr_word : words){
@@ -152,15 +243,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_SHOW, 
                 curr_word, 
                 _prog_lines.line, 
-                _prog_lines.line_number
-                ));
-        }
-        else if(curr_word == "naveen"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_NAVEEN,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "beerus"){
@@ -168,7 +252,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_BEERUS,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "meowth"){
@@ -176,7 +261,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_MEOWTH,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "pika"){
@@ -184,7 +270,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_PIKA,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "ayo"){
@@ -192,7 +279,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_AYO,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "return"){
@@ -200,23 +288,53 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_RETURN, 
                 curr_word, 
                 _prog_lines.line, 
-                _prog_lines.line_number
-                ));
+                _prog_lines.line_number,
+                LINE_IDENTATION
+            ));
         }
         else if(curr_word == "null"){
             _prog_token_list.push_back(makeToken(
                 _TOKEN_NULL, 
                 curr_word, 
                 _prog_lines.line, 
-                _prog_lines.line_number
-                ));
+                _prog_lines.line_number,
+                LINE_IDENTATION
+            ));
         }
         else if(curr_word == "="){
             _prog_token_list.push_back(makeToken(
                 _TOKEN_EQU,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
+            ));
+        }
+        else if(curr_word == "=="){
+            _prog_token_list.push_back(makeToken(
+                _TOKEN_EQUALSTO,
+                curr_word,
+                _prog_lines.line,
+                _prog_lines.line_number,
+                LINE_IDENTATION
+            ));
+        }
+        else if(curr_word == "!="){
+            _prog_token_list.push_back(makeToken(
+                _TOKEN_NOTEQUALS,
+                curr_word,
+                _prog_lines.line,
+                _prog_lines.line_number,
+                LINE_IDENTATION
+            ));
+        }
+        else if(curr_word == "!"){
+            _prog_token_list.push_back(makeToken(
+                _TOKEN_NOT,
+                curr_word,
+                _prog_lines.line,
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "<"){
@@ -224,7 +342,26 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_LESSTHAN,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
+            ));
+        }
+        else if(curr_word == "<="){
+            _prog_token_list.push_back(makeToken(
+                _TOKEN_LESSEQU,
+                curr_word,
+                _prog_lines.line,
+                _prog_lines.line_number,
+                LINE_IDENTATION
+            ));
+        }
+        else if(curr_word == ">="){
+            _prog_token_list.push_back(makeToken(
+                _TOKEN_GREATEREQU,
+                curr_word,
+                _prog_lines.line,
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == ">"){
@@ -232,7 +369,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_GREATERTHAN,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "+"){
@@ -240,7 +378,17 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_PLUS,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
+            ));
+        }
+        else if(curr_word == "+="){
+            _prog_token_list.push_back(makeToken(
+                _TOKEN_PLUSEQU,
+                curr_word,
+                _prog_lines.line,
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "-"){
@@ -248,7 +396,17 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_MINUS,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
+            ));
+        }
+        else if(curr_word == "-="){
+            _prog_token_list.push_back(makeToken(
+                _TOKEN_MINUSEQU,
+                curr_word,
+                _prog_lines.line,
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "*"){
@@ -256,7 +414,17 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_MUL,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
+            ));
+        }
+        else if(curr_word == "*="){
+            _prog_token_list.push_back(makeToken(
+                _TOKEN_MULEQUALS,
+                curr_word,
+                _prog_lines.line,
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "/"){
@@ -264,7 +432,17 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_DIV,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
+            ));
+        }
+        else if(curr_word == "/="){
+            _prog_token_list.push_back(makeToken(
+                _TOKEN_DIVEQUALS,
+                curr_word,
+                _prog_lines.line,
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "%"){
@@ -272,7 +450,17 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_MOD,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
+            ));
+        }
+        else if(curr_word == "%="){
+            _prog_token_list.push_back(makeToken(
+                _TOKEN_MODEQUALS,
+                curr_word,
+                _prog_lines.line,
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "("){
@@ -280,7 +468,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_BRAOPEN,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == ")"){
@@ -288,7 +477,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_BRACLOSE,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "{"){
@@ -296,7 +486,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_CURLOPEN,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "}"){
@@ -304,7 +495,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_CURLCLOSE,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(_helper_isString(curr_word)){
@@ -312,15 +504,18 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_STRING,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
-        else if(_helper_isNum(curr_word)){
+
+        else if(isdigit(curr_word[0])){
             _prog_token_list.push_back(makeToken(
                 _TOKEN_INT,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "while"){
@@ -328,7 +523,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_WHILE,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "if"){
@@ -336,7 +532,17 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_IF,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
+            ));
+        }
+        else if(curr_word == "then"){
+            _prog_token_list.push_back(makeToken(
+                _TOKEN_THEN,
+                curr_word,
+                _prog_lines.line,
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "elif"){
@@ -344,7 +550,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_ELIF,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == "else"){
@@ -352,7 +559,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_ELSE,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == ":"){
@@ -360,7 +568,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_COLON,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(curr_word == ";"){
@@ -368,7 +577,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_SEMI_COL,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
         }
         else if(!_helper_isToken(curr_word)){
@@ -376,8 +586,13 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_VAR,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number
+                _prog_lines.line_number,
+                LINE_IDENTATION
             ));
+        }
+        else{
+            std::cout << "ERROR in lexing\n";
+            exit(0);
         }
     }
 
