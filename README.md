@@ -2,7 +2,7 @@
 
 # [Meow Lang]
 
-I might finish this idk, here are all the details if you want to contribute
+I might finish this idk, here are all the details if you want to contribute. And I know this code is ugly as fuck i'm going to fix it, I think.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
