@@ -3,6 +3,8 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <unordered_map>
+#include <set>
 
 std::string BEERUS = R"(
     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⣠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -157,6 +159,71 @@ std::string AYO = R"(
 ⣿⣿⣷⣾⣏⡷⣭⣳⡜⣦⡝⣣⠞⣆⠯⣔⡣⣜⢢⢣⠜⣄⡊⢤⢁⠂⡄⢀⠀⠀⠀⠀⠈⠉⠛⠻⠿⠿⠿⠿⣿⠿⠛⠯⠧⠤⢌⡍⣉⠉⠁⠒⠦⠔⡆⡤⢄⣀⢀⡀⠀⠀⠀⠁⠀
 )";
 
+std::unordered_map<std::string, TOKEN_T> knowTokens = {
+        {"show", _TOKEN_SHOW},
+        {"beerus", _TOKEN_BEERUS},
+        {"meowth", _TOKEN_MEOWTH},
+        {"pika", _TOKEN_PIKA},
+        {"ayo", _TOKEN_AYO},
+        {"return", _TOKEN_RETURN},
+        {"null", _TOKEN_NULL},
+        {"=", _TOKEN_EQU},
+        {"==", _TOKEN_EQUALSTO},
+        {"!=", _TOKEN_NOTEQUALS},
+        {"!", _TOKEN_NOT},
+        {"<", _TOKEN_LESSTHAN},
+        {"<=", _TOKEN_LESSEQU},
+        {">=", _TOKEN_GREATEREQU},
+        {">", _TOKEN_GREATERTHAN},
+        {"+", _TOKEN_PLUS},
+        {"+=", _TOKEN_PLUSEQU},
+        {"-", _TOKEN_MINUS},
+        {"-=", _TOKEN_MINUSEQU},
+        {"*", _TOKEN_MUL},
+        {"*=", _TOKEN_MULEQUALS},
+        {"/", _TOKEN_DIV},
+        {"/=", _TOKEN_DIVEQUALS},
+        {"%", _TOKEN_MOD},
+        {"%=", _TOKEN_MODEQUALS},
+        {"(", _TOKEN_BRAOPEN},
+        {")", _TOKEN_BRACLOSE},
+        {"{", _TOKEN_CURLOPEN},
+        {"}", _TOKEN_CURLCLOSE},
+        {"[", _TOKEN_SQRBRAOPEN},
+        {"]", _TOKEN_SQRBRACLOSE},
+        {"while", _TOKEN_WHILE},
+        {"for", _TOKEN_FOR},
+        {"if", _TOKEN_IF},
+        {"then", _TOKEN_THEN},
+        {"elif", _TOKEN_ELIF},
+        {"else", _TOKEN_ELSE},
+        {":", _TOKEN_COLON},
+        {";", _TOKEN_SEMI_COL},
+};
+
+std::unordered_map<char, std::string> operator_pair = {
+    {'=', "=="},
+    {'!', "!="},
+    {'<', "<="},
+    {'>', ">="},
+    {'+', "+="},
+    {'-', "-="},
+    {'*', "*="},
+    {'/', "/="},
+    {'%', "%="},
+    {':', ":"},
+    {';', ";"},
+};
+
+std::set<char> brackets = {
+    '(',
+    ')',
+    '{',
+    '}',
+    '[',
+    ']',
+};
+
 // @brief convert file line to meow_line
 // @returns vector of meow_line
 std::vector<meow_line> file_to_vect(std::string _prog_filename){
@@ -181,4 +248,14 @@ std::vector<meow_line> file_to_vect(std::string _prog_filename){
     }
 
     return _prog_lines_vect;
+}
+
+std::string format_string(std::string _str){
+    std::string f_string =  "";
+
+    for(char i : _str){
+        if(i != '"') f_string += i;
+    }
+
+    return f_string;
 }

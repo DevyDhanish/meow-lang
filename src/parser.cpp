@@ -73,32 +73,6 @@ Tree Parser::parseMulDiv(){
     return left;
 }
 
-// Tree Parser::parseEqualsTo(){
-//     Tree equals_to(this->current_token);
-
-//     advance();
-
-//     if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
-//         equals_to.add_child(parseVar());
-//         return equals_to;
-//     }
-
-//     else if(this->current_token._TOKEN_TYPE == _TOKEN_INT){
-//         equals_to.add_child(parseAddSub());
-//         return equals_to;
-//     }
-
-//     else if(this->current_token._TOKEN_TYPE == _TOKEN_STRING){
-//         equals_to.add_child(parseStr());
-//         return equals_to;
-//     }
-
-//     else{
-//         exit(0);
-//     }
-// }
-
-
 Tree Parser::parseVar(){
     Tree var(this->current_token);
 
@@ -114,10 +88,6 @@ Tree Parser::parseVar(){
         return var;
     }
 
-    // else {
-    //     std::cout << "Syntax error : in line " << this->current_token._TOKEN_LINE_NUMBER << " - " << this->current_token._TOKEN_LINE << "\n";
-    //     exit(0);
-    // }
 
     return var;
 }
@@ -173,47 +143,6 @@ Tree Parser::parseInt(){
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL || this->current_token._TOKEN_TYPE == _TOKEN_COLON){
         return _int;
     }
-
-    // else if(this->current_token._TOKEN_TYPE == _TOKEN_PLUS){
-    //         Tree plus(this->current_token);
-    //         plus.add_child(_int);
-    //         advance();
-    //         plus.add_child(parseInt());
-
-    //         return plus;
-    // }
-
-    // else if(this->current_token._TOKEN_TYPE == _TOKEN_MINUS){
-    //     Tree minus(this->current_token);
-    //     minus.add_child(_int);
-    //     advance();
-    //     minus.add_child(parseInt());
-
-    //     return minus;
-    // }
-
-    // else if(this->current_token._TOKEN_TYPE == _TOKEN_DIV){
-    //     Tree div(this->current_token);
-    //     div.add_child(_int);
-    //     advance();
-    //     div.add_child(parseInt());
-
-    //     return div;
-    // }
-
-    // else if(this->current_token._TOKEN_TYPE == _TOKEN_MUL){
-    //     Tree mul(this->current_token);
-    //     mul.add_child(_int);
-    //     advance();
-    //     mul.add_child(parseInt());
-
-    //     return mul;
-    // }
-    
-    // else{
-    //     std::cout << "Syntax error : in line " << this->current_token._TOKEN_LINE_NUMBER << " - " << this->current_token._TOKEN_LINE << "\n";
-    //     exit(0);
-    // }
 
     return _int;
 }
@@ -307,7 +236,7 @@ Tree Parser::parseShow(){
     }
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_INT){
-        show.add_child(parseInt());
+        show.add_child(parseAddSub());
     }
 
     return show;
@@ -315,7 +244,7 @@ Tree Parser::parseShow(){
 
 Tree Parser::parseIf(){
 
-    int ifCounter = 1;
+    size_t ifCounter = 1;
     std::vector<std::vector<Token>> ifTokens;
     std::vector<Token> toks;
     Tree _if(this->current_token);
@@ -354,7 +283,14 @@ Tree Parser::parseIf(){
         // std::cout << "\n";
 
         
-        if(tokens_of_if[0]._TOKEN_TYPE == _TOKEN_EQUALSTO){
+        if(
+            tokens_of_if[0]._TOKEN_TYPE == _TOKEN_EQUALSTO      ||
+            tokens_of_if[0]._TOKEN_TYPE == _TOKEN_NOTEQUALS     ||
+            tokens_of_if[0]._TOKEN_TYPE == _TOKEN_LESSTHAN      ||
+            tokens_of_if[0]._TOKEN_TYPE == _TOKEN_GREATERTHAN   ||
+            tokens_of_if[0]._TOKEN_TYPE == _TOKEN_LESSEQU       ||
+            tokens_of_if[0]._TOKEN_TYPE == _TOKEN_GREATEREQU    
+            ){
             Tree equ_to(tokens_of_if[0]);
             _if.add_child(equ_to);
         }
@@ -384,6 +320,12 @@ Tree Parser::parseIf(){
     return _if;
 }
 
+Tree Parser::parseElse(){
+    Tree _else(this->current_token);
+
+    return _else;
+}
+
 Tree Parser::parse(std::vector<Token> prog_token){
     this->counter = 0;
     Tree main(makeToken(_TOKEN_START, START_NODE, "", 0, 0));
@@ -397,8 +339,12 @@ Tree Parser::parse(std::vector<Token> prog_token){
             main.add_child(parseShow());
         }
 
-        else if(this->current_token._TOKEN_TYPE == _TOKEN_IF){
+        else if(this->current_token._TOKEN_TYPE == _TOKEN_IF || this->current_token._TOKEN_TYPE == _TOKEN_ELIF){
             main.add_child(parseIf());
+        }
+
+        else if(this->current_token._TOKEN_TYPE == _TOKEN_ELSE){
+            main.add_child(parseElse());
         }
 
         else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){

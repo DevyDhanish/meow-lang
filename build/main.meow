@@ -1,4 +1,6 @@
-x = 4 + 10;
+y = 10 * 8;
+x = "hello world";
 
-if 23  + 20 - 3 == 40:
-    show x;
+show "value of x "; 
+
+show y;

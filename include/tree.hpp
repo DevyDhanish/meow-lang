@@ -9,7 +9,6 @@ class Tree{
 public:
     Token data;
     Tree *parent;
-    std::vector<Tree> childs;
 
     Tree(){};
 
@@ -26,4 +25,6 @@ public:
 
     // @brief prints the tree using DFS ( DEPTH FRIST SEARCH )
     void print_tree(int);
+    
+    std::vector<Tree> childs;
 };

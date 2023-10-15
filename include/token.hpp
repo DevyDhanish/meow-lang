@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <functional>
 
 
 // ALL possible type of tokens
@@ -48,6 +49,8 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_DIVEQUALS,       // 39
     _TOKEN_MODEQUALS,       // 40
     _TOKEN_NOT,             // 41
+    _TOKEN_SQRBRAOPEN,      // 42
+    _TOKEN_SQRBRACLOSE,     // 43
     
 }TOKEN_T;
 
@@ -57,6 +60,13 @@ typedef struct _STRUCT_TOKEN{
     std::string     _TOKEN_LINE;
     size_t          _TOKEN_LINE_NUMBER;
     int             _INDENTATION;
+
+    bool operator==(const struct _STRUCT_TOKEN &n){
+        return (
+            _TOKEN_TYPE == n._TOKEN_TYPE &&
+            _TOKEN_VALUE == n._TOKEN_VALUE
+        );
+    }
 }Token;
 
 

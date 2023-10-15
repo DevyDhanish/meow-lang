@@ -11,48 +11,21 @@
 
 int LINE_IDENTATION = 0;
 
-// check if current words is a token or not
-int _helper_isToken(std::string val){
-    std::vector<std::string> known_tokens = {
-        "show",
-        "return",
-        "null",
-        "if",
-        "else",
-        "while",
-        "for",
-        "beerus",
-        "meowth",
-        "then",
-    };
-
-    for(size_t i = 0 ; i < known_tokens.size(); i++){
-        if(val == known_tokens[i]) return 1;
-    }
-
-    return 0;
-}
-
-// check if current word is a operator
-int _helper_isOperator(char ch){
-    std::string ops = "{}[]()";
-
-    for(int i = 0; i < (int)ops.size(); i++){
-        if(ch == ops[i]) return 1;
-    }
-
-    return 0;
-}
-
-int _helper_isString(std::string word){
+int isString(std::string word){
     if(word[0] == '"' && word[word.size() - 1] == '"') return 1;
+
+    else return 0;
+}
+
+int isTypeOfBracket(char _bra){
+    if(brackets.find(_bra) != brackets.end()) return 1;
 
     else return 0;
 }
 
 // used to disassemble line into words for example line ` x = 5 + 5;` will be disassembled into `x,=,5,+,5,;`
 // This method will be called for each line
-std::vector<std::string> _helper_disassemble_line(meow_line line){
+std::vector<std::string> disassembleLine(meow_line line){
 
     std::vector<std::string> output;                                // each disassembled word will be pushed into this vector
     std::string curr_line = line.line;
@@ -69,104 +42,25 @@ std::vector<std::string> _helper_disassemble_line(meow_line line){
         if(lookAhead == ' '){                                       // ignore space
             curr_pos += 1;
         }
-        else if (lookAhead == '='){
+
+
+        else if(operator_pair.find(lookAhead) != operator_pair.end()){
+
             curr_pos += 1;
 
             if(curr_line[curr_pos] == '=')
-                output.push_back("==");
+                output.push_back(operator_pair[lookAhead]);
             else
-                output.push_back(std::string(1,lookAhead));
+                output.push_back(std::string(1, lookAhead));
 
             curr_pos += 1;
         }
-        else if (lookAhead == '>'){
-            curr_pos += 1;
 
-            if(curr_line[curr_pos] == '=')
-                output.push_back(">=");
-            else
-                output.push_back(std::string(1,lookAhead));
-
-            curr_pos += 1;
-        }
-        else if (lookAhead == '<'){
-            curr_pos += 1;
-
-            if(curr_line[curr_pos] == '=')
-                output.push_back("<=");
-            else
-                output.push_back(std::string(1,lookAhead));
-
-            curr_pos += 1;
-        }
-        else if (lookAhead == '+'){
-            curr_pos += 1;
-
-            if(curr_line[curr_pos] == '=')
-                output.push_back("+=");
-            else
-                output.push_back(std::string(1,lookAhead));
-
-            curr_pos += 1;
-        }
-        else if (lookAhead == '-'){
-            curr_pos += 1;
-
-            if(curr_line[curr_pos] == '=')
-                output.push_back("-=");
-            else
-                output.push_back(std::string(1,lookAhead));
-
-            curr_pos += 1;
-        }
-        else if (lookAhead == '*'){
-            curr_pos += 1;
-
-            if(curr_line[curr_pos] == '=')
-                output.push_back("*=");
-            else
-                output.push_back(std::string(1,lookAhead));
-
-            curr_pos += 1;
-        }
-        else if (lookAhead == '/'){
-            curr_pos += 1;
-
-            if(curr_line[curr_pos] == '=')
-                output.push_back("/=");
-            else
-                output.push_back(std::string(1,lookAhead));
-
-            curr_pos += 1;
-        }
-        else if (lookAhead == '%'){
-            curr_pos += 1;
-
-            if(curr_line[curr_pos] == '=')
-                output.push_back("%=");
-            else
-                output.push_back(std::string(1,lookAhead));
-
-            curr_pos += 1;
-        }
-        else if (lookAhead == '!'){
-            curr_pos += 1;
-
-            if(curr_line[curr_pos] == '=')
-                output.push_back("!=");
-            else
-                output.push_back(std::string(1,lookAhead));
-
-            curr_pos += 1;
-        }
-        else if(_helper_isOperator(lookAhead)){
+        else if(isTypeOfBracket(lookAhead)){
             output.push_back(std::string(1, lookAhead));
             curr_pos += 1;
         }
-        else if ( lookAhead == ':'){
-            output.push_back(std::string(1, lookAhead));
-            curr_pos += 1;
-        }
+
         else if (lookAhead == '"'){                                 // if a string is detected sorround it with `"` for example `this is a string` will become "this is a string"
             std::string word;
             word += '"';
@@ -214,10 +108,6 @@ std::vector<std::string> _helper_disassemble_line(meow_line line){
                 output.push_back(word);
             else output.push_back(std::string(1,lookAhead));
         }
-        else if (lookAhead == ';'){ 
-            output.push_back(std::string(1, lookAhead));
-            curr_pos += 1;
-        }
 
         else{
             std::cout << "Unknown token: encountered " << "`" << lookAhead << "`" << " at line " << line.line_number << "\n";
@@ -234,272 +124,21 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
 
     std::vector<Token> _prog_token_list;
     LINE_IDENTATION = 0;
-    std::vector<std::string> words = _helper_disassemble_line(_prog_lines);
+    std::vector<std::string> words = disassembleLine(_prog_lines);
 
     for(std::string curr_word : words){
         
-        if(curr_word == "show"){
+        if(knowTokens.find(curr_word) != knowTokens.end()){
             _prog_token_list.push_back(makeToken(
-                _TOKEN_SHOW, 
-                curr_word, 
-                _prog_lines.line, 
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "beerus"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_BEERUS,
+                knowTokens[curr_word],
                 curr_word,
                 _prog_lines.line,
                 _prog_lines.line_number,
                 LINE_IDENTATION
             ));
         }
-        else if(curr_word == "meowth"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_MEOWTH,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "pika"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_PIKA,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "ayo"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_AYO,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "return"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_RETURN, 
-                curr_word, 
-                _prog_lines.line, 
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "null"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_NULL, 
-                curr_word, 
-                _prog_lines.line, 
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "="){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_EQU,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "=="){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_EQUALSTO,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "!="){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_NOTEQUALS,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "!"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_NOT,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "<"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_LESSTHAN,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "<="){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_LESSEQU,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == ">="){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_GREATEREQU,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == ">"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_GREATERTHAN,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "+"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_PLUS,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "+="){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_PLUSEQU,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "-"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_MINUS,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "-="){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_MINUSEQU,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "*"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_MUL,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "*="){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_MULEQUALS,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "/"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_DIV,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "/="){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_DIVEQUALS,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "%"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_MOD,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "%="){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_MODEQUALS,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "("){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_BRAOPEN,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == ")"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_BRACLOSE,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "{"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_CURLOPEN,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "}"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_CURLCLOSE,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(_helper_isString(curr_word)){
+
+        else if(isString(curr_word)){
             _prog_token_list.push_back(makeToken(
                 _TOKEN_STRING,
                 curr_word,
@@ -518,70 +157,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 LINE_IDENTATION
             ));
         }
-        else if(curr_word == "while"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_WHILE,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "if"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_IF,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "then"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_THEN,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "elif"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_ELIF,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == "else"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_ELSE,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == ":"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_COLON,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(curr_word == ";"){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_SEMI_COL,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
-        }
-        else if(!_helper_isToken(curr_word)){
+
+        else if(knowTokens.find(curr_word) == knowTokens.end()){
             _prog_token_list.push_back(makeToken(
                 _TOKEN_VAR,
                 curr_word,
