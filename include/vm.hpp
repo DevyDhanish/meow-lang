@@ -13,7 +13,7 @@ typedef enum _MEOW_BYTE_CODE{
     _OP_CMP_GREATER,        // 4    X >  X
     _OP_CMP_NOTEQU,         // 5    X != X
     _OP_SET,                // 6    X = SOMETHING
-    _OP_JMP_IF_FALSE,       // 7    jump to else if any comparison is false
+    _OP_ELSE,               // 7    else
 
 } MEOW_BYTE_CODE;
 

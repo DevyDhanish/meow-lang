@@ -1,6 +1,8 @@
-y = 10 * 8;
-x = "hello world";
+x = 10;
+y = 20;
 
-show "value of x "; 
+if 4 + 4 == 8:
+    show x;
 
-show y;
+else:
+    show y;
