@@ -1,8 +1,19 @@
-x = 10;
-y = 20;
+x = "naveen";
+y = "dhanish";
 
-if 4 + 4 == 8:
-    show x;
+if 5 == 5:
+    y = "bsdk";
 
 else:
-    show y;
+    x = "bruh";
+    show "bru";
+    show "bruladfj";
+    show "ljasdf";
+    show "lajdsf";
+    show 1;
+    show 2;
+    show 3;
+    show 4;
+
+show y;
+show x;

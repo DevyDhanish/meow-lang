@@ -322,7 +322,6 @@ Tree Parser::parseIf(){
 
 Tree Parser::parseElse(){
     Tree _else(this->current_token);
-
     return _else;
 }
 

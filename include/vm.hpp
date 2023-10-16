@@ -31,3 +31,6 @@ Byte_code makeByteCode(MEOW_BYTE_CODE _mnemonic, Token _op1, Token _op2);
 void run();
 void submitByteCode(Byte_code b_c);
 void showByteCode();
+void runByteCode(Byte_code &curr_bc, size_t &counter);
+void runIfBlock(size_t &counter);
+void runElseBlock(size_t &counter);

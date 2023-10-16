@@ -310,9 +310,9 @@ int main(int argc, char **argv){
 
     }
 
-    run();
+    showByteCode();
 
-    //showByteCode();
+    run();
 
     return 0;
 }
