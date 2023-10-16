@@ -1,19 +1,7 @@
-x = "naveen";
-y = "dhanish";
-
-if 5 == 5:
-    y = "bsdk";
+if "hello" == "hello":
+    x = 10;
 
 else:
-    x = "bruh";
-    show "bru";
-    show "bruladfj";
-    show "ljasdf";
-    show "lajdsf";
-    show 1;
-    show 2;
-    show 3;
-    show 4;
+    x = 20;
 
-show y;
 show x;

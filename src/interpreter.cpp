@@ -115,8 +115,8 @@ void Interpreter::convertToByteCode(Tree root) {
     }
 
     else if(root.data._TOKEN_TYPE == _TOKEN_ELSE){
-        Tree op1 (makeToken(_TOKEN_EMPTY,"","",0, 0));
-        Tree op2 (makeToken(_TOKEN_EMPTY,"","",0, 0));
-        generateElseByteCode(root.data, op1, op2);
+        // Tree op1 (makeToken(_TOKEN_EMPTY,"","",0, 0));
+        // Tree op2 (makeToken(_TOKEN_EMPTY,"","",0, 0));
+        generateElseByteCode(root.data, root.data, root.data);
     }
 }

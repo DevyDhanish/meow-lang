@@ -101,10 +101,6 @@ Tree Parser::parseStr(){
         str.add_child(this->current_token);
         return str;
     }
-    else{
-        std::cout << "Syntax error : in line " << this->current_token._TOKEN_LINE_NUMBER << " - " << this->current_token._TOKEN_LINE << "\n";
-        exit(0);
-    }
 
     return str;
 }
