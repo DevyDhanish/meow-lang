@@ -1,7 +1,0 @@
-if "hello" == "hello":
-    x = 10;
-
-else:
-    x = 20;
-
-show x;
