@@ -346,7 +346,7 @@ Tree Parser::parse(std::vector<Token> prog_token){
             main.add_child(parseVar());
         }
 
-        break;
+        this->counter++;
     }
 
     this->progToken.clear();

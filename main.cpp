@@ -279,6 +279,7 @@ int main(int argc, char **argv){
         tokenized_vector = lex.tokenize(line);
 
         AST = parser.parse(tokenized_vector);
+        interpreter.convertToByteCode(AST.get_child(0));
 
         #ifdef DEBUG
 
@@ -302,15 +303,10 @@ int main(int argc, char **argv){
             std::cout << std::endl;
             std::cout << "===============[ ACTUAL EXECUTION ]============\n";
 
+            showByteCode();
         #endif
-
-        // Interpreter convert to byte code
-
-        interpreter.convertToByteCode(AST.get_child(0));
-
     }
 
-    showByteCode();
 
     run();
 

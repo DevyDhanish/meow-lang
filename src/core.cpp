@@ -224,6 +224,13 @@ std::set<char> brackets = {
     ']',
 };
 
+bool isEmpty(std::string curr_line){
+    for(char i : curr_line){
+        if(i != ' ') return 0;
+    }
+    return 1;
+}
+
 // @brief convert file line to meow_line
 // @returns vector of meow_line
 std::vector<meow_line> file_to_vect(std::string _prog_filename){
@@ -236,7 +243,7 @@ std::vector<meow_line> file_to_vect(std::string _prog_filename){
     while(_prog_file){
         getline(_prog_file, _prog_line);
 
-        if(!_prog_line.empty()){                            // skip the empty lines
+        if(!isEmpty(_prog_line)){                            // skip the empty lines
             meow_line _line;
             _line.line = _prog_line;
             _line.line_number = line_number;

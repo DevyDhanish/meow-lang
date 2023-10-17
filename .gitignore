@@ -3,7 +3,9 @@
 *.asm
 *.a
 *.sh
+*.meow
 
 meowlang
+build/
 
 .vscode/
