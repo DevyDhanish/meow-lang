@@ -35,3 +35,4 @@ void showByteCode();
 void runByteCode(Byte_code &curr_bc, size_t &counter);
 void runIfBlock(size_t &counter);
 void runElseBlock(size_t &counter);
+void runLoopBlock(size_t &counter);

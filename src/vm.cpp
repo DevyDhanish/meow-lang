@@ -7,7 +7,6 @@
 #include <assert.h>
 
 std::vector<Byte_code> meow_byte_code;
-int LAST_LOGIC_FLAG = 1;
 
 Byte_code makeByteCode(MEOW_BYTE_CODE _mnemonic, Token _op1, Token _op2){
     Byte_code newByteCode;
@@ -197,6 +196,35 @@ void runElseBlock(size_t &counter){
     counter--;
 }
 
+void runLoopBlock(size_t &counter){
+    Byte_code curr_bc = meow_byte_code[counter];
+    int limit = std::stold(curr_bc.operand_1._TOKEN_VALUE);
+
+    counter++;
+    size_t save_ctr = counter;
+
+    curr_bc = meow_byte_code[counter];
+    int curr_idt = curr_bc.operand_1._INDENTATION;
+    int c = 0;
+
+    while(c < limit){
+        while(curr_bc.operand_1._INDENTATION == curr_idt)
+        {
+
+            runByteCode(curr_bc, counter);
+
+            counter++;
+            curr_bc = meow_byte_code[counter];
+
+        }
+        c++;
+        counter = save_ctr;
+        curr_bc = meow_byte_code[counter];
+    }
+
+    counter--;
+}
+
 void runByteCode(Byte_code &curr_bc, size_t &counter){
     if(curr_bc.mnemonic == _OP_SET){
         insert(curr_bc.operand_1, curr_bc.operand_2);
@@ -204,12 +232,17 @@ void runByteCode(Byte_code &curr_bc, size_t &counter){
     else if(curr_bc.mnemonic == _OP_OUT){
         if(curr_bc.operand_1._TOKEN_TYPE == _TOKEN_VAR){
             Token var = get(curr_bc.operand_1);
-            std::cout << format_string(var._TOKEN_VALUE);
+            std::cout << format_string(var._TOKEN_VALUE) << "\n";
         }
         else{
-            std::cout << format_string(curr_bc.operand_1._TOKEN_VALUE);
+            std::cout << format_string(curr_bc.operand_1._TOKEN_VALUE) << "\n";
         }
     }
+
+    else if(curr_bc.mnemonic == _OP_LOOP){
+        runLoopBlock(counter);
+    }
+
     else if(curr_bc.mnemonic == _OP_CMP_EQU ||
             curr_bc.mnemonic == _OP_CMP_LESS ||
             curr_bc.mnemonic == _OP_CMP_GREATER ||

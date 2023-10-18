@@ -262,6 +262,7 @@ Tree Parser::parseIf(){
         else if(this->progToken[ifCounter]._TOKEN_TYPE == _TOKEN_COLON){
             ifTokens.push_back(toks);
             toks.clear();
+            break;
         }
 
         else { 
@@ -321,6 +322,17 @@ Tree Parser::parseElse(){
     return _else;
 }
 
+Tree Parser::parseWhile(){
+    Tree _while(this->current_token);
+    advance();
+
+    if(this->current_token._TOKEN_TYPE == _TOKEN_INT){
+        _while.add_child(parseAddSub());
+    }
+
+    return _while;
+}
+
 Tree Parser::parse(std::vector<Token> prog_token){
     this->counter = 0;
     Tree main(makeToken(_TOKEN_START, START_NODE, "", 0, 0));
@@ -334,6 +346,10 @@ Tree Parser::parse(std::vector<Token> prog_token){
             main.add_child(parseShow());
         }
 
+        else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
+            main.add_child(parseVar());
+        }
+
         else if(this->current_token._TOKEN_TYPE == _TOKEN_IF || this->current_token._TOKEN_TYPE == _TOKEN_ELIF){
             main.add_child(parseIf());
         }
@@ -342,10 +358,9 @@ Tree Parser::parse(std::vector<Token> prog_token){
             main.add_child(parseElse());
         }
 
-        else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
-            main.add_child(parseVar());
+        else if(this->current_token._TOKEN_TYPE == _TOKEN_WHILE){
+            main.add_child(parseWhile());
         }
-
         this->counter++;
     }
 

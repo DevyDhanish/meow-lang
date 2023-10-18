@@ -14,6 +14,7 @@ std::unordered_map<TOKEN_T, MEOW_BYTE_CODE> token_byte_code_relation{
     {_TOKEN_GREATERTHAN, _OP_CMP_GREATER},
     {_TOKEN_NOTEQUALS, _OP_CMP_NOTEQU},
     {_TOKEN_ELSE, _OP_ELSE},
+    {_TOKEN_WHILE, _OP_LOOP}
 };
 
 long double solveExpression(Tree root){
@@ -94,6 +95,13 @@ void Interpreter::generateElseByteCode(Token op, Tree op1, Tree op2){
     createAndSubmitByteCode(op, op1.data, op2.data);
 }
 
+void Interpreter::generateWhileByteCode(Token op, Tree op1, Tree op2){
+
+    solveExpressionAndAssignValue(op1);
+    createAndSubmitByteCode(op, op1.data, op2.data);
+
+}
+
 void Interpreter::convertToByteCode(Tree root) {
 
     if(root.data._TOKEN_TYPE == _TOKEN_VAR){
@@ -118,5 +126,10 @@ void Interpreter::convertToByteCode(Tree root) {
         // Tree op1 (makeToken(_TOKEN_EMPTY,"","",0, 0));
         // Tree op2 (makeToken(_TOKEN_EMPTY,"","",0, 0));
         generateElseByteCode(root.data, root.data, root.data);
+    }
+
+    else if(root.data._TOKEN_TYPE == _TOKEN_WHILE){
+        Tree op2 (makeToken(_TOKEN_EMPTY,"","",0, 0));
+        generateWhileByteCode(root.data, root.get_child(0), op2);
     }
 }
