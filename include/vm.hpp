@@ -18,7 +18,6 @@ typedef enum _MEOW_BYTE_CODE{
     _OP_CMP_GREAEQU,        // 9    x >= x
 } MEOW_BYTE_CODE;
 
-
 typedef struct _STRUCT_MEOW_BYTE_CODE{
     MEOW_BYTE_CODE mnemonic;
     Token operand_1;

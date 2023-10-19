@@ -304,6 +304,7 @@ int main(int argc, char **argv){
             std::cout << "===============[ ACTUAL EXECUTION ]============\n";
 
             showByteCode();
+            
         #endif
     }
 

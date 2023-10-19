@@ -30,7 +30,7 @@ Tree Parser::parseEqu(){
     }
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
-        equ.add_child(parseVar());
+        equ.add_child(parseAddSub());
     }
 
     return equ;
@@ -79,13 +79,19 @@ Tree Parser::parseVar(){
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL || this->current_token._TOKEN_TYPE == _TOKEN_COLON){
-        var.add_child(this->current_token);
+        //var.add_child(this->current_token);
         return var;
     }
 
+    // else if (this->current_token._TOKEN_TYPE == _TOKEN_PLUS || this->current_token._TOKEN_TYPE == _TOKEN_MINUS ||
+    //          this->current_token._TOKEN_TYPE == _TOKEN_MUL || this->current_token._TOKEN_TYPE == _TOKEN_DIV) {
+    //     var.add_child(parseAddSub()); // Continue parsing the expression.
+    //     return var;
+    // }
+
     else if(this->current_token._TOKEN_TYPE == _TOKEN_EQU){
         var.add_child(parseEqu());
-        return var;
+        //return var;
     }
 
 
@@ -118,7 +124,7 @@ Tree Parser::parseShowStr(){
         str.add_child(parseVar());
     }
     else if(this->current_token._TOKEN_TYPE == _TOKEN_INT){
-        str.add_child(parseInt());
+        str.add_child(parseAddSub());
     }
     else if(this->current_token._TOKEN_TYPE == _TOKEN_STRING){
         str.add_child(parseShowStr());

@@ -1,6 +1,7 @@
 #include "../include/interpreter.hpp"
 #include "../include/token.hpp"
 #include "../include/vm.hpp"
+#include "../include/map.hpp"
 #include <unordered_map>
 #include <iostream>
 #include <string>
@@ -17,6 +18,8 @@ std::unordered_map<TOKEN_T, MEOW_BYTE_CODE> token_byte_code_relation{
     {_TOKEN_WHILE, _OP_LOOP}
 };
 
+std::unordered_map<std::string, long double> symbolTable;
+
 long double solveExpression(Tree root){
     Tree child_tok = root;
     
@@ -32,7 +35,12 @@ long double solveExpression(Tree root){
     else if(child_tok.data._TOKEN_TYPE == _TOKEN_DIV){
         return solveExpression(root.get_child(0)) / solveExpression(root.get_child(1));
     }
-    else{
+    else if(child_tok.data._TOKEN_TYPE == _TOKEN_VAR)
+    {
+        return symbolTable[root.data._TOKEN_VALUE];
+    }
+    else
+    {
         return std::stold(child_tok.data._TOKEN_VALUE);
     }
 }
@@ -47,7 +55,7 @@ void createAndSubmitByteCode(Token oper, Token oper1, Token oper2){
     );
 }
 
-void solveExpressionAndAssignValue(Tree &op){
+void solveExpressionAndAssignValue(Tree &op, long double val){
     if( op.data._TOKEN_TYPE  == _TOKEN_PLUS    ||
         op.data._TOKEN_TYPE == _TOKEN_MINUS    ||
         op.data._TOKEN_TYPE == _TOKEN_MUL      ||
@@ -59,7 +67,7 @@ void solveExpressionAndAssignValue(Tree &op){
 
             op.data = makeToken(
                 _TOKEN_INT,
-                std::to_string(solveExpression(op)),
+                std::to_string(val),
                 op.data._TOKEN_LINE,
                 op.data._TOKEN_LINE_NUMBER,
                 op.data._INDENTATION
@@ -70,14 +78,16 @@ void solveExpressionAndAssignValue(Tree &op){
 
 void Interpreter::generateAssignmentByteCode(Token op, Tree op1, Tree op2) {
 
-    solveExpressionAndAssignValue(op2);
+    symbolTable[op1.data._TOKEN_VALUE] = solveExpression(op2);
+
+    solveExpressionAndAssignValue(op2, symbolTable[op1.data._TOKEN_VALUE]);
 
     createAndSubmitByteCode(op, op1.data, op2.data);
 }
 
 void Interpreter::generateShowByteCode(Token op, Tree op1){
 
-    solveExpressionAndAssignValue(op1);
+    solveExpressionAndAssignValue(op1, solveExpression(op1));
 
     Tree op2 (makeToken(_TOKEN_EMPTY,"","",0, 0));
     createAndSubmitByteCode(op, op1.data, op2.data);
@@ -85,8 +95,8 @@ void Interpreter::generateShowByteCode(Token op, Tree op1){
 
 void Interpreter::generateIfByteCode(Token op, Tree op1, Tree op2){
 
-    solveExpressionAndAssignValue(op2);
-    solveExpressionAndAssignValue(op1);
+    solveExpressionAndAssignValue(op2, solveExpression(op2));
+    solveExpressionAndAssignValue(op1, solveExpression(op2));
 
     createAndSubmitByteCode(op, op1.data, op2.data);
 }
@@ -97,7 +107,7 @@ void Interpreter::generateElseByteCode(Token op, Tree op1, Tree op2){
 
 void Interpreter::generateWhileByteCode(Token op, Tree op1, Tree op2){
 
-    solveExpressionAndAssignValue(op1);
+    solveExpressionAndAssignValue(op1, solveExpression(op2));
     createAndSubmitByteCode(op, op1.data, op2.data);
 
 }
