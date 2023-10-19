@@ -26,120 +26,188 @@ void showByteCode(){
     }
 }
 
-bool compareTokens(TOKEN_T token_type, MEOW_BYTE_CODE cmp_type, Token left_op, Token right_op){
-    if(cmp_type == _OP_CMP_EQU){
-        //std::cout << "LJLDJF" << left_op._TOKEN_TYPE;
-        if(token_type == _TOKEN_INT){
-            return (std::stold(left_op._TOKEN_VALUE) == std::stold(right_op._TOKEN_VALUE));
-        }
-
-        if(token_type == _TOKEN_VAR){
-            Token l_op = get(left_op);
-            Token r_op = get(right_op);
-
-            if(l_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_INT){
-                return (std::stold(l_op._TOKEN_VALUE) == std::stold(right_op._TOKEN_VALUE));
-            }
-
-            if(token_type == _TOKEN_STRING){
-                return (left_op._TOKEN_VALUE == right_op._TOKEN_VALUE);
-            }
-        }
-
-        if(token_type == _TOKEN_STRING){
-            return (left_op._TOKEN_VALUE == right_op._TOKEN_VALUE);
-        }
+bool compareEquals(Token left_op, Token right_op)
+{
+    if(left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING)
+    {
+        return(left_op._TOKEN_VALUE == right_op._TOKEN_VALUE);
     }
-
-    if(cmp_type == _OP_CMP_LESS){
-        //std::cout << "LJLDJF" << left_op._TOKEN_TYPE;
-        if(token_type == _TOKEN_INT){
-            return (std::stold(left_op._TOKEN_VALUE) < std::stold(right_op._TOKEN_VALUE));
-        }
-
-        if(token_type == _TOKEN_VAR){
-            Token l_op = get(left_op);
-            Token r_op = get(right_op);
-
-            if(l_op._TOKEN_TYPE == _TOKEN_INT && r_op._TOKEN_TYPE == _TOKEN_INT){
-                return (std::stold(l_op._TOKEN_VALUE) < std::stold(r_op._TOKEN_VALUE));
-            }
-
-        }
+    else if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
+        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
+    {
+        std::cout << "Cannot `==` between a string and a int\n";
+        return 0;
     }
-
-    if(cmp_type == _OP_CMP_GREATER){
-        //std::cout << "LJLDJF" << left_op._TOKEN_TYPE;
-        if(token_type == _TOKEN_INT){
-            return (std::stold(left_op._TOKEN_VALUE) > std::stold(right_op._TOKEN_VALUE));
-        }
-        if(token_type == _TOKEN_VAR){
-            Token l_op = get(left_op);
-            Token r_op = get(right_op);
-
-            if(l_op._TOKEN_TYPE == _TOKEN_INT && r_op._TOKEN_TYPE == _TOKEN_INT){
-                return (std::stold(l_op._TOKEN_VALUE) > std::stold(r_op._TOKEN_VALUE));
-            }
-        }
-    }
-
-    if(cmp_type == _OP_CMP_NOTEQU){
-        //std::cout << "LJLDJF" << left_op._TOKEN_TYPE;
-        if(token_type == _TOKEN_INT){
-            return (std::stold(left_op._TOKEN_VALUE) != std::stold(right_op._TOKEN_VALUE));
-        }
-        if(token_type == _TOKEN_VAR){
-            Token l_op = get(left_op);
-            Token r_op = get(right_op);
-
-            if(l_op._TOKEN_TYPE == _TOKEN_INT && r_op._TOKEN_TYPE == _TOKEN_INT){
-                return (std::stold(l_op._TOKEN_VALUE) != std::stold(r_op._TOKEN_VALUE));
-            }
-
-            if(token_type == _TOKEN_STRING){
-                return (left_op._TOKEN_VALUE != right_op._TOKEN_VALUE);
-            }
-        }
-
-        if(token_type == _TOKEN_STRING){
-            return (left_op._TOKEN_VALUE != right_op._TOKEN_VALUE);
-        }
-    }
-
-    if(cmp_type == _OP_CMP_LESSEQU){
-        //std::cout << "LJLDJF" << left_op._TOKEN_TYPE;
-        if(token_type == _TOKEN_INT){
-            return (std::stold(left_op._TOKEN_VALUE) <= std::stold(right_op._TOKEN_VALUE));
-        }
-        if(token_type == _TOKEN_VAR){
-            Token l_op = get(left_op);
-            Token r_op = get(right_op);
-
-            if(l_op._TOKEN_TYPE == _TOKEN_INT && r_op._TOKEN_TYPE == _TOKEN_INT){
-                return (std::stold(l_op._TOKEN_VALUE) <= std::stold(r_op._TOKEN_VALUE));
-            }
-        }
-    }
-
-    if(cmp_type == _OP_CMP_GREAEQU){
-        //std::cout << "LJLDJF" << left_op._TOKEN_TYPE;
-        if(token_type == _TOKEN_INT){
-            return (std::stold(left_op._TOKEN_VALUE) >= std::stold(right_op._TOKEN_VALUE));
-        }
-
-        if(token_type == _TOKEN_VAR){
-            Token l_op = get(left_op);
-            Token r_op = get(right_op);
-
-            if(l_op._TOKEN_TYPE == _TOKEN_INT && r_op._TOKEN_TYPE == _TOKEN_INT){
-                return (std::stold(l_op._TOKEN_VALUE) >= std::stold(r_op._TOKEN_VALUE));
-            }
-
-        }
-
+    else
+    {
+        return(std::stold(left_op._TOKEN_VALUE) == std::stold(right_op._TOKEN_VALUE));
     }
 
     return false;
+}
+
+bool compareNotEquals(Token left_op, Token right_op)
+{
+    if(left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING)
+    {
+        return(left_op._TOKEN_VALUE != right_op._TOKEN_VALUE);
+    }
+    else if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
+        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
+    {
+        std::cout << "Cannot `!=` between a string and a int\n";
+        return 0;
+    }
+    else
+    {
+        return(std::stold(left_op._TOKEN_VALUE) != std::stold(right_op._TOKEN_VALUE));
+    }
+
+    return false;
+}
+
+bool compareLessEquals(Token left_op, Token right_op)
+{
+    // if(left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING)
+    // {
+    //     return(left_op._TOKEN_VALUE != right_op._TOKEN_VALUE);
+    // }
+    if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
+        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
+    {
+        std::cout << "Cannot `<=` between a string and a int\n";
+        return 0;
+    }
+    else
+    {
+        return(std::stold(left_op._TOKEN_VALUE) <= std::stold(right_op._TOKEN_VALUE));
+    }
+
+    return false;
+}
+
+bool compareGreaterEquals(Token left_op, Token right_op)
+{
+    // if(left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING)
+    // {
+    //     return(left_op._TOKEN_VALUE != right_op._TOKEN_VALUE);
+    // }
+    if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
+        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
+    {
+        std::cout << "Cannot `>=` between a string and a int\n";
+        return 0;
+    }
+    else
+    {
+        return(std::stold(left_op._TOKEN_VALUE) >= std::stold(right_op._TOKEN_VALUE));
+    }
+
+    return false;
+}
+
+bool compareLess(Token left_op, Token right_op)
+{
+    // if(left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING)
+    // {
+    //     return(left_op._TOKEN_VALUE != right_op._TOKEN_VALUE);
+    // }
+    if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
+        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
+    {
+        std::cout << "Cannot `<` between a string and a int\n";
+        return 0;
+    }
+    else
+    {
+        return(std::stold(left_op._TOKEN_VALUE) < std::stold(right_op._TOKEN_VALUE));
+    }
+
+    return false;
+}
+
+bool compareGreater(Token left_op, Token right_op)
+{
+    // if(left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING)
+    // {
+    //     return(left_op._TOKEN_VALUE != right_op._TOKEN_VALUE);
+    // }
+    if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
+        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
+    {
+        std::cout << "Cannot `>` between a string and a int\n";
+        return 0;
+    }
+    else
+    {
+        return(std::stold(left_op._TOKEN_VALUE) > std::stold(right_op._TOKEN_VALUE));
+    }
+
+    return false;
+}
+
+bool compareTokens(TOKEN_T token_type, MEOW_BYTE_CODE cmp_type, Token left_op, Token right_op){
+
+    typedef bool (*compareFunctionPtr)(Token, Token);
+
+    compareFunctionPtr cmpfncptr;
+
+    // bool (*cmpEquals)(Token, Token) = &compareEquals;
+    // bool (*cmpNotEquals)(Token, Token) = &compareNotEquals;
+    // bool (*cmpLessEquals)(Token, Token) = &compareLessEquals;
+    // bool (*cmpGreaterEquals)(Token, Token) = &compareGreaterEquals;
+    // bool (*cmpLess)(Token, Token) = &compareLess;
+    // bool (*cmpGreater)(Token, Token) = &compareGreater;
+
+    switch(cmp_type){
+        case _OP_CMP_EQU:
+            cmpfncptr = &compareEquals;
+            break;
+        case _OP_CMP_NOTEQU:
+            cmpfncptr = &compareNotEquals;
+            break;
+        case _OP_CMP_LESSEQU:
+            cmpfncptr = &compareLessEquals;
+            break;
+        case _OP_CMP_GREAEQU:
+            cmpfncptr = &compareGreaterEquals;
+            break;
+        case _OP_CMP_LESS:
+            cmpfncptr = &compareLess;
+            break;
+        case _OP_CMP_GREATER:
+            cmpfncptr = &compareGreater;
+            break;
+        default:
+            cmpfncptr = &compareEquals;
+    }
+
+    if(left_op._TOKEN_TYPE == _TOKEN_VAR && right_op._TOKEN_TYPE == _TOKEN_VAR)
+    {
+        Token l_var = get(left_op);
+        Token r_var = get(right_op);
+
+        return (*cmpfncptr)(l_var, r_var);
+    }
+
+    else if(left_op._TOKEN_TYPE == _TOKEN_VAR && right_op._TOKEN_TYPE != _TOKEN_VAR)
+    {
+        Token l_var = get(left_op);
+
+        return (*cmpfncptr)(l_var, right_op);
+    }
+
+    else if(left_op._TOKEN_TYPE != _TOKEN_VAR && right_op._TOKEN_TYPE == _TOKEN_VAR)
+    {
+        Token r_var = get(right_op);
+
+        return (*cmpfncptr)(left_op, r_var);
+    }
+
+    else
+    {
+        return (*cmpfncptr)(left_op, right_op);
+    }
 }
 
 void runIfBlock(size_t &counter){
@@ -193,9 +261,9 @@ void runElseBlock(size_t &counter){
         counter++;
         curr_bc = meow_byte_code[counter];
         
-        counter--;
     }
 
+    counter--;
 }
 
 void runLoopBlock(size_t &counter){
@@ -207,7 +275,7 @@ void runLoopBlock(size_t &counter){
 
     curr_bc = meow_byte_code[counter];
     int curr_idt = curr_bc.operand_1._INDENTATION;
-    int c = 0;
+    int c = 1;
 
     while(c < limit){
         while(curr_bc.operand_1._INDENTATION == curr_idt)
@@ -223,9 +291,9 @@ void runLoopBlock(size_t &counter){
         counter = save_ctr;
         curr_bc = meow_byte_code[counter];
         
-        counter--;
     }
 
+    counter--;
 }
 
 void runByteCode(Byte_code &curr_bc, size_t &counter){

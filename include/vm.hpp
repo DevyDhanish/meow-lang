@@ -16,6 +16,7 @@ typedef enum _MEOW_BYTE_CODE{
     _OP_ELSE,               // 7    else
     _OP_CMP_LESSEQU,        // 8    x <= x
     _OP_CMP_GREAEQU,        // 9    x >= x
+    
 } MEOW_BYTE_CODE;
 
 typedef struct _STRUCT_MEOW_BYTE_CODE{

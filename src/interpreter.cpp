@@ -80,9 +80,16 @@ void solveExpressionAndAssignValue(Tree &op, long double val){
 
 void Interpreter::generateAssignmentByteCode(Token op, Tree op1, Tree op2) {
 
-    symbolTable[op1.data._TOKEN_VALUE] = solveExpression(op2);
-
-    solveExpressionAndAssignValue(op2, symbolTable[op1.data._TOKEN_VALUE]);
+    if(op2.data._TOKEN_TYPE == _TOKEN_INT ||
+        op2.data._TOKEN_TYPE == _TOKEN_PLUS ||
+        op2.data._TOKEN_TYPE == _TOKEN_MINUS ||
+        op2.data._TOKEN_TYPE == _TOKEN_MUL ||
+        op2.data._TOKEN_TYPE == _TOKEN_DIV
+        )
+    {
+        symbolTable[op1.data._TOKEN_VALUE] = solveExpression(op2);
+        solveExpressionAndAssignValue(op2, symbolTable[op1.data._TOKEN_VALUE]);
+    }
 
     createAndSubmitByteCode(op, op1.data, op2.data);
 }
@@ -97,8 +104,24 @@ void Interpreter::generateShowByteCode(Token op, Tree op1){
 
 void Interpreter::generateIfByteCode(Token op, Tree op1, Tree op2){
 
-    solveExpressionAndAssignValue(op1, solveExpression(op1));
-    solveExpressionAndAssignValue(op2, solveExpression(op2));
+    if(op1.data._TOKEN_TYPE == _TOKEN_INT || 
+        op1.data._TOKEN_TYPE == _TOKEN_PLUS ||
+        op1.data._TOKEN_TYPE == _TOKEN_MINUS || 
+        op1.data._TOKEN_TYPE == _TOKEN_MUL || 
+        op1.data._TOKEN_TYPE == _TOKEN_DIV)
+    {
+        solveExpressionAndAssignValue(op1, solveExpression(op1));
+    }
+
+    if(op2.data._TOKEN_TYPE == _TOKEN_INT ||
+        op2.data._TOKEN_TYPE == _TOKEN_PLUS ||
+        op2.data._TOKEN_TYPE == _TOKEN_MINUS ||
+        op2.data._TOKEN_TYPE == _TOKEN_MUL ||
+        op2.data._TOKEN_TYPE == _TOKEN_DIV
+        )
+    {
+        solveExpressionAndAssignValue(op2, solveExpression(op2));
+    }
 
     createAndSubmitByteCode(op, op1.data, op2.data);
 }
@@ -109,7 +132,7 @@ void Interpreter::generateElseByteCode(Token op, Tree op1, Tree op2){
 
 void Interpreter::generateWhileByteCode(Token op, Tree op1, Tree op2){
 
-    solveExpressionAndAssignValue(op1, solveExpression(op2));
+    solveExpressionAndAssignValue(op1, solveExpression(op1));
     createAndSubmitByteCode(op, op1.data, op2.data);
 
 }
@@ -130,7 +153,7 @@ void Interpreter::convertToByteCode(Tree root) {
         generateShowByteCode(root.data, root.get_child(0));
     }
 
-    else if(root.data._TOKEN_TYPE == _TOKEN_IF){
+    else if(root.data._TOKEN_TYPE == _TOKEN_IF || root.data._TOKEN_TYPE == _TOKEN_ELIF){
         generateIfByteCode(root.get_child(0).data, root.get_child(1), root.get_child(2));
     }
 
