@@ -12,6 +12,8 @@ std::unordered_map<TOKEN_T, MEOW_BYTE_CODE> token_byte_code_relation{
     {_TOKEN_SHOW, _OP_OUT},
     {_TOKEN_EQUALSTO, _OP_CMP_EQU},
     {_TOKEN_LESSTHAN, _OP_CMP_LESS},
+    {_TOKEN_LESSEQU, _OP_CMP_LESSEQU},
+    {_TOKEN_GREATEREQU, _OP_CMP_GREAEQU},
     {_TOKEN_GREATERTHAN, _OP_CMP_GREATER},
     {_TOKEN_NOTEQUALS, _OP_CMP_NOTEQU},
     {_TOKEN_ELSE, _OP_ELSE},
@@ -87,7 +89,7 @@ void Interpreter::generateAssignmentByteCode(Token op, Tree op1, Tree op2) {
 
 void Interpreter::generateShowByteCode(Token op, Tree op1){
 
-    solveExpressionAndAssignValue(op1, solveExpression(op1));
+    if(op1.data._TOKEN_TYPE == _TOKEN_INT) solveExpressionAndAssignValue(op1, solveExpression(op1));
 
     Tree op2 (makeToken(_TOKEN_EMPTY,"","",0, 0));
     createAndSubmitByteCode(op, op1.data, op2.data);
@@ -95,8 +97,8 @@ void Interpreter::generateShowByteCode(Token op, Tree op1){
 
 void Interpreter::generateIfByteCode(Token op, Tree op1, Tree op2){
 
+    solveExpressionAndAssignValue(op1, solveExpression(op1));
     solveExpressionAndAssignValue(op2, solveExpression(op2));
-    solveExpressionAndAssignValue(op1, solveExpression(op2));
 
     createAndSubmitByteCode(op, op1.data, op2.data);
 }

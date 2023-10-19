@@ -166,9 +166,10 @@ void runIfBlock(size_t &counter){
             counter++;
             curr_bc = meow_byte_code[counter];
         }
+
+        counter--;
     }
 
-    counter--;
 }
 
 void runElseBlock(size_t &counter){
@@ -191,9 +192,10 @@ void runElseBlock(size_t &counter){
 
         counter++;
         curr_bc = meow_byte_code[counter];
+        
+        counter--;
     }
 
-    counter--;
 }
 
 void runLoopBlock(size_t &counter){
@@ -220,9 +222,10 @@ void runLoopBlock(size_t &counter){
         c++;
         counter = save_ctr;
         curr_bc = meow_byte_code[counter];
+        
+        counter--;
     }
 
-    counter--;
 }
 
 void runByteCode(Byte_code &curr_bc, size_t &counter){
