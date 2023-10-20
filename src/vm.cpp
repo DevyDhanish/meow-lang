@@ -7,6 +7,17 @@
 #include <assert.h>
 
 std::vector<Byte_code> meow_byte_code;
+size_t instruction_pointer = 0;
+
+void advance(){
+    if(instruction_pointer < meow_byte_code.size()){
+        instruction_pointer++;
+    }
+}
+
+void withdraw(){
+    if(instruction_pointer > 0) instruction_pointer--;
+}
 
 Byte_code makeByteCode(MEOW_BYTE_CODE _mnemonic, Token _op1, Token _op2){
     Byte_code newByteCode;
@@ -146,18 +157,11 @@ bool compareGreater(Token left_op, Token right_op)
     return false;
 }
 
-bool compareTokens(TOKEN_T token_type, MEOW_BYTE_CODE cmp_type, Token left_op, Token right_op){
+bool compareTokens(MEOW_BYTE_CODE cmp_type, Token left_op, Token right_op){
 
     typedef bool (*compareFunctionPtr)(Token, Token);
 
     compareFunctionPtr cmpfncptr;
-
-    // bool (*cmpEquals)(Token, Token) = &compareEquals;
-    // bool (*cmpNotEquals)(Token, Token) = &compareNotEquals;
-    // bool (*cmpLessEquals)(Token, Token) = &compareLessEquals;
-    // bool (*cmpGreaterEquals)(Token, Token) = &compareGreaterEquals;
-    // bool (*cmpLess)(Token, Token) = &compareLess;
-    // bool (*cmpGreater)(Token, Token) = &compareGreater;
 
     switch(cmp_type){
         case _OP_CMP_EQU:
@@ -210,136 +214,162 @@ bool compareTokens(TOKEN_T token_type, MEOW_BYTE_CODE cmp_type, Token left_op, T
     }
 }
 
-void runIfBlock(size_t &counter){
-    Byte_code curr_bc = meow_byte_code[counter];
-    int if_indent = curr_bc.operand_1._INDENTATION;
+// void runIfBlock(size_t &counter){
+//     Byte_code curr_bc = meow_byte_code[counter];
+//     int if_indent = curr_bc.operand_1._INDENTATION;
 
-    counter++;
-    curr_bc = meow_byte_code[counter];
-    int curr_idt = curr_bc.operand_1._INDENTATION;
-    while(curr_bc.operand_1._INDENTATION == curr_idt)
+//     advance();
+//     curr_bc = meow_byte_code[counter];
+//     int curr_idt = curr_bc.operand_1._INDENTATION;
+//     while(curr_bc.operand_1._INDENTATION == curr_idt)
+//     {
+
+//         runByteCode(curr_bc, counter);
+
+//         advance();
+//         curr_bc = meow_byte_code[counter];
+
+//     }
+
+//     if(curr_bc.mnemonic == _OP_ELSE && curr_bc.operand_1._INDENTATION == if_indent){
+//         counter++;
+//         curr_bc = meow_byte_code[counter];
+//         while(curr_bc.operand_1._INDENTATION != if_indent){
+//             advance();
+//             curr_bc = meow_byte_code[counter];
+//         }
+
+//         withdraw();
+//     }
+
+// }
+
+// void runElseBlock(){
+//     Byte_code curr_bc = meow_byte_code[instruction_pointer];
+
+//     while(curr_bc.mnemonic != _OP_ELSE){
+//         //std::cout << curr_bc.operand_1._TOKEN_LINE;
+//         advance();
+//         curr_bc = meow_byte_code[instruction_pointer];
+//     }     // leave us at else:
+
+//     advance();
+//     curr_bc = meow_byte_code[instruction_pointer];
+//     int curr_idt = curr_bc.operand_1._INDENTATION;
+
+//     while(curr_bc.operand_1._INDENTATION == curr_idt)
+//     {
+
+//         runByteCode(curr_bc);
+
+//         advance();
+//         curr_bc = meow_byte_code[instruction_pointer];
+        
+//     }
+
+//     withdraw();
+// }
+
+// void runLoopBlock(size_t &counter){
+//     Byte_code curr_bc = meow_byte_code[counter];
+//     int limit = std::stold(curr_bc.operand_1._TOKEN_VALUE);
+
+//     counter++;
+//     size_t save_ctr = counter;
+
+//     curr_bc = meow_byte_code[counter];
+//     int curr_idt = curr_bc.operand_1._INDENTATION;
+//     int c = 1;
+
+//     while(c < limit){
+//         while(curr_bc.operand_1._INDENTATION == curr_idt)
+//         {
+
+//             runByteCode(curr_bc, counter);
+
+//             counter++;
+//             curr_bc = meow_byte_code[counter];
+
+//         }
+//         c++;
+//         counter = save_ctr;
+//         curr_bc = meow_byte_code[counter];
+        
+//     }
+
+//     counter--;
+// }
+
+// void runByteCode(Byte_code &curr_bc){
+//     if(curr_bc.mnemonic == _OP_SET){
+//         insert(curr_bc.operand_1, curr_bc.operand_2);
+//     }
+//     else if(curr_bc.mnemonic == _OP_OUT){
+//         if(curr_bc.operand_1._TOKEN_TYPE == _TOKEN_VAR){
+//             Token var = get(curr_bc.operand_1);
+//             std::cout << format_string(var._TOKEN_VALUE) << "\n";
+//         }
+//         else{
+//             std::cout << format_string(curr_bc.operand_1._TOKEN_VALUE) << "\n";
+//         }
+//     }
+
+//     else if(curr_bc.mnemonic == _OP_LOOP){
+//         runLoopBlock();
+//     }
+
+//     else if(curr_bc.mnemonic == _OP_CMP_EQU ||
+//             curr_bc.mnemonic == _OP_CMP_LESS ||
+//             curr_bc.mnemonic == _OP_CMP_GREATER ||
+//             curr_bc.mnemonic == _OP_CMP_NOTEQU  ||
+//             curr_bc.mnemonic == _OP_CMP_LESSEQU  ||
+//             curr_bc.mnemonic == _OP_CMP_GREAEQU
+//         ){
+
+//         if(compareTokens(curr_bc.mnemonic, curr_bc.operand_1, curr_bc.operand_2))
+//         {
+//             runIfBlock();
+//         }
+//         else
+//         {
+//             runElseBlock();
+//         }
+//     }
+// }
+
+// void run(){
+//     while(instruction_pointer < meow_byte_code.size()){
+//         Byte_code curr_bc = meow_byte_code[instruction_pointer];
+        
+//         runByteCode(curr_bc);
+
+//         advance();
+//     }
+// }
+
+void preproces()
+{
+    int counter = 0;
+    Byte_code curr_inst;
+    while(counter < meow_byte_code.size())
     {
-
-        runByteCode(curr_bc, counter);
-
-        counter++;
-        curr_bc = meow_byte_code[counter];
-
-    }
-
-    if(curr_bc.mnemonic == _OP_ELSE && curr_bc.operand_1._INDENTATION == if_indent){
-        counter++;
-        curr_bc = meow_byte_code[counter];
-        while(curr_bc.operand_1._INDENTATION != if_indent){
+        curr_inst = meow_byte_code[counter];
+        if(curr_inst.mnemonic == _OP_CMP_EQU || curr_inst.mnemonic == _OP_CMP_LESS ||
+            curr_inst.mnemonic == _OP_CMP_GREAEQU || curr_inst.mnemonic == _OP_CMP_NOTEQU ||
+            curr_inst.mnemonic == _OP_CMP_LESSEQU || curr_inst.mnemonic == _OP_CMP_GREAEQU)
+        {
             counter++;
-            curr_bc = meow_byte_code[counter];
+            curr_inst = meow_byte_code[counter];
+            int indent_if = curr_inst.operand_1._INDENTATION;
+
+            while(curr_inst.operand_1._INDENTATION != indent_if){
+                counter++;
+                curr_inst = meow_byte_code[counter];
+            }
+
+            Byte_code endif = {_OP_ENDIF, makeToken(_TOKEN_ENDIF, "_ENDIF_", "", 0, 0), makeToken(_TOKEN_ENDIF, "_ENDIF_", "", 0, 0)};
+            meow_byte_code.insert(meow_byte_code.begin() + counter, endif);
         }
-
-        counter--;
-    }
-
-}
-
-void runElseBlock(size_t &counter){
-    Byte_code curr_bc = meow_byte_code[counter];
-
-    while(curr_bc.mnemonic != _OP_ELSE){
-        //std::cout << curr_bc.operand_1._TOKEN_LINE;
-        counter++;
-        curr_bc = meow_byte_code[counter];
-    }     // leave us at else:
-
-    counter++;
-    curr_bc = meow_byte_code[counter];
-    int curr_idt = curr_bc.operand_1._INDENTATION;
-
-    while(curr_bc.operand_1._INDENTATION == curr_idt)
-    {
-
-        runByteCode(curr_bc, counter);
-
-        counter++;
-        curr_bc = meow_byte_code[counter];
-        
-    }
-
-    counter--;
-}
-
-void runLoopBlock(size_t &counter){
-    Byte_code curr_bc = meow_byte_code[counter];
-    int limit = std::stold(curr_bc.operand_1._TOKEN_VALUE);
-
-    counter++;
-    size_t save_ctr = counter;
-
-    curr_bc = meow_byte_code[counter];
-    int curr_idt = curr_bc.operand_1._INDENTATION;
-    int c = 1;
-
-    while(c < limit){
-        while(curr_bc.operand_1._INDENTATION == curr_idt)
-        {
-
-            runByteCode(curr_bc, counter);
-
-            counter++;
-            curr_bc = meow_byte_code[counter];
-
-        }
-        c++;
-        counter = save_ctr;
-        curr_bc = meow_byte_code[counter];
-        
-    }
-
-    counter--;
-}
-
-void runByteCode(Byte_code &curr_bc, size_t &counter){
-    if(curr_bc.mnemonic == _OP_SET){
-        insert(curr_bc.operand_1, curr_bc.operand_2);
-    }
-    else if(curr_bc.mnemonic == _OP_OUT){
-        if(curr_bc.operand_1._TOKEN_TYPE == _TOKEN_VAR){
-            Token var = get(curr_bc.operand_1);
-            std::cout << format_string(var._TOKEN_VALUE) << "\n";
-        }
-        else{
-            std::cout << format_string(curr_bc.operand_1._TOKEN_VALUE) << "\n";
-        }
-    }
-
-    else if(curr_bc.mnemonic == _OP_LOOP){
-        runLoopBlock(counter);
-    }
-
-    else if(curr_bc.mnemonic == _OP_CMP_EQU ||
-            curr_bc.mnemonic == _OP_CMP_LESS ||
-            curr_bc.mnemonic == _OP_CMP_GREATER ||
-            curr_bc.mnemonic == _OP_CMP_NOTEQU  ||
-            curr_bc.mnemonic == _OP_CMP_LESSEQU  ||
-            curr_bc.mnemonic == _OP_CMP_GREAEQU
-        ){
-
-        if(compareTokens(curr_bc.operand_1._TOKEN_TYPE, curr_bc.mnemonic, curr_bc.operand_1, curr_bc.operand_2))
-        {
-            runIfBlock(counter);
-        }
-        else
-        {
-            runElseBlock(counter);
-        }
-    }
-}
-
-void run(){
-    size_t counter = 0;
-
-    while(counter < meow_byte_code.size()){
-        Byte_code curr_bc = meow_byte_code[counter];
-        
-        runByteCode(curr_bc, counter);
 
         counter++;
     }

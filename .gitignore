@@ -6,6 +6,8 @@
 *.meow
 
 meowlang
-build/
 
+build/
 .vscode/
+
+Notes.md
