@@ -15,4 +15,5 @@ class Interpreter{
         void generateElseByteCode(Token op, Tree op1, Tree op2);
         void generateWhileByteCode(Token op, Tree op1, Tree op2);
         void generateEndifnEndElse(Token op, Tree op1, Tree op2);
+        void generateTakeByteCode(Token op, Tree op1, Tree op2);
 };

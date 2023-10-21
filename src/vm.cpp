@@ -5,6 +5,8 @@
 #include "../include/core.hpp"
 #include "../include/map.hpp"
 #include <assert.h>
+#include <ctype.h>
+#include <string>
 
 std::vector<Byte_code> meow_byte_code;
 size_t instruction_pointer = 0;
@@ -46,7 +48,7 @@ bool compareEquals(Token left_op, Token right_op)
 {
     if(left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING)
     {
-        return(left_op._TOKEN_VALUE == right_op._TOKEN_VALUE);
+        return(format_string(left_op._TOKEN_VALUE) == format_string(right_op._TOKEN_VALUE));
     }
     else if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
         (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
@@ -66,7 +68,7 @@ bool compareNotEquals(Token left_op, Token right_op)
 {
     if(left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING)
     {
-        return(left_op._TOKEN_VALUE != right_op._TOKEN_VALUE);
+        return(format_string(left_op._TOKEN_VALUE) != format_string(right_op._TOKEN_VALUE));
     }
     else if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
         (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
@@ -247,7 +249,10 @@ void runIfBlock()
         };
         
     }
-
+    else
+    {
+        goback();
+    }
 }
 
 void runElseBlock()
@@ -278,6 +283,11 @@ void runElseBlock()
             advance();
         }
     }
+
+    else
+    {
+        goback();
+    }
 }
 
 void runByteCode(){
@@ -287,10 +297,21 @@ void runByteCode(){
     else if(current_instruction.mnemonic == _OP_OUT){
         if(current_instruction.operand_1._TOKEN_TYPE == _TOKEN_VAR){
             Token var = get(current_instruction.operand_1);
-            std::cout << format_string(var._TOKEN_VALUE) << "\n";
+
+            if(var._TOKEN_TYPE == _TOKEN_STRING)
+            {
+                std::cout << format_string(var._TOKEN_VALUE) << "\n";
+            }
+            else
+            {
+                std::cout << var._TOKEN_VALUE << "\n";
+            }
+        }
+        else if(current_instruction.operand_1._TOKEN_TYPE == _TOKEN_STRING){
+            std::cout << format_string(current_instruction.operand_1._TOKEN_VALUE) << "\n";
         }
         else{
-            std::cout << format_string(current_instruction.operand_1._TOKEN_VALUE) << "\n";
+            std::cout << current_instruction.operand_1._TOKEN_VALUE << "\n";
         }
     }
 

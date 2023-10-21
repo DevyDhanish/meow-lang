@@ -34,6 +34,7 @@ class Parser{
         Tree parseIf();
         Tree parseElse();
         Tree parseWhile();
+        Tree parseTake();
         std::vector<Token> progToken;           // stores the tokenized vector for the parser to use
         size_t counter = 0;                     // counter to keep track of where it is in the `progToken` token vector
 };

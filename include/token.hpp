@@ -53,6 +53,7 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_SQRBRACLOSE,     // 43
     _TOKEN_ENDIF,           // 44
     _TOKEN_ENDELSE,         // 45
+    _TOKEN_TAKE,            // 46
     
 }TOKEN_T;
 

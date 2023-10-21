@@ -16,6 +16,19 @@ void Parser::advance(){
     }
 }
 
+Tree Parser::parseTake(){
+    Tree take(this->current_token);
+
+    advance();
+
+    if(this->current_token._TOKEN_TYPE == _TOKEN_STRING)
+    {
+        take.add_child(parseStr());
+    }
+
+    return take;
+}
+
 Tree Parser::parseEqu(){
     Tree equ(this->current_token);
 
@@ -31,6 +44,10 @@ Tree Parser::parseEqu(){
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
         equ.add_child(parseAddSub());
+    }
+
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_TAKE){
+        equ.add_child(parseTake());
     }
 
     return equ;
@@ -58,7 +75,7 @@ Tree Parser::parseAddSub(){
 Tree Parser::parseMulDiv(){
     Tree left = parseInt();
 
-    while(this->current_token._TOKEN_TYPE == _TOKEN_MUL || this->current_token._TOKEN_TYPE == _TOKEN_DIV){
+    while(this->current_token._TOKEN_TYPE == _TOKEN_MUL || this->current_token._TOKEN_TYPE == _TOKEN_DIV || this->current_token._TOKEN_TYPE == _TOKEN_MOD){
         Token op_token = this->current_token;
         advance();
         Tree right = parseInt();
@@ -93,7 +110,6 @@ Tree Parser::parseVar(){
         var.add_child(parseEqu());
         //return var;
     }
-
 
     return var;
 }
@@ -298,18 +314,11 @@ Tree Parser::parseIf(){
             _if.add_child(equ_to);
         }
 
-        else if(tokens_of_if[0]._TOKEN_TYPE == _TOKEN_INT){
+        else if(tokens_of_if[0]._TOKEN_TYPE == _TOKEN_INT || tokens_of_if[0]._TOKEN_TYPE == _TOKEN_VAR){
             this->progToken = tokens_of_if;
             this->counter = 0;
             advance();
             _if.add_child(parseAddSub());
-        }
-
-        else if(tokens_of_if[0]._TOKEN_TYPE == _TOKEN_VAR){
-            this->progToken = tokens_of_if;
-            this->counter = 0;
-            advance();
-            _if.add_child(parseVar());
         }
 
         else if(tokens_of_if[0]._TOKEN_TYPE == _TOKEN_STRING){

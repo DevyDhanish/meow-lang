@@ -18,6 +18,7 @@ typedef enum _MEOW_BYTE_CODE{
     _OP_CMP_GREAEQU,        // 9    x >= x
     _OP_ENDIF,              // 10
     _OP_ENDELSE,            // 11
+    _OP_IN,                 // 12
     
 } MEOW_BYTE_CODE;
 
