@@ -193,7 +193,8 @@ void Interpreter::convertToByteCode(Tree root) {
     }
 
     else if(root.data._TOKEN_TYPE == _TOKEN_IF || root.data._TOKEN_TYPE == _TOKEN_ELIF){
-        generateIfByteCode(root.get_child(0).data, root.get_child(1), root.get_child(2));
+        Tree cmp_op = root.get_child(0);
+        generateIfByteCode(cmp_op.data, cmp_op.get_child(1), cmp_op.get_child(0));
     }
 
     else if(root.data._TOKEN_TYPE == _TOKEN_ELSE){
