@@ -364,10 +364,17 @@ Tree Parser::parse(std::vector<Token> prog_token){
             main.add_child(parseElse());
         }
 
+        else if(this->current_token._TOKEN_TYPE == _TOKEN_ENDIF ||
+            this->current_token._TOKEN_TYPE == _TOKEN_ENDELSE)
+            {
+                main.add_child(Tree(this->current_token));
+            }
+
         else if(this->current_token._TOKEN_TYPE == _TOKEN_WHILE){
             main.add_child(parseWhile());
         }
-        this->counter++;
+        
+        this->counter++;        // don't change this it will break things, i forgot what this does.
     }
 
     this->progToken.clear();

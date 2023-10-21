@@ -303,14 +303,12 @@ int main(int argc, char **argv){
             std::cout << std::endl;
             std::cout << "===============[ ACTUAL EXECUTION ]============\n";
             
+            showByteCode();
         #endif
     }
 
-    preproces();
-    showByteCode();
 
-
-    //run();
+    run();
 
     return 0;
 }

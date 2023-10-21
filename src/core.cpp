@@ -197,6 +197,8 @@ std::unordered_map<std::string, TOKEN_T> knowTokens = {
         {"then", _TOKEN_THEN},
         {"elif", _TOKEN_ELIF},
         {"else", _TOKEN_ELSE},
+        {"endif", _TOKEN_ENDIF},
+        {"endelse", _TOKEN_ENDELSE},
         {":", _TOKEN_COLON},
         {";", _TOKEN_SEMI_COL},
 };

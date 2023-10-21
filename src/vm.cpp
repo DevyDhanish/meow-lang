@@ -8,15 +8,20 @@
 
 std::vector<Byte_code> meow_byte_code;
 size_t instruction_pointer = 0;
+Byte_code current_instruction;
 
 void advance(){
     if(instruction_pointer < meow_byte_code.size()){
         instruction_pointer++;
+        current_instruction = meow_byte_code[instruction_pointer];
     }
 }
 
-void withdraw(){
-    if(instruction_pointer > 0) instruction_pointer--;
+void goback(){
+    if(instruction_pointer > 0){
+        instruction_pointer--;
+        current_instruction = meow_byte_code[instruction_pointer];
+    }
 }
 
 Byte_code makeByteCode(MEOW_BYTE_CODE _mnemonic, Token _op1, Token _op2){
@@ -214,163 +219,107 @@ bool compareTokens(MEOW_BYTE_CODE cmp_type, Token left_op, Token right_op){
     }
 }
 
-// void runIfBlock(size_t &counter){
-//     Byte_code curr_bc = meow_byte_code[counter];
-//     int if_indent = curr_bc.operand_1._INDENTATION;
-
-//     advance();
-//     curr_bc = meow_byte_code[counter];
-//     int curr_idt = curr_bc.operand_1._INDENTATION;
-//     while(curr_bc.operand_1._INDENTATION == curr_idt)
-//     {
-
-//         runByteCode(curr_bc, counter);
-
-//         advance();
-//         curr_bc = meow_byte_code[counter];
-
-//     }
-
-//     if(curr_bc.mnemonic == _OP_ELSE && curr_bc.operand_1._INDENTATION == if_indent){
-//         counter++;
-//         curr_bc = meow_byte_code[counter];
-//         while(curr_bc.operand_1._INDENTATION != if_indent){
-//             advance();
-//             curr_bc = meow_byte_code[counter];
-//         }
-
-//         withdraw();
-//     }
-
-// }
-
-// void runElseBlock(){
-//     Byte_code curr_bc = meow_byte_code[instruction_pointer];
-
-//     while(curr_bc.mnemonic != _OP_ELSE){
-//         //std::cout << curr_bc.operand_1._TOKEN_LINE;
-//         advance();
-//         curr_bc = meow_byte_code[instruction_pointer];
-//     }     // leave us at else:
-
-//     advance();
-//     curr_bc = meow_byte_code[instruction_pointer];
-//     int curr_idt = curr_bc.operand_1._INDENTATION;
-
-//     while(curr_bc.operand_1._INDENTATION == curr_idt)
-//     {
-
-//         runByteCode(curr_bc);
-
-//         advance();
-//         curr_bc = meow_byte_code[instruction_pointer];
-        
-//     }
-
-//     withdraw();
-// }
-
-// void runLoopBlock(size_t &counter){
-//     Byte_code curr_bc = meow_byte_code[counter];
-//     int limit = std::stold(curr_bc.operand_1._TOKEN_VALUE);
-
-//     counter++;
-//     size_t save_ctr = counter;
-
-//     curr_bc = meow_byte_code[counter];
-//     int curr_idt = curr_bc.operand_1._INDENTATION;
-//     int c = 1;
-
-//     while(c < limit){
-//         while(curr_bc.operand_1._INDENTATION == curr_idt)
-//         {
-
-//             runByteCode(curr_bc, counter);
-
-//             counter++;
-//             curr_bc = meow_byte_code[counter];
-
-//         }
-//         c++;
-//         counter = save_ctr;
-//         curr_bc = meow_byte_code[counter];
-        
-//     }
-
-//     counter--;
-// }
-
-// void runByteCode(Byte_code &curr_bc){
-//     if(curr_bc.mnemonic == _OP_SET){
-//         insert(curr_bc.operand_1, curr_bc.operand_2);
-//     }
-//     else if(curr_bc.mnemonic == _OP_OUT){
-//         if(curr_bc.operand_1._TOKEN_TYPE == _TOKEN_VAR){
-//             Token var = get(curr_bc.operand_1);
-//             std::cout << format_string(var._TOKEN_VALUE) << "\n";
-//         }
-//         else{
-//             std::cout << format_string(curr_bc.operand_1._TOKEN_VALUE) << "\n";
-//         }
-//     }
-
-//     else if(curr_bc.mnemonic == _OP_LOOP){
-//         runLoopBlock();
-//     }
-
-//     else if(curr_bc.mnemonic == _OP_CMP_EQU ||
-//             curr_bc.mnemonic == _OP_CMP_LESS ||
-//             curr_bc.mnemonic == _OP_CMP_GREATER ||
-//             curr_bc.mnemonic == _OP_CMP_NOTEQU  ||
-//             curr_bc.mnemonic == _OP_CMP_LESSEQU  ||
-//             curr_bc.mnemonic == _OP_CMP_GREAEQU
-//         ){
-
-//         if(compareTokens(curr_bc.mnemonic, curr_bc.operand_1, curr_bc.operand_2))
-//         {
-//             runIfBlock();
-//         }
-//         else
-//         {
-//             runElseBlock();
-//         }
-//     }
-// }
-
-// void run(){
-//     while(instruction_pointer < meow_byte_code.size()){
-//         Byte_code curr_bc = meow_byte_code[instruction_pointer];
-        
-//         runByteCode(curr_bc);
-
-//         advance();
-//     }
-// }
-
-void preproces()
+void runIfBlock()
 {
-    int counter = 0;
-    Byte_code curr_inst;
-    while(counter < meow_byte_code.size())
+    int curr_if_indent = current_instruction.operand_1._INDENTATION;
+    advance();
+    while (1)
     {
-        curr_inst = meow_byte_code[counter];
-        if(curr_inst.mnemonic == _OP_CMP_EQU || curr_inst.mnemonic == _OP_CMP_LESS ||
-            curr_inst.mnemonic == _OP_CMP_GREAEQU || curr_inst.mnemonic == _OP_CMP_NOTEQU ||
-            curr_inst.mnemonic == _OP_CMP_LESSEQU || curr_inst.mnemonic == _OP_CMP_GREAEQU)
+        if(current_instruction.mnemonic == _OP_ENDIF && 
+        current_instruction.operand_1._INDENTATION == curr_if_indent) break;
+
+        runByteCode();
+        advance();
+    }
+
+    advance();
+
+    if(current_instruction.mnemonic == _OP_ELSE)
+    {
+        //int curr_else_indent = current_instruction.operand_1._INDENTATION;
+        advance();
+        while(1)
         {
-            counter++;
-            curr_inst = meow_byte_code[counter];
-            int indent_if = curr_inst.operand_1._INDENTATION;
+            if(current_instruction.mnemonic == _OP_ENDELSE &&
+            current_instruction.operand_1._INDENTATION == curr_if_indent) break;
 
-            while(curr_inst.operand_1._INDENTATION != indent_if){
-                counter++;
-                curr_inst = meow_byte_code[counter];
-            }
+            advance();
+        };
+        
+    }
 
-            Byte_code endif = {_OP_ENDIF, makeToken(_TOKEN_ENDIF, "_ENDIF_", "", 0, 0), makeToken(_TOKEN_ENDIF, "_ENDIF_", "", 0, 0)};
-            meow_byte_code.insert(meow_byte_code.begin() + counter, endif);
+}
+
+void runElseBlock()
+{
+    int curr_if_indent = current_instruction.operand_1._INDENTATION;
+    advance();
+    while(1)
+    {
+        if(current_instruction.mnemonic == _OP_ENDIF && 
+        current_instruction.operand_1._INDENTATION == curr_if_indent) break;
+
+        advance();
+    }
+
+    advance();
+
+    if(current_instruction.mnemonic == _OP_ELSE)
+    {
+        int curr_else_indent = current_instruction.operand_1._INDENTATION;
+        advance();
+
+        while(1)
+        {
+            if(current_instruction.mnemonic == _OP_ENDELSE &&
+                current_instruction.operand_1._INDENTATION == curr_else_indent) break;
+
+            runByteCode();
+            advance();
         }
+    }
+}
 
-        counter++;
+void runByteCode(){
+    if(current_instruction.mnemonic == _OP_SET){
+        insert(current_instruction.operand_1, current_instruction.operand_2);
+    }
+    else if(current_instruction.mnemonic == _OP_OUT){
+        if(current_instruction.operand_1._TOKEN_TYPE == _TOKEN_VAR){
+            Token var = get(current_instruction.operand_1);
+            std::cout << format_string(var._TOKEN_VALUE) << "\n";
+        }
+        else{
+            std::cout << format_string(current_instruction.operand_1._TOKEN_VALUE) << "\n";
+        }
+    }
+
+    else if(current_instruction.mnemonic == _OP_CMP_EQU ||
+            current_instruction.mnemonic == _OP_CMP_LESS ||
+            current_instruction.mnemonic == _OP_CMP_GREATER ||
+            current_instruction.mnemonic == _OP_CMP_NOTEQU  ||
+            current_instruction.mnemonic == _OP_CMP_LESSEQU  ||
+            current_instruction.mnemonic == _OP_CMP_GREAEQU
+        ){
+
+        if(compareTokens(current_instruction.mnemonic, current_instruction.operand_1, current_instruction.operand_2))
+        {
+            runIfBlock();
+        }
+        else
+        {
+            runElseBlock();
+        }
+    }
+}
+
+void run()
+{
+    current_instruction = meow_byte_code[instruction_pointer];
+    while(instruction_pointer < meow_byte_code.size())
+    {
+        runByteCode();
+
+        advance();
     }
 }

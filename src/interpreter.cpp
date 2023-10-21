@@ -16,6 +16,8 @@ std::unordered_map<TOKEN_T, MEOW_BYTE_CODE> token_byte_code_relation{
     {_TOKEN_GREATEREQU, _OP_CMP_GREAEQU},
     {_TOKEN_GREATERTHAN, _OP_CMP_GREATER},
     {_TOKEN_NOTEQUALS, _OP_CMP_NOTEQU},
+    {_TOKEN_ENDIF, _OP_ENDIF},
+    {_TOKEN_ENDELSE, _OP_ENDELSE},
     {_TOKEN_ELSE, _OP_ELSE},
     {_TOKEN_WHILE, _OP_LOOP}
 };
@@ -137,6 +139,11 @@ void Interpreter::generateWhileByteCode(Token op, Tree op1, Tree op2){
 
 }
 
+void Interpreter::generateEndifnEndElse(Token op, Tree op1, Tree op2)
+{
+    createAndSubmitByteCode(op, op1.data, op2.data);
+}
+
 void Interpreter::convertToByteCode(Tree root) {
 
     if(root.data._TOKEN_TYPE == _TOKEN_VAR){
@@ -160,8 +167,14 @@ void Interpreter::convertToByteCode(Tree root) {
     else if(root.data._TOKEN_TYPE == _TOKEN_ELSE){
         // Tree op1 (makeToken(_TOKEN_EMPTY,"","",0, 0));
         // Tree op2 (makeToken(_TOKEN_EMPTY,"","",0, 0));
-        generateElseByteCode(root.data, root.data, root.data);
+        generateElseByteCode(root.data, root, root);
     }
+
+    else if(root.data._TOKEN_TYPE == _TOKEN_ENDIF ||
+        root.data._TOKEN_TYPE == _TOKEN_ENDELSE)
+        {
+            generateEndifnEndElse(root.data, root, root);
+        }
 
     else if(root.data._TOKEN_TYPE == _TOKEN_WHILE){
         Tree op2 (makeToken(_TOKEN_EMPTY,"","",0, 0));

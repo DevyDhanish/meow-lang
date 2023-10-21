@@ -31,13 +31,13 @@ std::vector<std::string> disassembleLine(meow_line line){
     std::string curr_line = line.line;
     size_t curr_pos = 0;
 
+    for(char i : curr_line){
+        if(i != ' ') break;
+        else LINE_IDENTATION += 1;
+    }
+
     while(curr_pos < curr_line.size()){                             // loop until it reaches the end of the line
         char lookAhead = curr_line[curr_pos];
-
-        for(char i : curr_line){
-            if(i != ' ') break;
-            if(i == ' ') LINE_IDENTATION += 1;
-        }
 
         if(lookAhead == ' '){                                       // ignore space
             curr_pos += 1;
