@@ -66,10 +66,7 @@ int main(int argc, char **argv){
             
         #endif
     }
-
-    #ifndef DEBUG
-        run();
-    #endif
-
+    run();
+    
     return 0;
 }

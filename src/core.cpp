@@ -197,11 +197,12 @@ std::unordered_map<std::string, TOKEN_T> knowTokens = {
         {"then", _TOKEN_THEN},
         {"elif", _TOKEN_ELIF},
         {"else", _TOKEN_ELSE},
-        {"endif", _TOKEN_ENDIF},
-        {"endelse", _TOKEN_ENDELSE},
+        {"fi", _TOKEN_ENDIF},
+        {"el", _TOKEN_ENDELSE},
         {":", _TOKEN_COLON},
         {";", _TOKEN_SEMI_COL},
         {"take", _TOKEN_TAKE},
+        {"end", _TOKEN_ENDWHILE},
 };
 
 std::unordered_map<char, std::string> operator_pair = {
