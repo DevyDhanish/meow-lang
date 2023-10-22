@@ -96,19 +96,12 @@ Tree Parser::parseVar(){
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL || this->current_token._TOKEN_TYPE == _TOKEN_COLON){
-        //var.add_child(this->current_token);
+        var.add_child(this->current_token);
         return var;
     }
 
-    // else if (this->current_token._TOKEN_TYPE == _TOKEN_PLUS || this->current_token._TOKEN_TYPE == _TOKEN_MINUS ||
-    //          this->current_token._TOKEN_TYPE == _TOKEN_MUL || this->current_token._TOKEN_TYPE == _TOKEN_DIV) {
-    //     var.add_child(parseAddSub()); // Continue parsing the expression.
-    //     return var;
-    // }
-
     else if(this->current_token._TOKEN_TYPE == _TOKEN_EQU){
         var.add_child(parseEqu());
-        //return var;
     }
 
     return var;
@@ -120,6 +113,7 @@ Tree Parser::parseStr(){
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL || this->current_token._TOKEN_TYPE == _TOKEN_COLON){
+        str.add_child(this->current_token);
         return str;
     }
 
@@ -148,6 +142,7 @@ Tree Parser::parseShowStr(){
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
+        str.add_child(this->current_token);
         return str;
     }
     else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
@@ -159,10 +154,6 @@ Tree Parser::parseShowStr(){
     else if(this->current_token._TOKEN_TYPE == _TOKEN_STRING){
         str.add_child(parseShowStr());
     }
-    else{
-        std::cout << "Syntax error : in line " << this->current_token._TOKEN_LINE_NUMBER << " - " << this->current_token._TOKEN_LINE << "\n";
-        exit(0);
-    }
 
     return str;
 }
@@ -173,6 +164,7 @@ Tree Parser::parseInt(){
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL || this->current_token._TOKEN_TYPE == _TOKEN_COLON){
+        _int.add_child(this->current_token);
         return _int;
     }
 
@@ -182,9 +174,6 @@ Tree Parser::parseInt(){
 Tree Parser::parseBee(){
     Tree bee(makeToken(_TOKEN_BEERUS, BEERUS, "beerus", 0, 0));
 
-    std::string current_line = this->current_token._TOKEN_LINE;
-    size_t current_line_number = this->current_token._TOKEN_LINE_NUMBER;
-
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
@@ -192,10 +181,7 @@ Tree Parser::parseBee(){
         return bee;
     }
 
-    else{
-        std::cout << "Syntax error: in line `" << current_line << "` : line number: " << current_line_number << "\n";
-        exit(0);
-    }
+    return bee;
 }
 
 Tree Parser::parseMeo(){
@@ -332,6 +318,13 @@ Tree Parser::parseIf(){
 
 Tree Parser::parseElse(){
     Tree _else(this->current_token);
+    advance();
+
+    if(this->current_token._TOKEN_TYPE == _TOKEN_COLON)
+    {
+        _else.add_child(Tree(this->current_token));
+    }
+
     return _else;
 }
 

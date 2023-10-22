@@ -4,6 +4,7 @@
 #include "../include/map.hpp"
 #include "../include/core.hpp"
 #include "../include/map.hpp"
+#include "../include/error.hpp"
 #include <assert.h>
 #include <ctype.h>
 #include <string>
@@ -58,7 +59,7 @@ void showByteCode(){
     }
 }
 
-long double solveExpression(Tree root){
+long long solveExpression(Tree root){
     Tree child_tok = root;
     
     if(child_tok.data._TOKEN_TYPE == _TOKEN_PLUS){
@@ -81,19 +82,20 @@ long double solveExpression(Tree root){
     {
         Token var = get(root.data);
         if(var._TOKEN_TYPE != _TOKEN_EMPTY){
-            if(var._TOKEN_TYPE == _TOKEN_INT) return std::stold(var._TOKEN_VALUE);
+            if(var._TOKEN_TYPE == _TOKEN_INT) return std::stoll(var._TOKEN_VALUE);
             else
             {
-                std::cout << root.data._TOKEN_VALUE << " " << "Contains string not int" << "\n";
-                exit(0);
+                displayError(_E_TYPE_ERROR, root.data._TOKEN_LINE, root.data._TOKEN_LINE_NUMBER);
             }
         }
         else return 0;
     }
     else
     {
-        return std::stold(child_tok.data._TOKEN_VALUE);
+        return std::stoll(child_tok.data._TOKEN_VALUE);
     }
+
+    return 0;
 }
 
 Token makeTokenFromValue(TOKEN_T Token_type, long double val)
@@ -117,7 +119,7 @@ bool isOperator(Token op)
     return false;
 }
 
-bool compareEquals(Token left_op, Token right_op)
+bool compareEquals(Token left_op, Token right_op, Token ori_left, Token ori_right)
 {
     if(left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING)
     {
@@ -126,18 +128,18 @@ bool compareEquals(Token left_op, Token right_op)
     else if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
         (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
     {
-        std::cout << "Cannot `==` between a string and a int\n";
+        displayError(_E_CMP_ERROR, ori_left._TOKEN_LINE, ori_left._TOKEN_LINE_NUMBER);
         return 0;
     }
     else
     {
-        return(std::stold(left_op._TOKEN_VALUE) == std::stold(right_op._TOKEN_VALUE));
+        return(std::stoll(left_op._TOKEN_VALUE) == std::stoll(right_op._TOKEN_VALUE));
     }
 
     return false;
 }
 
-bool compareNotEquals(Token left_op, Token right_op)
+bool compareNotEquals(Token left_op, Token right_op, Token ori_left, Token ori_right)
 {
     if(left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING)
     {
@@ -146,76 +148,80 @@ bool compareNotEquals(Token left_op, Token right_op)
     else if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
         (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
     {
-        std::cout << "Cannot `!=` between a string and a int\n";
+        displayError(_E_CMP_ERROR, ori_left._TOKEN_LINE, ori_left._TOKEN_LINE_NUMBER);
         return 0;
     }
     else
     {
-        return(std::stold(left_op._TOKEN_VALUE) != std::stold(right_op._TOKEN_VALUE));
+        return(std::stoll(left_op._TOKEN_VALUE) != std::stoll(right_op._TOKEN_VALUE));
     }
 
     return false;
 }
 
-bool compareLessEquals(Token left_op, Token right_op)
+bool compareLessEquals(Token left_op, Token right_op, Token ori_left, Token ori_right)
 {
     if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
-        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
+        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING) ||
+        (left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING))
     {
-        std::cout << "Cannot `<=` between a string and a int\n";
+        displayError(_E_CMP_ERROR, ori_left._TOKEN_LINE, ori_left._TOKEN_LINE_NUMBER);
         return 0;
     }
     else
     {
-        return(std::stold(left_op._TOKEN_VALUE) <= std::stold(right_op._TOKEN_VALUE));
+        return(std::stoll(left_op._TOKEN_VALUE) <= std::stoll(right_op._TOKEN_VALUE));
     }
 
     return false;
 }
 
-bool compareGreaterEquals(Token left_op, Token right_op)
+bool compareGreaterEquals(Token left_op, Token right_op, Token ori_left, Token ori_right)
 {
     if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
-        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
+        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING) ||
+        (left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING))
     {
-        std::cout << "Cannot `>=` between a string and a int\n";
+        displayError(_E_CMP_ERROR, ori_left._TOKEN_LINE, ori_left._TOKEN_LINE_NUMBER);
         return 0;
     }
     else
     {
-        return(std::stold(left_op._TOKEN_VALUE) >= std::stold(right_op._TOKEN_VALUE));
+        return(std::stoll(left_op._TOKEN_VALUE) >= std::stoll(right_op._TOKEN_VALUE));
     }
 
     return false;
 }
 
-bool compareLess(Token left_op, Token right_op)
+bool compareLess(Token left_op, Token right_op, Token ori_left, Token ori_right)
 {
     if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
-        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
+        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING) ||
+        (left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING))
     {
-        std::cout << "Cannot `<` between a string and a int\n";
+        displayError(_E_CMP_ERROR, ori_left._TOKEN_LINE, ori_left._TOKEN_LINE_NUMBER);
         return 0;
     }
     else
     {
-        return(std::stold(left_op._TOKEN_VALUE) < std::stold(right_op._TOKEN_VALUE));
+        return(std::stoll(left_op._TOKEN_VALUE) < std::stoll(right_op._TOKEN_VALUE));
     }
 
     return false;
 }
 
-bool compareGreater(Token left_op, Token right_op)
+bool compareGreater(Token left_op, Token right_op, Token ori_left, Token ori_right)
 {
     if((left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_INT) ||
-        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING))
+        (left_op._TOKEN_TYPE == _TOKEN_INT && right_op._TOKEN_TYPE == _TOKEN_STRING) ||
+        (left_op._TOKEN_TYPE == _TOKEN_STRING && right_op._TOKEN_TYPE == _TOKEN_STRING))
     {
-        std::cout << "Cannot `>` between a string and a int\n";
+        displayError(_E_CMP_ERROR, ori_left._TOKEN_LINE, ori_left._TOKEN_LINE_NUMBER);
         return 0;
     }
     else
     {
-        return(std::stold(left_op._TOKEN_VALUE) > std::stold(right_op._TOKEN_VALUE));
+        return(std::stoll(left_op._TOKEN_VALUE) > std::stoll(right_op._TOKEN_VALUE));
     }
 
     return false;
@@ -223,7 +229,7 @@ bool compareGreater(Token left_op, Token right_op)
 
 bool compareTokens(MEOW_BYTE_CODE cmp_type, Tree left_op, Tree right_op){
 
-    typedef bool (*compareFunctionPtr)(Token, Token);
+    typedef bool (*compareFunctionPtr)(Token, Token, Token, Token);
 
     compareFunctionPtr cmpfncptr;
 
@@ -255,7 +261,7 @@ bool compareTokens(MEOW_BYTE_CODE cmp_type, Tree left_op, Tree right_op){
         Token l_var = get(left_op.data);
         Token r_var = get(right_op.data);
 
-        return (*cmpfncptr)(l_var, r_var);
+        return (*cmpfncptr)(l_var, r_var, left_op.data, right_op.data);
     }
 
     // string
@@ -263,14 +269,34 @@ bool compareTokens(MEOW_BYTE_CODE cmp_type, Tree left_op, Tree right_op){
     {
         Token l_var = get(left_op.data);
 
-        return (*cmpfncptr)(l_var, right_op.data);
+        return (*cmpfncptr)(l_var, right_op.data, left_op.data, right_op.data);
     }
 
     else if(left_op.data._TOKEN_TYPE == _TOKEN_STRING && right_op.data._TOKEN_TYPE == _TOKEN_VAR)
     {
         Token r_var = get(right_op.data);
 
-        return (*cmpfncptr)(left_op.data, r_var);
+        return (*cmpfncptr)(left_op.data, r_var, left_op.data, right_op.data);
+    }
+
+    else if(left_op.data._TOKEN_TYPE == _TOKEN_INT && right_op.data._TOKEN_TYPE == _TOKEN_STRING)
+    {
+        displayError(_E_CMP_ERROR, left_op.data._TOKEN_LINE, left_op.data._TOKEN_LINE_NUMBER);
+    }
+
+    else if(left_op.data._TOKEN_TYPE == _TOKEN_STRING && right_op.data._TOKEN_TYPE == _TOKEN_INT)
+    {
+        displayError(_E_CMP_ERROR, left_op.data._TOKEN_LINE, left_op.data._TOKEN_LINE_NUMBER);
+    }
+
+    else if(isOperator(left_op.data) && right_op.data._TOKEN_TYPE == _TOKEN_STRING)
+    {
+        displayError(_E_CMP_ERROR, left_op.data._TOKEN_LINE, left_op.data._TOKEN_LINE_NUMBER);
+    }
+
+    else if(left_op.data._TOKEN_TYPE == _TOKEN_STRING && isOperator(right_op.data))
+    {
+        displayError(_E_CMP_ERROR, left_op.data._TOKEN_LINE, left_op.data._TOKEN_LINE_NUMBER);
     }
 
     // operator
@@ -281,7 +307,7 @@ bool compareTokens(MEOW_BYTE_CODE cmp_type, Tree left_op, Tree right_op){
     {
         Token left_val = makeTokenFromValue(_TOKEN_INT, solveExpression(left_op));
         Token right_val = makeTokenFromValue(_TOKEN_INT, solveExpression(right_op));
-        return (*cmpfncptr)(left_val, right_val);
+        return (*cmpfncptr)(left_val, right_val, left_op.data, right_op.data);
     }
 
     // variables
@@ -289,19 +315,19 @@ bool compareTokens(MEOW_BYTE_CODE cmp_type, Tree left_op, Tree right_op){
     {
         Token l_var = get(left_op.data);
         Token right_val = makeTokenFromValue(_TOKEN_INT, solveExpression(right_op));
-        return (*cmpfncptr)(l_var, right_val);
+        return (*cmpfncptr)(l_var, right_val, left_op.data, right_op.data);
     }
 
     else if((left_op.data._TOKEN_TYPE == _TOKEN_INT || isOperator(left_op.data)) && right_op.data._TOKEN_TYPE == _TOKEN_VAR)
     {
         Token r_var = get(right_op.data);
         Token left_val = makeTokenFromValue(_TOKEN_INT, solveExpression(left_op));
-        return (*cmpfncptr)(left_val, r_var);
+        return (*cmpfncptr)(left_val, r_var, left_op.data, right_op.data);
     }
 
     else
     {
-        return (*cmpfncptr)(left_op.data, right_op.data);
+        return (*cmpfncptr)(left_op.data, right_op.data, left_op.data, right_op.data);
     }
 }
 
@@ -431,9 +457,6 @@ void output(Tree root)
     }
     else if(root.data._TOKEN_TYPE == _TOKEN_STRING){
         std::cout << format_string(root.data._TOKEN_VALUE);
-    }
-    else{
-        std::cout << root.data._TOKEN_VALUE;
     }
 
     if(root.childs.size() > 0) output(root.get_child(0));

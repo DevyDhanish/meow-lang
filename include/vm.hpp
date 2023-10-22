@@ -22,7 +22,7 @@ typedef enum _MEOW_BYTE_CODE{
     _OP_IN,                 // 12
     _OP_EXIT,               // 13
     _OP_ENDWHILE,           // 14
-    
+
 } MEOW_BYTE_CODE;
 
 typedef struct _STRUCT_MEOW_BYTE_CODE{
@@ -46,4 +46,5 @@ void runElseBlock();
 void runLoopBlock();
 void advance();
 void goback();
+bool isOperator(Token op);
 //void preproces();

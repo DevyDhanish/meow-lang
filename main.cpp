@@ -10,6 +10,7 @@
 #include "include/parser.hpp"
 #include "include/interpreter.hpp"
 #include "include/vm.hpp"
+#include "include/error.hpp"
 
 using std::vector;
 using std::cout;
@@ -36,7 +37,7 @@ int main(int argc, char **argv){
     for(meow_line line : program_lines){
 
         tokenized_vector = lex.tokenize(line);
-
+        checkSyntax(tokenized_vector);
         AST = parser.parse(tokenized_vector);
         interpreter.convertToByteCode(AST.get_child(0));
 
@@ -47,13 +48,8 @@ int main(int argc, char **argv){
             std::cout << "=====================[ TOKENS ]======================\n";
 
             for(size_t i = 0; i < tokenized_vector.size(); i ++){
-                std:: cout << "Token Type = " << tokenized_vector[i]._TOKEN_TYPE << "\t\t" << "Token value = " << tokenized_vector[i]._TOKEN_VALUE << "\t\t" << "Line Number = " << tokenized_vector[i]._TOKEN_LINE_NUMBER << " INDENTATION = " << tokenized_vector[i]._INDENTATION << "\n";
+                std:: cout << "Token Type = " << tokenized_vector[i]._TOKEN_TYPE << "\t\t" << "Token value = " << tokenized_vector[i]._TOKEN_VALUE << "\t\t" << tokenized_vector[i]._TOKEN_LINE << "\t\t" << "Line Number = " << tokenized_vector[i]._TOKEN_LINE_NUMBER << " INDENTATION = " << tokenized_vector[i]._INDENTATION << "\n";
             }
-
-            // std::cout << "===================[ VAR MAP ] =====================\n";
-            // for(auto const &pair: var_map){
-            //     std::cout << pair.first << " = " << pair.second << "\n";
-            // }
     
             std::cout << "================[ PARSE TREE ]===================\n";
             AST.print_tree(0);
