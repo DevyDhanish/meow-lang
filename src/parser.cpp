@@ -126,6 +126,22 @@ Tree Parser::parseStr(){
     return str;
 }
 
+Tree Parser::parseShowVar()
+{
+    Tree var(this->current_token);
+    advance();
+    if(this->current_token._TOKEN_TYPE == _TOKEN_STRING)
+    {
+        var.add_child(parseShowStr());
+    }
+
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_INT){
+        var.add_child(parseAddSub());
+    }
+
+    return var;
+}
+
 Tree Parser::parseShowStr(){
     Tree str(this->current_token);
 
@@ -135,7 +151,7 @@ Tree Parser::parseShowStr(){
         return str;
     }
     else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
-        str.add_child(parseVar());
+        str.add_child(parseShowVar());
     }
     else if(this->current_token._TOKEN_TYPE == _TOKEN_INT){
         str.add_child(parseAddSub());
@@ -323,10 +339,53 @@ Tree Parser::parseWhile(){
     Tree _while(this->current_token);
     advance();
 
-    if(this->current_token._TOKEN_TYPE == _TOKEN_INT){
-        _while.add_child(parseAddSub());
+        std::vector<Token> left_expr;
+
+    while(1)
+    {
+        if(this->current_token._TOKEN_TYPE == _TOKEN_EQUALSTO ||
+        this->current_token._TOKEN_TYPE == _TOKEN_NOTEQUALS ||
+        this->current_token._TOKEN_TYPE == _TOKEN_LESSTHAN ||
+        this->current_token._TOKEN_TYPE == _TOKEN_GREATERTHAN ||
+        this->current_token._TOKEN_TYPE == _TOKEN_LESSEQU ||
+        this->current_token._TOKEN_TYPE == _TOKEN_GREATEREQU) break;
+
+        left_expr.push_back(this->current_token);
+        advance();
     }
 
+    Tree cmp_op(this->current_token);
+
+    advance();
+
+    // parse the right expr
+    if(this->current_token._TOKEN_TYPE == _TOKEN_STRING)
+    {
+        cmp_op.add_child(parseStr());
+    }
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_INT ||
+        this->current_token._TOKEN_TYPE == _TOKEN_VAR)
+    {
+        cmp_op.add_child(parseAddSub());
+    }
+
+    this->counter = 0;
+    this->progToken = left_expr;
+    advance();
+
+    // parse the left expr
+    if(this->current_token._TOKEN_TYPE == _TOKEN_STRING)
+    {
+        cmp_op.add_child(parseStr());
+    }
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_INT ||
+        this->current_token._TOKEN_TYPE == _TOKEN_VAR)
+    {
+        cmp_op.add_child(parseAddSub());
+    }
+
+    _while.add_child(cmp_op);
+    
     return _while;
 }
 
@@ -336,8 +395,6 @@ Tree Parser::parse(std::vector<Token> prog_token){
     
     this->progToken = prog_token;
     advance();
-
-    //while(this->counter < prog_token.size()){
 
         if(this->current_token._TOKEN_TYPE == _TOKEN_SHOW){
             main.add_child(parseShow());
@@ -365,15 +422,22 @@ Tree Parser::parse(std::vector<Token> prog_token){
                 main.add_child(Tree(this->current_token));
                 return main;
             }
-
+        else if(this->current_token._TOKEN_TYPE == _TOKEN_ENDWHILE)
+        {
+            main.add_child(Tree(this->current_token));
+            return main;
+        }
         else if(this->current_token._TOKEN_TYPE == _TOKEN_WHILE){
             main.add_child(parseWhile());
             return main;
         }
-        
-        //this->counter++;        // don't change this it will break things, i forgot what this does.
-    //}
 
+        else
+        {
+            std::cout << this->current_token._TOKEN_TYPE << " " << this->current_token._TOKEN_VALUE << " is not recogized\n";
+            exit(0);
+        }
+        
     this->progToken.clear();
 
     return main;

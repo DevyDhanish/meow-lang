@@ -25,6 +25,7 @@ class Parser{
         Tree parseInt();
         Tree parseStr();
         Tree parseShowStr();
+        Tree parseShowVar();
         Tree parseAddSub();
         Tree parseMulDiv();
         Tree parseBee();

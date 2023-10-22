@@ -4,6 +4,7 @@
 [ DONE ] - Nested if statements
 
 # ERRORS
+[ ] - Lexer having can't tokenize properly if there is no space in between letters and numbers in an expression. 
 [ ] - Sometimes it gives a seg fault when interpreting sometimes it does not.
 [ FIXIED ] - Single if statement causes
 terminate called after throwing an instance of 'std::length_error'
