@@ -1,6 +1,7 @@
 #include "../include/lexer.hpp"
 #include "../include/token.hpp"
 #include "../include/core.hpp"
+#include "../include/error.hpp"
 
 #include <string>
 #include <vector>
@@ -110,8 +111,7 @@ std::vector<std::string> disassembleLine(meow_line line){
         }
 
         else{
-            std::cout << "Unknown token: encountered " << "`" << lookAhead << "`" << " at line " << line.line_number << "\n";
-            break;
+            displayError(_E_UNKNOW_TOKEN_ERROR, line.line, line.line_number);
         }
 
     }
@@ -168,8 +168,7 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
             ));
         }
         else{
-            std::cout << "ERROR in lexing\n";
-            exit(0);
+            displayError(_E_UNKNOW_TOKEN_ERROR, _prog_lines.line, _prog_lines.line_number);
         }
     }
 

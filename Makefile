@@ -19,6 +19,7 @@ libs:
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/map.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/map.o
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/interpreter.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/interpreter.o
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/vm.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/vm.o
+	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/error.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/error.o
 
 	ar rcs $(LIB_DIR)/libmeow.a $(LIB_DIR)/*.o
 
