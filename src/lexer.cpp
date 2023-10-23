@@ -5,7 +5,6 @@
 
 #include <string>
 #include <vector>
-#include <map>
 #include <ctype.h>
 #include <iostream>
 
@@ -71,7 +70,7 @@ std::vector<std::string> disassembleLine(meow_line line){
                 curr_pos += 1;
 
                 if(curr_pos > curr_line.size()){
-                    std::cout << "Syntax error: at line " << line.line_number << " missing `\"` at the end of the string" << "\n";          // change the way errors are shown
+                    displayError(_E_SYNTAX_ERROR, line.line, line.line_number);          // change the way errors are shown
                     break;
                 }
             }

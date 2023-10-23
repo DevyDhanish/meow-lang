@@ -1,5 +1,6 @@
 # TODO
 [ ] - Better parsing of if statements and it's conditions
+[ ] - DO the (*=, +=, -=, /=, %=) things
 [ DONE ] - Better handling of if else statements
 [ DONE ] - Nested if statements
 

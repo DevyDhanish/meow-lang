@@ -2,6 +2,7 @@
 #include "../include/tree.hpp"
 #include "../include/token.hpp"
 #include "../include/core.hpp"
+#include "../include/error.hpp"
 
 #include <vector>
 #include <iostream>
@@ -450,8 +451,7 @@ Tree Parser::parse(std::vector<Token> prog_token){
 
         else
         {
-            std::cout << this->current_token._TOKEN_TYPE << " " << this->current_token._TOKEN_VALUE << " is not recogized\n";
-            exit(0);
+            displayError(_E_UNKNOW_TOKEN_ERROR, current_token._TOKEN_LINE, current_token._TOKEN_LINE_NUMBER);
         }
         
     this->progToken.clear();

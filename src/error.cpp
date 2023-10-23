@@ -2,13 +2,18 @@
 #include <unordered_map>
 #include "../include/token.hpp"
 #include "../include/vm.hpp"
+#include <iostream>
+#include <vector>
 
 std::unordered_map<Error_T, std::string> error_table = 
 {
     {_E_SYNTAX_ERROR, "Syntax Error at %lu : %s"},
     {_E_CMP_ERROR, "Comparison Error at %lu : %s"},
     {_E_TYPE_ERROR, "Type Error at %lu : %s"},
+    {_E_INDENTATION_ERROR, "Indentation Error at %lu : %s"},
+    {_E_UNKNOW_TOKEN_ERROR, "Unknow Token at %lu : %s"},
 };
+
 int counter = 0;
 std::vector<Token> TOKENS;
 
@@ -18,69 +23,106 @@ void displayError(Error_T error_type, std::string _line, size_t line_number) {
     exit(0);
 }
 
-void checkVar(Token next)
+void checkOperator(Token next)
 {
-    if(next._TOKEN_TYPE == _TOKEN_SEMI_COL || next._TOKEN_TYPE == _TOKEN_COLON)
+    switch (next._TOKEN_TYPE)
     {
-        return;
-    }
-    else if(isOperator(next))
+    case _TOKEN_INT:
+        break;
+
+    default:
+        Token prev = TOKENS[--counter];
+        displayError(_E_SYNTAX_ERROR, prev._TOKEN_LINE, prev._TOKEN_LINE_NUMBER);
+        break;
+    }   
+}
+
+void checkInt(Token next)
+{
+    switch (next._TOKEN_TYPE)
     {
-        return;
-    }
-    else
-    {
-        displayError(_E_SYNTAX_ERROR, next._TOKEN_LINE, next._TOKEN_LINE_NUMBER);
+    case _TOKEN_SEMI_COL:
+        break;
+    case _TOKEN_PLUS:
+        checkOperator(TOKENS[++counter]);
+        break;
+    case _TOKEN_MINUS:
+        checkOperator(TOKENS[++counter]);
+        break;
+    case _TOKEN_MUL:
+        checkOperator(TOKENS[++counter]);
+        break;
+    case _TOKEN_DIV:
+        checkOperator(TOKENS[++counter]);
+        break;
+    case _TOKEN_MOD:
+        checkOperator(TOKENS[++counter]);
+        break;
+    case _TOKEN_NEW_LINE:
+        break;
+    case _TOKEN_NOTEQUALS:
+        break;
+    case _TOKEN_EQUALSTO:
+        break;
+    case _TOKEN_LESSTHAN:
+        break;
+    case _TOKEN_LESSEQU:
+        break;
+    case _TOKEN_GREATEREQU:
+        break;
+    case _TOKEN_GREATERTHAN:
+        break;
+    case _TOKEN_COLON:
+        break;
+    default:
+        Token prev = TOKENS[--counter];
+        displayError(_E_SYNTAX_ERROR, prev._TOKEN_LINE, prev._TOKEN_LINE_NUMBER);
+        break;
     }
 }
+
 void checkStr(Token next)
 {
-
-    if(next._TOKEN_TYPE == _TOKEN_SEMI_COL || next._TOKEN_TYPE == _TOKEN_COLON)
+    switch (next._TOKEN_TYPE)
     {
-        return;
-    }
-    else if(next._TOKEN_TYPE == _TOKEN_VAR)
-    {
-        counter++;
-        checkVar(TOKENS[counter]);
-    }
-    else if(next._TOKEN_TYPE == _TOKEN_INT)
-    {
-        counter++;
-        //checkInt(TOKENS[counter]);
-    }
-    else
-    {
-        counter--;
-        next = TOKENS[counter];
-        displayError(_E_SYNTAX_ERROR, next._TOKEN_LINE, next._TOKEN_LINE_NUMBER);
+    case _TOKEN_SEMI_COL:
+        break;
+    
+    default:
+        Token prev = TOKENS[--counter];
+        displayError(_E_SYNTAX_ERROR, prev._TOKEN_LINE, prev._TOKEN_LINE_NUMBER);
+        break;
     }
 }
 
 void checkShow(Token next)
 {
-    if(next._TOKEN_TYPE == _TOKEN_STRING)
+    switch(next._TOKEN_TYPE)
     {
-        counter++;
-        checkStr(TOKENS[counter]);
-    }
-    else if(next._TOKEN_TYPE == _TOKEN_VAR)
-    {
-        counter++;
-        checkVar(TOKENS[counter]);
-    }
-    else if(next._TOKEN_TYPE == _TOKEN_INT)
-    {
-        counter++;
-        //checkInt(TOKENS[counter]);
-    }
-    else
-    {
-        displayError(_E_SYNTAX_ERROR, next._TOKEN_LINE, next._TOKEN_LINE_NUMBER);
+        case _TOKEN_STRING:
+            checkStr(TOKENS[++counter]);
+            break;
+
+        case _TOKEN_PIKA:
+            break;
+        case _TOKEN_AYO:
+            break;
+        case _TOKEN_BEERUS:
+            break;
+        case _TOKEN_MEOWTH:
+            break;
+        case _TOKEN_NEW_LINE:
+            break;
+
+        case _TOKEN_INT:
+            checkInt(TOKENS[++counter]);
+            break;
+
+        default:
+            displayError(_E_SYNTAX_ERROR, next._TOKEN_LINE, next._TOKEN_LINE_NUMBER);
+            break;
     }
 }
-
 void checkSyntax(std::vector<Token> tokens)
 {
     TOKENS = tokens;
@@ -89,11 +131,12 @@ void checkSyntax(std::vector<Token> tokens)
         Token curr = TOKENS[counter];
 
         if(curr._TOKEN_TYPE == _TOKEN_SHOW)
-        {
-            counter++;
-            checkShow(TOKENS[counter]);
+        {   
+            ++counter;
+            Token next = TOKENS[counter];
+            checkShow(next);
         }
-        
+
         counter++;
     }
 
