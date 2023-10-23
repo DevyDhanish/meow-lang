@@ -203,6 +203,7 @@ std::unordered_map<std::string, TOKEN_T> knowTokens = {
         {";", _TOKEN_SEMI_COL},
         {"take", _TOKEN_TAKE},
         {"end", _TOKEN_ENDWHILE},
+        {"nl", _TOKEN_NEW_LINE},
 };
 
 std::unordered_map<char, std::string> operator_pair = {

@@ -458,6 +458,14 @@ void output(Tree root)
     else if(root.data._TOKEN_TYPE == _TOKEN_STRING){
         std::cout << format_string(root.data._TOKEN_VALUE);
     }
+    else if(root.data._TOKEN_TYPE == _TOKEN_NEW_LINE)
+    {
+        std::cout << "\n";
+    }
+    else if(root.data._TOKEN_TYPE == _TOKEN_PIKA || root.data._TOKEN_TYPE == _TOKEN_AYO || root.data._TOKEN_TYPE == _TOKEN_MEOWTH || root.data._TOKEN_TYPE == _TOKEN_BEERUS)
+    {
+        std::cout << root.data._TOKEN_VALUE;
+    }
 
     if(root.childs.size() > 0) output(root.get_child(0));
 }
@@ -499,7 +507,6 @@ void runByteCode(){
 
     else if(current_instruction.mnemonic == _OP_OUT){
         output(current_instruction.operand_1);
-        std::cout << "\n";
     }
 
     else if(current_instruction.mnemonic == _OP_CMP_EQU ||

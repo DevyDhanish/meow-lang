@@ -1,0 +1,17 @@
+show "Welcome to age calculator";
+
+while 1 == 1:
+    yearBorn = take "what year were you born : ";
+    currentYear = 2023;
+    
+    show "Calculating";
+    
+    age = currentYear - yearBorn;
+    
+    if age < 0:
+        show "Nigga we not even in " yearBorn;
+    fi;
+    else:
+        show "You are " age " years old";
+    el;
+end;

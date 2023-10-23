@@ -1,0 +1,9 @@
+y = take "Enter a number : ";
+
+if y % 2 == 0:
+    show "Even";
+endif;
+
+else:
+    show "Odd";
+endelse;
