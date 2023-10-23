@@ -120,6 +120,19 @@ Tree Parser::parseStr(){
     return str;
 }
 
+Tree Parser::parseNewLine()
+{
+    Tree nl(this->current_token);
+    advance();
+
+    if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
+        nl.add_child(this->current_token);
+        return nl;
+    }
+
+    return nl;
+}
+
 Tree Parser::parseShowVar()
 {
     Tree var(this->current_token);
@@ -143,6 +156,11 @@ Tree Parser::parseShowStr(){
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
         str.add_child(this->current_token);
+        return str;
+    }
+    if(this->current_token._TOKEN_TYPE == _TOKEN_NEW_LINE)
+    {
+        str.add_child(parseNewLine());
         return str;
     }
     else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
@@ -233,6 +251,11 @@ Tree Parser::parseShow(){
         show.add_child(parseVar());
     }
 
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_NEW_LINE)
+    {
+        show.add_child(parseNewLine());
+    }
+    
     else if(this->current_token._TOKEN_TYPE == _TOKEN_BEERUS){
         show.add_child(parseBee());
     }

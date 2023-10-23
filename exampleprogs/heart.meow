@@ -1,0 +1,58 @@
+rows = 20;
+
+i = 0;
+j = 0;
+i = rows / 2;
+
+while i <= rows:
+    j = 1;
+
+    while j < rows - i;
+        show " ";
+        j = j + 2;
+    end;
+
+    j = 1;
+
+    while j <= i:
+        show "*";
+        j = j + 1;
+    end;
+
+    j = 1;
+
+    while j <= rows - i:
+        show " ";
+        j = j + 1;
+    end;
+
+    j = 1;
+
+    while j <= i;
+        show "*";
+        j = j + 1;
+    end;
+
+    show nl;
+    i = i + 2;
+end;
+
+i = rows;
+
+while i >= 1:
+    j = i;
+    while j < rows:
+        show " ";
+        j = j + 1;
+    end;
+
+    j = 1;
+
+    while j <= i * 2 - 1:
+        show "*";
+        j = j + 1;
+    end;
+
+    show nl;
+    i = i - 1;
+end;

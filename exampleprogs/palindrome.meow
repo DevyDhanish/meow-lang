@@ -1,0 +1,19 @@
+input = take "Enter a number : ";
+
+copy = input;
+reverse = 0;
+ld = 0;
+
+while copy != 0:
+    ld = copy % 10;
+    reverse = reverse * 10 + ld;
+    copy = copy / 10;
+end;
+
+if reverse == input:
+    show "Palindrome -> " input;
+fi;
+
+else:
+    show "Not palindrome -> " input;
+el;
