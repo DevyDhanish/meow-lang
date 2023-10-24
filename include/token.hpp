@@ -61,6 +61,17 @@ typedef enum _STRUCT_TOKEN_TYPE{
     
 }TOKEN_T;
 
+typedef enum _CONTEXT{
+    _C_ASSIGNMNET,              // 0
+    _C_OUTPUT,                  // 1
+    _C_INPUT,                   // 2
+    _C_IF_STMT,                 // 3
+    _C_LOOP_STMT,               // 4
+    _C_ELSE_STMT,               // 5
+    _C_END,                     // 6
+    _C_EXPR,                    // 7
+} Contenxt_t;
+
 typedef struct _STRUCT_TOKEN{
     TOKEN_T         _TOKEN_TYPE;
     std::string     _TOKEN_VALUE;

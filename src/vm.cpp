@@ -466,6 +466,10 @@ void output(Tree root)
     {
         std::cout << root.data._TOKEN_VALUE;
     }
+    else if(root.data._TOKEN_TYPE == _TOKEN_INT)
+    {
+        std::cout << root.data._TOKEN_VALUE;
+    }
 
     if(root.childs.size() > 0) output(root.get_child(0));
 }

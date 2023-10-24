@@ -17,6 +17,32 @@ void Parser::advance(){
     }
 }
 
+void Parser::changeContext(Contenxt_t newContext)
+{
+    this->current_context = newContext;
+}
+
+Token Parser::lookAhead()
+{
+    if(this->counter < this->progToken.size())
+    {
+        return this->progToken[this->counter];
+    }
+    else
+    {
+        return makeToken(_TOKEN_EMPTY, "", "", 0, 0);
+    }
+}
+
+bool find(std::vector<TOKEN_T> pool, TOKEN_T target)
+{
+    if(std::find(pool.begin(), pool.end(), target) == pool.end()){
+        return false;
+    }else{
+        return true;
+    }
+}
+
 Tree Parser::parseTake(){
     Tree take(this->current_token);
 
@@ -33,6 +59,16 @@ Tree Parser::parseTake(){
 Tree Parser::parseEqu(){
     Tree equ(this->current_token);
 
+    // std::vector<TOKEN_T> valid_next_tokens;
+
+    // if(this->current_context == _C_ASSIGNMNET)
+    // {
+    //     valid_next_tokens = {_TOKEN_VAR, _TOKEN_INT, _TOKEN_STRING};
+    // }
+
+    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
+
+
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_STRING){
@@ -40,10 +76,12 @@ Tree Parser::parseEqu(){
     }
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_INT){
+        changeContext(_C_EXPR);
         equ.add_child(parseAddSub());
     }
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
+        changeContext(_C_EXPR);
         equ.add_child(parseAddSub());
     }
 
@@ -94,6 +132,15 @@ Tree Parser::parseMulDiv(){
 Tree Parser::parseVar(){
     Tree var(this->current_token);
 
+    // std::vector<TOKEN_T> valid_next_tokens;
+
+    // if(this->current_context == _C_ASSIGNMNET)
+    // {
+    //     valid_next_tokens = {_TOKEN_EQU};
+    // }
+
+    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
+
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL || this->current_token._TOKEN_TYPE == _TOKEN_COLON){
@@ -110,6 +157,22 @@ Tree Parser::parseVar(){
 
 Tree Parser::parseStr(){
     Tree str(this->current_token);
+
+    // std::vector<TOKEN_T> valid_next_tokens;
+
+    // if(this->current_context == _C_ASSIGNMNET)
+    // {
+    //     valid_next_tokens = {_TOKEN_SEMI_COL};
+    // }
+
+    // if(this->current_context == _C_IF_STMT || this->current_context == _C_LOOP_STMT)
+    // {
+    //     valid_next_tokens = {_TOKEN_COLON, _TOKEN_EQUALSTO, _TOKEN_NOTEQUALS, _TOKEN_LESSTHAN, _TOKEN_GREATERTHAN, _TOKEN_LESSEQU, _TOKEN_GREATEREQU};
+    // }
+
+    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
+
+
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL || this->current_token._TOKEN_TYPE == _TOKEN_COLON){
@@ -122,12 +185,34 @@ Tree Parser::parseStr(){
 
 Tree Parser::parseNewLine()
 {
+    // if(this->current_context == _C_OUTPUT)
+    // {
+    //     std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_STRING, _TOKEN_INT, _TOKEN_VAR, _TOKEN_NEW_LINE, _TOKEN_BEERUS, _TOKEN_MEOWTH, _TOKEN_PIKA, _TOKEN_MEOWTH, _TOKEN_SEMI_COL};
+
+    //     if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
+    // }
+
     Tree nl(this->current_token);
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
         nl.add_child(this->current_token);
         return nl;
+    }
+
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR)
+    {
+        nl.add_child(parseShowVar());
+    }
+
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_INT)
+    {
+        nl.add_child(parseAddSub());
+    }
+
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_STRING)
+    {
+        nl.add_child(parseShowStr());
     }
 
     return nl;
@@ -137,10 +222,22 @@ Tree Parser::parseShowVar()
 {
     Tree var(this->current_token);
 
+    // if(this->current_context == _C_OUTPUT)
+    // {
+    //     std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_STRING, _TOKEN_INT, _TOKEN_VAR, _TOKEN_NEW_LINE, _TOKEN_BEERUS, _TOKEN_MEOWTH, _TOKEN_PIKA, _TOKEN_SEMI_COL};
+
+    //     if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
+    // }
+
     advance();
     if(this->current_token._TOKEN_TYPE == _TOKEN_STRING)
     {
         var.add_child(parseShowStr());
+    }
+
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR)
+    {
+        var.add_child(parseShowVar());
     }
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_INT){
@@ -152,6 +249,14 @@ Tree Parser::parseShowVar()
 
 Tree Parser::parseShowStr(){
     Tree str(this->current_token);
+
+    // if(this->current_context = _C_OUTPUT)
+    // {
+    //     std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_STRING, _TOKEN_INT, _TOKEN_VAR, _TOKEN_NEW_LINE, _TOKEN_BEERUS, _TOKEN_MEOWTH, _TOKEN_PIKA, _TOKEN_SEMI_COL};
+
+    //     if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
+
+    // }
 
     advance();
 
@@ -180,6 +285,21 @@ Tree Parser::parseShowStr(){
 
 Tree Parser::parseInt(){
     Tree _int(this->current_token);
+
+    // std::vector<TOKEN_T> valid_next_tokens;
+
+    // if(this->current_context == _C_EXPR)
+    // {
+    //     valid_next_tokens = {_TOKEN_PLUS, _TOKEN_MINUS, _TOKEN_MUL, _TOKEN_DIV, _TOKEN_MOD, _TOKEN_SEMI_COL};
+    //     if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
+    // }
+
+    // else if(this->current_context == _C_OUTPUT)
+    // {
+    //     valid_next_tokens = {_TOKEN_PLUS, _TOKEN_MINUS, _TOKEN_MUL, _TOKEN_DIV, _TOKEN_MOD, _TOKEN_SEMI_COL, _TOKEN_VAR, _TOKEN_STRING, _TOKEN_NEW_LINE};
+    //     if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
+    // }
+
 
     advance();
 
@@ -247,6 +367,10 @@ Tree Parser::parseAyo(){
 Tree Parser::parseShow(){
     Tree show(this->current_token);
 
+    // std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_STRING, _TOKEN_INT, _TOKEN_VAR, _TOKEN_NEW_LINE, _TOKEN_BEERUS, _TOKEN_MEOWTH, _TOKEN_PIKA};
+
+    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
+
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
@@ -287,6 +411,16 @@ Tree Parser::parseShow(){
 
 Tree Parser::parseIf(){
     Tree _if(this->current_token);
+
+    // std::vector<TOKEN_T> valid_next_tokens;
+
+    // if(this->current_context == _C_IF_STMT)
+    // {
+    //     valid_next_tokens = {_TOKEN_INT, _TOKEN_STRING, _TOKEN_VAR};
+    // }
+
+    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
+
     advance();
     // get op
     // get left exper
@@ -343,6 +477,11 @@ Tree Parser::parseIf(){
 
 Tree Parser::parseElse(){
     Tree _else(this->current_token);
+    
+    // std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_SEMI_COL};
+
+    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
+
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_COLON)
@@ -355,9 +494,18 @@ Tree Parser::parseElse(){
 
 Tree Parser::parseWhile(){
     Tree _while(this->current_token);
-    advance();
 
-        std::vector<Token> left_expr;
+    // std::vector<TOKEN_T> valid_next_tokens;
+
+    // if(this->current_context == _C_LOOP_STMT)
+    // {
+    //     valid_next_tokens = {_TOKEN_INT, _TOKEN_STRING, _TOKEN_VAR};
+    // }
+
+    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
+
+    advance();
+    std::vector<Token> left_expr;
 
     while(1)
     {
@@ -415,21 +563,25 @@ Tree Parser::parse(std::vector<Token> prog_token){
     advance();
 
         if(this->current_token._TOKEN_TYPE == _TOKEN_SHOW){
+            changeContext(_C_OUTPUT);
             main.add_child(parseShow());
             return main;
         }
 
         else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
+            changeContext(_C_ASSIGNMNET);
             main.add_child(parseVar());
             return main;
         }
 
         else if(this->current_token._TOKEN_TYPE == _TOKEN_IF || this->current_token._TOKEN_TYPE == _TOKEN_ELIF){
+            changeContext(_C_IF_STMT);
             main.add_child(parseIf());
             return main;
         }
 
         else if(this->current_token._TOKEN_TYPE == _TOKEN_ELSE){
+            changeContext(_C_ELSE_STMT);
             main.add_child(parseElse());
             return main;
         }
@@ -437,15 +589,24 @@ Tree Parser::parse(std::vector<Token> prog_token){
         else if(this->current_token._TOKEN_TYPE == _TOKEN_ENDIF ||
             this->current_token._TOKEN_TYPE == _TOKEN_ENDELSE)
             {
+                changeContext(_C_END);
+                std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_SEMI_COL};
+
+                if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
+
                 main.add_child(Tree(this->current_token));
                 return main;
             }
         else if(this->current_token._TOKEN_TYPE == _TOKEN_ENDWHILE)
         {
+            changeContext(_C_END);
+            std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_SEMI_COL};
+            if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
             main.add_child(Tree(this->current_token));
             return main;
         }
         else if(this->current_token._TOKEN_TYPE == _TOKEN_WHILE){
+            changeContext(_C_LOOP_STMT);
             main.add_child(parseWhile());
             return main;
         }

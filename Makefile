@@ -24,10 +24,10 @@ libs:
 	ar rcs $(LIB_DIR)/libmeow.a $(LIB_DIR)/*.o
 
 bin-debug:
-	$(CC) $(CPPFLAGS) -DDEBUG main.cpp -I$(INCLUDE_DIR) -L$(LIB_DIR) -lmeow -o $(OUTPUT_DIR)/$(PROJECT_NAME)
+	$(CC) $(CPPFLAGS) -DDEBUG main.cpp -I$(INCLUDE_DIR) -L$(LIB_DIR) -lmeow -o $(OUTPUT_DIR)/$(PROJECT_NAME) -static
 	
 bin-release:
-	$(CC) $(CPPFLAGS) main.cpp -I$(INCLUDE_DIR) -L$(LIB_DIR) -lmeow -o $(OUTPUT_DIR)/$(PROJECT_NAME)
+	$(CC) $(CPPFLAGS) main.cpp -I$(INCLUDE_DIR) -L$(LIB_DIR) -lmeow -o $(OUTPUT_DIR)/$(PROJECT_NAME) -static
 
 clean:
 	rm -r build
