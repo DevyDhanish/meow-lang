@@ -2,6 +2,7 @@
 #include "../include/tree.hpp"
 #include "../include/token.hpp"
 #include "../include/core.hpp"
+#include "../include/error.hpp"
 
 #include <vector>
 #include <iostream>
@@ -109,7 +110,6 @@ Tree Parser::parseVar(){
 
 Tree Parser::parseStr(){
     Tree str(this->current_token);
-
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL || this->current_token._TOKEN_TYPE == _TOKEN_COLON){
@@ -136,6 +136,7 @@ Tree Parser::parseNewLine()
 Tree Parser::parseShowVar()
 {
     Tree var(this->current_token);
+
     advance();
     if(this->current_token._TOKEN_TYPE == _TOKEN_STRING)
     {
@@ -154,7 +155,8 @@ Tree Parser::parseShowStr(){
 
     advance();
 
-    if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
+    if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL)
+    {
         str.add_child(this->current_token);
         return str;
     }
@@ -248,7 +250,7 @@ Tree Parser::parseShow(){
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
-        show.add_child(parseVar());
+        show.add_child(parseShowVar());
     }
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_NEW_LINE)
@@ -450,8 +452,7 @@ Tree Parser::parse(std::vector<Token> prog_token){
 
         else
         {
-            std::cout << this->current_token._TOKEN_TYPE << " " << this->current_token._TOKEN_VALUE << " is not recogized\n";
-            exit(0);
+            displayError(_E_UNKNOW_TOKEN_ERROR, current_token._TOKEN_LINE, current_token._TOKEN_LINE_NUMBER);
         }
         
     this->progToken.clear();

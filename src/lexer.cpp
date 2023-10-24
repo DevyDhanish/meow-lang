@@ -5,7 +5,6 @@
 
 #include <string>
 #include <vector>
-#include <map>
 #include <ctype.h>
 #include <iostream>
 
@@ -49,12 +48,14 @@ std::vector<std::string> disassembleLine(meow_line line){
 
             curr_pos += 1;
 
-            if(curr_line[curr_pos] == '=')
+            if(curr_line[curr_pos] == '='){
                 output.push_back(operator_pair[lookAhead]);
+                curr_pos += 1;
+            }
             else
                 output.push_back(std::string(1, lookAhead));
 
-            curr_pos += 1;
+            //curr_pos += 1;
         }
 
         else if(isTypeOfBracket(lookAhead)){
@@ -62,7 +63,7 @@ std::vector<std::string> disassembleLine(meow_line line){
             curr_pos += 1;
         }
 
-        else if (lookAhead == '"'){                                 // if a string is detected sorround it with `"` for example `this is a string` will become "this is a string"
+        else if (lookAhead == '"'){                                 // if a string is detected surround it with `"` for example `this is a string` will become "this is a string"
             std::string word;
             word += '"';
             curr_pos += 1;
@@ -71,23 +72,17 @@ std::vector<std::string> disassembleLine(meow_line line){
                 curr_pos += 1;
 
                 if(curr_pos > curr_line.size()){
-                    std::cout << "Syntax error: at line " << line.line_number << " missing `\"` at the end of the string" << "\n";          // change the way errors are shown
-                    break;
+                    displayError(_E_SYNTAX_ERROR, line.line, line.line_number);
                 }
             }
             word += '"';
-            if(word != "")
-                output.push_back(word);
-            else{
-                //std::cout << "Empty string\n";
-                break;
-            };
+            output.push_back(word);
             curr_pos += 1;
         }
 
         else if (isdigit(lookAhead)){
             std::string word;
-            while(curr_pos < curr_line.size() && isalnum(curr_line[curr_pos])){
+            while(curr_pos < curr_line.size() && isdigit(curr_line[curr_pos])){
                 word += curr_line[curr_pos];
                 curr_pos += 1;
             }
