@@ -22,26 +22,26 @@ void Parser::changeContext(Contenxt_t newContext)
     this->current_context = newContext;
 }
 
-Token Parser::lookAhead()
-{
-    if(this->counter < this->progToken.size())
-    {
-        return this->progToken[this->counter];
-    }
-    else
-    {
-        return makeToken(_TOKEN_EMPTY, "", "", 0, 0);
-    }
-}
+// Token Parser::lookAhead()
+// {
+//     if(this->counter < this->progToken.size())
+//     {
+//         return this->progToken[this->counter];
+//     }
+//     else
+//     {
+//         return makeToken(_TOKEN_EMPTY, "", "", 0, 0);
+//     }
+// }
 
-bool find(std::vector<TOKEN_T> pool, TOKEN_T target)
-{
-    if(std::find(pool.begin(), pool.end(), target) == pool.end()){
-        return false;
-    }else{
-        return true;
-    }
-}
+// bool find(std::vector<TOKEN_T> pool, TOKEN_T target)
+// {
+//     if(std::find(pool.begin(), pool.end(), target) == pool.end()){
+//         return false;
+//     }else{
+//         return true;
+//     }
+// }
 
 Tree Parser::parseTake(){
     Tree take(this->current_token);
