@@ -37,7 +37,6 @@ int main(int argc, char **argv){
     for(meow_line line : program_lines){
 
         tokenized_vector = lex.tokenize(line);
-        checkSyntax(tokenized_vector);
         AST = parser.parse(tokenized_vector);
         interpreter.convertToByteCode(AST.get_child(0));
 
@@ -62,6 +61,7 @@ int main(int argc, char **argv){
             
         #endif
     }
+    
     run();
     
     return 0;
