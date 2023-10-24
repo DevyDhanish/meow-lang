@@ -590,18 +590,12 @@ Tree Parser::parse(std::vector<Token> prog_token){
             this->current_token._TOKEN_TYPE == _TOKEN_ENDELSE)
             {
                 changeContext(_C_END);
-                std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_SEMI_COL};
-
-                if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
-
                 main.add_child(Tree(this->current_token));
                 return main;
             }
         else if(this->current_token._TOKEN_TYPE == _TOKEN_ENDWHILE)
         {
             changeContext(_C_END);
-            std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_SEMI_COL};
-            if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
             main.add_child(Tree(this->current_token));
             return main;
         }
