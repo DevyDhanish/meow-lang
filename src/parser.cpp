@@ -235,6 +235,11 @@ Tree Parser::parseShowVar()
         var.add_child(parseShowStr());
     }
 
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_NEW_LINE)
+    {
+        var.add_child(parseNewLine());
+    }
+
     else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR)
     {
         var.add_child(parseShowVar());
