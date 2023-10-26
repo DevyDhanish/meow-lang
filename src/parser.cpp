@@ -22,27 +22,6 @@ void Parser::changeContext(Contenxt_t newContext)
     this->current_context = newContext;
 }
 
-// Token Parser::lookAhead()
-// {
-//     if(this->counter < this->progToken.size())
-//     {
-//         return this->progToken[this->counter];
-//     }
-//     else
-//     {
-//         return makeToken(_TOKEN_EMPTY, "", "", 0, 0);
-//     }
-// }
-
-// bool find(std::vector<TOKEN_T> pool, TOKEN_T target)
-// {
-//     if(std::find(pool.begin(), pool.end(), target) == pool.end()){
-//         return false;
-//     }else{
-//         return true;
-//     }
-// }
-
 Tree Parser::parseTake(){
     Tree take(this->current_token);
 
@@ -52,22 +31,16 @@ Tree Parser::parseTake(){
     {
         take.add_child(parseStr());
     }
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "take should be continued with a string", 0);
+    }
 
     return take;
 }
 
 Tree Parser::parseEqu(){
     Tree equ(this->current_token);
-
-    // std::vector<TOKEN_T> valid_next_tokens;
-
-    // if(this->current_context == _C_ASSIGNMNET)
-    // {
-    //     valid_next_tokens = {_TOKEN_VAR, _TOKEN_INT, _TOKEN_STRING};
-    // }
-
-    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
-
 
     advance();
 
@@ -87,6 +60,11 @@ Tree Parser::parseEqu(){
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_TAKE){
         equ.add_child(parseTake());
+    }
+
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "incorrect assignment", 0);
     }
 
     return equ;
@@ -132,15 +110,6 @@ Tree Parser::parseMulDiv(){
 Tree Parser::parseVar(){
     Tree var(this->current_token);
 
-    // std::vector<TOKEN_T> valid_next_tokens;
-
-    // if(this->current_context == _C_ASSIGNMNET)
-    // {
-    //     valid_next_tokens = {_TOKEN_EQU};
-    // }
-
-    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
-
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL || this->current_token._TOKEN_TYPE == _TOKEN_COLON){
@@ -152,26 +121,16 @@ Tree Parser::parseVar(){
         var.add_child(parseEqu());
     }
 
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "(; or = or :) is missing after a variable", 0);
+    }
+
     return var;
 }
 
 Tree Parser::parseStr(){
     Tree str(this->current_token);
-
-    // std::vector<TOKEN_T> valid_next_tokens;
-
-    // if(this->current_context == _C_ASSIGNMNET)
-    // {
-    //     valid_next_tokens = {_TOKEN_SEMI_COL};
-    // }
-
-    // if(this->current_context == _C_IF_STMT || this->current_context == _C_LOOP_STMT)
-    // {
-    //     valid_next_tokens = {_TOKEN_COLON, _TOKEN_EQUALSTO, _TOKEN_NOTEQUALS, _TOKEN_LESSTHAN, _TOKEN_GREATERTHAN, _TOKEN_LESSEQU, _TOKEN_GREATEREQU};
-    // }
-
-    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
-
 
     advance();
 
@@ -180,18 +139,16 @@ Tree Parser::parseStr(){
         return str;
     }
 
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "String should be end with a `;` or `:`", 0);
+    }
+
     return str;
 }
 
 Tree Parser::parseNewLine()
 {
-    // if(this->current_context == _C_OUTPUT)
-    // {
-    //     std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_STRING, _TOKEN_INT, _TOKEN_VAR, _TOKEN_NEW_LINE, _TOKEN_BEERUS, _TOKEN_MEOWTH, _TOKEN_PIKA, _TOKEN_MEOWTH, _TOKEN_SEMI_COL};
-
-    //     if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
-    // }
-
     Tree nl(this->current_token);
     advance();
 
@@ -215,6 +172,11 @@ Tree Parser::parseNewLine()
         nl.add_child(parseShowStr());
     }
 
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "newline keyword countinued with a invalid token", 0);
+    }
+
     return nl;
 }
 
@@ -222,17 +184,16 @@ Tree Parser::parseShowVar()
 {
     Tree var(this->current_token);
 
-    // if(this->current_context == _C_OUTPUT)
-    // {
-    //     std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_STRING, _TOKEN_INT, _TOKEN_VAR, _TOKEN_NEW_LINE, _TOKEN_BEERUS, _TOKEN_MEOWTH, _TOKEN_PIKA, _TOKEN_SEMI_COL};
-
-    //     if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
-    // }
-
     advance();
     if(this->current_token._TOKEN_TYPE == _TOKEN_STRING)
     {
         var.add_child(parseShowStr());
+    }
+
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL)
+    {
+        var.add_child(Tree(this->current_token));
+        return var;
     }
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_NEW_LINE)
@@ -249,19 +210,16 @@ Tree Parser::parseShowVar()
         var.add_child(parseAddSub());
     }
 
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "variable keyword countinued with a invalid token", 0);
+    }
+
     return var;
 }
 
 Tree Parser::parseShowStr(){
     Tree str(this->current_token);
-
-    // if(this->current_context = _C_OUTPUT)
-    // {
-    //     std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_STRING, _TOKEN_INT, _TOKEN_VAR, _TOKEN_NEW_LINE, _TOKEN_BEERUS, _TOKEN_MEOWTH, _TOKEN_PIKA, _TOKEN_SEMI_COL};
-
-    //     if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
-
-    // }
 
     advance();
 
@@ -284,27 +242,16 @@ Tree Parser::parseShowStr(){
     else if(this->current_token._TOKEN_TYPE == _TOKEN_STRING){
         str.add_child(parseShowStr());
     }
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "string keyword countinued with a invalid token", 0);
+    }
 
     return str;
 }
 
 Tree Parser::parseInt(){
     Tree _int(this->current_token);
-
-    // std::vector<TOKEN_T> valid_next_tokens;
-
-    // if(this->current_context == _C_EXPR)
-    // {
-    //     valid_next_tokens = {_TOKEN_PLUS, _TOKEN_MINUS, _TOKEN_MUL, _TOKEN_DIV, _TOKEN_MOD, _TOKEN_SEMI_COL};
-    //     if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
-    // }
-
-    // else if(this->current_context == _C_OUTPUT)
-    // {
-    //     valid_next_tokens = {_TOKEN_PLUS, _TOKEN_MINUS, _TOKEN_MUL, _TOKEN_DIV, _TOKEN_MOD, _TOKEN_SEMI_COL, _TOKEN_VAR, _TOKEN_STRING, _TOKEN_NEW_LINE};
-    //     if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
-    // }
-
 
     advance();
 
@@ -325,6 +272,10 @@ Tree Parser::parseBee(){
         bee.add_child(this->current_token);
         return bee;
     }
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "beerus continued with a invalid token", 0);
+    }
 
     return bee;
 }
@@ -338,6 +289,10 @@ Tree Parser::parseMeo(){
         meo.add_child(this->current_token);
         return meo;
     }
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "meowth continued with a invalid token", 0);
+    }
 
     return meo;
 }
@@ -350,6 +305,10 @@ Tree Parser::parsePika(){
     if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
         pika.add_child(this->current_token);
         return pika;
+    }
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "pika continued with a invalid token", 0);
     }
 
     return pika;
@@ -365,16 +324,16 @@ Tree Parser::parseAyo(){
         ayo.add_child(this->current_token);
         return ayo;
     }
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "ayo continued with a invalid token", 0);
+    }
 
     return ayo;
 }
 
 Tree Parser::parseShow(){
     Tree show(this->current_token);
-
-    // std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_STRING, _TOKEN_INT, _TOKEN_VAR, _TOKEN_NEW_LINE, _TOKEN_BEERUS, _TOKEN_MEOWTH, _TOKEN_PIKA};
-
-    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
 
     advance();
 
@@ -410,21 +369,16 @@ Tree Parser::parseShow(){
     else if(this->current_token._TOKEN_TYPE == _TOKEN_INT){
         show.add_child(parseAddSub());
     }
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "show continued with a invalid token", 0);
+    }
 
     return show;
 }
 
 Tree Parser::parseIf(){
     Tree _if(this->current_token);
-
-    // std::vector<TOKEN_T> valid_next_tokens;
-
-    // if(this->current_context == _C_IF_STMT)
-    // {
-    //     valid_next_tokens = {_TOKEN_INT, _TOKEN_STRING, _TOKEN_VAR};
-    // }
-
-    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
 
     advance();
     // get op
@@ -441,6 +395,11 @@ Tree Parser::parseIf(){
         this->current_token._TOKEN_TYPE == _TOKEN_LESSEQU ||
         this->current_token._TOKEN_TYPE == _TOKEN_GREATEREQU) break;
 
+        if(this->current_token._TOKEN_TYPE == _TOKEN_EMPTY)
+        {
+            displayError(_E_SYNTAX_ERROR, "Invalid if statement", 0);
+        }
+
         left_expr.push_back(this->current_token);
         advance();
     }
@@ -459,6 +418,10 @@ Tree Parser::parseIf(){
     {
         cmp_op.add_child(parseAddSub());
     }
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "invalid syntax", 0);
+    }
 
     this->counter = 0;
     this->progToken = left_expr;
@@ -474,6 +437,10 @@ Tree Parser::parseIf(){
     {
         cmp_op.add_child(parseAddSub());
     }
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "invalid syntax", 0);
+    }
 
     _if.add_child(cmp_op);
     
@@ -483,15 +450,15 @@ Tree Parser::parseIf(){
 Tree Parser::parseElse(){
     Tree _else(this->current_token);
     
-    // std::vector<TOKEN_T> valid_next_tokens = {_TOKEN_SEMI_COL};
-
-    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
-
     advance();
 
     if(this->current_token._TOKEN_TYPE == _TOKEN_COLON)
     {
         _else.add_child(Tree(this->current_token));
+    }
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "`:` missing at the end of else", 0);
     }
 
     return _else;
@@ -499,15 +466,6 @@ Tree Parser::parseElse(){
 
 Tree Parser::parseWhile(){
     Tree _while(this->current_token);
-
-    // std::vector<TOKEN_T> valid_next_tokens;
-
-    // if(this->current_context == _C_LOOP_STMT)
-    // {
-    //     valid_next_tokens = {_TOKEN_INT, _TOKEN_STRING, _TOKEN_VAR};
-    // }
-
-    // if(!find(valid_next_tokens, lookAhead()._TOKEN_TYPE)) displayError(_E_SYNTAX_ERROR, this->current_token._TOKEN_LINE, this->current_token._TOKEN_LINE_NUMBER);
 
     advance();
     std::vector<Token> left_expr;
@@ -521,6 +479,11 @@ Tree Parser::parseWhile(){
         this->current_token._TOKEN_TYPE == _TOKEN_LESSEQU ||
         this->current_token._TOKEN_TYPE == _TOKEN_GREATEREQU) break;
 
+        if(this->current_token._TOKEN_TYPE == _TOKEN_EMPTY)
+        {
+            displayError(_E_SYNTAX_ERROR, "Invalid while statement", 0);
+        }
+
         left_expr.push_back(this->current_token);
         advance();
     }
@@ -539,6 +502,10 @@ Tree Parser::parseWhile(){
     {
         cmp_op.add_child(parseAddSub());
     }
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "invalid syntax", 0);
+    }
 
     this->counter = 0;
     this->progToken = left_expr;
@@ -553,6 +520,10 @@ Tree Parser::parseWhile(){
         this->current_token._TOKEN_TYPE == _TOKEN_VAR)
     {
         cmp_op.add_child(parseAddSub());
+    }
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "invalid syntax", 0);
     }
 
     _while.add_child(cmp_op);
@@ -596,17 +567,47 @@ Tree Parser::parse(std::vector<Token> prog_token){
             {
                 changeContext(_C_END);
                 main.add_child(Tree(this->current_token));
+                advance();
+                if(this->current_token._TOKEN_TYPE == _TOKEN_EMPTY)
+                {
+                    displayError(_E_SYNTAX_ERROR, "missing `;` at the end", 0);
+                }
                 return main;
             }
         else if(this->current_token._TOKEN_TYPE == _TOKEN_ENDWHILE)
         {
             changeContext(_C_END);
             main.add_child(Tree(this->current_token));
+            advance();
+            if(this->current_token._TOKEN_TYPE == _TOKEN_EMPTY)
+            {
+                displayError(_E_SYNTAX_ERROR, "missing `;` at the end", 0);
+            }
             return main;
         }
         else if(this->current_token._TOKEN_TYPE == _TOKEN_WHILE){
             changeContext(_C_LOOP_STMT);
             main.add_child(parseWhile());
+            return main;
+        }
+        else if(this->current_token._TOKEN_TYPE == _TOKEN_PIKA)
+        {
+            main.add_child(parsePika());
+            return main;
+        }
+        else if(this->current_token._TOKEN_TYPE == _TOKEN_MEOWTH)
+        {
+            main.add_child(parseMeo());
+            return main;
+        }
+        else if(this->current_token._TOKEN_TYPE == _TOKEN_BEERUS)
+        {
+            main.add_child(parseBee());
+            return main;
+        }
+        else if(this->current_token._TOKEN_TYPE == _TOKEN_AYO)
+        {
+            main.add_child(parseAyo());
             return main;
         }
 

@@ -7,11 +7,12 @@
 
 std::unordered_map<Error_T, std::string> error_table = 
 {
-    {_E_SYNTAX_ERROR, "Syntax Error at %lu : %s"},
-    {_E_CMP_ERROR, "Comparison Error at %lu : %s"},
-    {_E_TYPE_ERROR, "Type Error at %lu : %s"},
-    {_E_INDENTATION_ERROR, "Indentation Error at %lu : %s"},
-    {_E_UNKNOW_TOKEN_ERROR, "Unknow Token at %lu : %s"},
+    {_E_SYNTAX_ERROR, "\nSyntax Error at %lu : %s\n"},
+    {_E_CMP_ERROR, "\nComparison Error at %lu : %s\n"},
+    {_E_TYPE_ERROR, "\nType Error at %lu : %s\n"},
+    {_E_INDENTATION_ERROR, "\nIndentation Error at %lu : %s\n"},
+    {_E_UNKNOW_TOKEN_ERROR, "\nUnknow Token at %lu : %s\n"},
+    {_E_UNDECLARED_VAR_ERROR, "\nUndeclared Variable at %lu : %s\n"},
 };
 
 int counter = 0;

@@ -54,8 +54,27 @@ void submitByteCode(Byte_code b_c){
 }
 
 void showByteCode(){
+    std::unordered_map<_MEOW_BYTE_CODE, std::string> byte_code_table = {
+        {_OP_OUT, "_OP_OUT"},
+        {_OP_LOOP, "_OP_LOOP"},
+        {_OP_CMP_EQU, "_OP_CMP_EQU"},
+        {_OP_CMP_LESS, "_OP_CMP_LESS"},
+        {_OP_CMP_GREATER,"_OP_CMP_GREATER"},
+        {_OP_CMP_NOTEQU,"_OP_CMP_NOTEQU"},
+        {_OP_SET,"_OP_SET"},
+        {_OP_ELSE,"_OP_ELSE"},
+        {_OP_CMP_LESSEQU,"_OP_CMP_LESSEQU"},
+        {_OP_CMP_GREAEQU,"_OP_CMP_GREAEQU"},
+        {_OP_ENDIF,"_OP_ENDIF"},
+        {_OP_ENDELSE,"_OP_ENDELSE"},
+        {_OP_IN,"_OP_IN"},
+        {_OP_EXIT,"_OP_EXIT"},
+        {_OP_ENDWHILE,"_OP_ENDWHILE"},
+    };
+    int count = 1;
     for(Byte_code i : meow_byte_code){
-        std::cout << " " << i.mnemonic << " " << i.operand_1.data._TOKEN_VALUE << " " << i.operand_2.data._TOKEN_VALUE << "\n";
+        std::cout << count << " : " << byte_code_table[i.mnemonic] << " " << i.operand_1.data._TOKEN_VALUE << " " << i.operand_2.data._TOKEN_VALUE << "\n";
+        count++;
     }
 }
 
@@ -88,7 +107,10 @@ long long solveExpression(Tree root){
                 displayError(_E_TYPE_ERROR, root.data._TOKEN_LINE, root.data._TOKEN_LINE_NUMBER);
             }
         }
-        else return 0;
+        else
+        {
+            displayError(_E_UNDECLARED_VAR_ERROR, root.data._TOKEN_LINE, root.data._TOKEN_LINE_NUMBER);
+        };
     }
     else
     {
@@ -337,8 +359,14 @@ void runIfBlock()
     advance();
     while (1)
     {
+
         if(current_instruction.mnemonic == _OP_ENDIF && 
         current_instruction.operand_1.data._INDENTATION == curr_if_indent) break;
+
+        else if((current_instruction.operand_1.data._INDENTATION == curr_if_indent && current_instruction.mnemonic != _OP_ENDIF) || current_instruction.mnemonic == _OP_EXIT)
+        {
+            displayError(_E_SYNTAX_ERROR, "if was not ended with `fi;` or Incorrect Indent was used", current_instruction.operand_1.data._TOKEN_LINE_NUMBER);
+        }
 
         runByteCode();
         advance();
@@ -352,8 +380,14 @@ void runIfBlock()
         advance();
         while(1)
         {
-            if(current_instruction.mnemonic == _OP_ENDELSE &&
+
+            if(current_instruction.mnemonic == _OP_ENDELSE && 
             current_instruction.operand_1.data._INDENTATION == curr_if_indent) break;
+
+            else if((current_instruction.operand_1.data._INDENTATION == curr_if_indent && current_instruction.mnemonic != _OP_ENDELSE) || current_instruction.mnemonic == _OP_EXIT)
+            {
+                displayError(_E_SYNTAX_ERROR, "else was not ended with `el;` or Incorrect Indent was used", current_instruction.operand_1.data._TOKEN_LINE_NUMBER);
+            }
 
             advance();
         };
@@ -373,7 +407,11 @@ void runElseBlock()
     {
         if(current_instruction.mnemonic == _OP_ENDIF && 
         current_instruction.operand_1.data._INDENTATION == curr_if_indent) break;
-
+        else if((current_instruction.operand_1.data._INDENTATION == curr_if_indent && current_instruction.mnemonic != _OP_ENDIF) || current_instruction.mnemonic == _OP_EXIT)
+        {
+            displayError(_E_SYNTAX_ERROR, "if was not ended with `if;` or Incorrect Indent was used", current_instruction.operand_1.data._TOKEN_LINE_NUMBER);
+        }
+        
         advance();
     }
 
@@ -386,8 +424,12 @@ void runElseBlock()
 
         while(1)
         {
-            if(current_instruction.mnemonic == _OP_ENDELSE &&
-                current_instruction.operand_1.data._INDENTATION == curr_else_indent) break;
+            if(current_instruction.mnemonic == _OP_ENDELSE && 
+            current_instruction.operand_1.data._INDENTATION == curr_else_indent) break;
+            else if((current_instruction.operand_1.data._INDENTATION == curr_else_indent && current_instruction.mnemonic != _OP_ENDELSE) || current_instruction.mnemonic == _OP_EXIT)
+            {
+                displayError(_E_SYNTAX_ERROR, "else was not ended with `el;` or Incorrect Indent was used", current_instruction.operand_1.data._TOKEN_LINE_NUMBER);
+            }
 
             runByteCode();
             advance();
@@ -412,12 +454,16 @@ void runLoopBlock()
 
         while(1)
         {
-            if(current_instruction.mnemonic == _OP_ENDWHILE &&
-                current_instruction.operand_1.data._INDENTATION == while_indent){
-                    instruction_pointer = while_instruction;
-                    advance();
-                    break;
-                }
+            if(current_instruction.mnemonic == _OP_ENDWHILE && 
+            current_instruction.operand_1.data._INDENTATION == while_indent){
+                instruction_pointer = while_instruction;
+                advance();
+                break;
+            }
+            else if((current_instruction.operand_1.data._INDENTATION == while_indent && current_instruction.mnemonic != _OP_ENDWHILE) || current_instruction.mnemonic == _OP_EXIT)
+            {
+                displayError(_E_SYNTAX_ERROR, "while was not ended with `end;` or Incorrect Indent was used", current_instruction.operand_1.data._TOKEN_LINE_NUMBER);
+            }
 
             runByteCode();
             advance();
@@ -429,10 +475,14 @@ void runLoopBlock()
     advance();
     while(1)
     {
-        if(current_instruction.mnemonic == _OP_ENDWHILE &&
-            current_instruction.operand_1.data._INDENTATION == while_indent){
+        if(current_instruction.mnemonic == _OP_ENDWHILE && 
+        current_instruction.operand_1.data._INDENTATION == while_indent){
             break;
-            }
+        }
+        else if((current_instruction.operand_1.data._INDENTATION == while_indent && current_instruction.mnemonic != _OP_ENDWHILE) || current_instruction.mnemonic == _OP_EXIT)
+        {
+            displayError(_E_SYNTAX_ERROR, "while was not ended with `end;` or Incorrect Indent was used", current_instruction.operand_1.data._TOKEN_LINE_NUMBER);
+        }
         
         advance();
     }
@@ -446,9 +496,13 @@ void output(Tree root)
         {
             std::cout << format_string(var._TOKEN_VALUE);
         }
-        else
+        else if(var._TOKEN_TYPE == _TOKEN_INT)
         {
             std::cout << var._TOKEN_VALUE;
+        }
+        else
+        {
+            displayError(_E_UNDECLARED_VAR_ERROR, root.data._TOKEN_LINE, root.data._TOKEN_LINE_NUMBER);
         }
     }
     else if(isOperator(root.data))

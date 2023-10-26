@@ -1,16 +1,21 @@
 y = take "what is your age : ";
 
 if y > 10:
-    if y <= 17:
-        show "You are a Teen";
+
+    if y < 18:
+        show "You are a Teen" nl;
     fi;
 
-    if y > 17:
-        show "You are an Adult";
+    if y >= 18:
+        show "You are an Adult" nl;
     fi;
+
+    else:
+        show "Kid lover" nl;
+    el;
 
 fi;
 
 else:
-    show "You are a kid";
+    show "You are a kid" nl;
 el;

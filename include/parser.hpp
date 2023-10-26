@@ -20,7 +20,7 @@ class Parser{
         Token current_token;                    // holds the token the parser is looking at right now
         Contenxt_t current_context;             // holds the context based on this the error checking changes it's behavior
         void advance();                         // sets the current token to the next token
-        Token lookAhead();
+        Token lookAhead();                      // not using currently anywhere
         Tree parseVar();
         Tree parseEqu();
         Tree parseShow();

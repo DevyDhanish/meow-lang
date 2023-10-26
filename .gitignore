@@ -1,10 +1,10 @@
 *.out
 *.o
 *.asm
-*.a
 *.sh
+*.a
 
-meowlang
+meowlang.exe
 
 build/
 .vscode/

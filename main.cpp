@@ -2,6 +2,7 @@
 #include <vector>
 #include <unordered_map>
 #include <string.h>
+#include <string>
 
 #include "include/core.hpp"
 #include "include/lexer.hpp"
@@ -61,8 +62,16 @@ int main(int argc, char **argv){
             
         #endif
     }
-    
+
+    for(int i=0;i<argc;i++)
+    {
+        if(string(argv[i]) == "-b" || string(argv[i]) == "--byte")
+        {
+            showByteCode();
+        }
+    }
+
     run();
-    
+
     return 0;
 }

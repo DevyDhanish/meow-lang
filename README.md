@@ -6,7 +6,7 @@ I might finish this idk, here are all the details if you want to contribute. And
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-# BUILD DEV (very early stages)
+# BUILD v1.6.11 (First Version)
 
 # GETTING STARTED
 
@@ -23,14 +23,15 @@ I use ubuntu, this steps might not work on windows or mac systems.
 `./meowlang main.meow`<br />
 
 # Prerequisites
-1 - `make` <br />
+1 - `make/mingw32-make` <br />
 3 - `g++/clang++` <br />
 
 # PLAN
 step 1 - Put the whole file in buffer so it is easier to work with.<br>
 step 2 - Lexer will work with this buffer to produce tokens<br>
 step 3 - read the tokenized list and generate a AST and check of syntax errors<br>
-step 4 - read the AST and execute code according to it<br>
+step 4 - read the AST and genered bytecode according to it<br>
+step 5 - read the bytecode and execute it <br>
 
 
 # TODO📋

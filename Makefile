@@ -1,5 +1,5 @@
 CC := g++
-PROJECT_NAME = meowlang
+PROJECT_NAME = meowlang.exe
 CPPFLAGS := -Wall -Wextra
 EFLAGS := -c -g
 INCLUDE_DIR := include
@@ -8,7 +8,7 @@ LIB_DIR := lib
 OUTPUT_DIR := build
 
 create:
-	mkdir lib build
+	mkdir build
 
 libs:
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/core.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/core.o
@@ -24,11 +24,8 @@ libs:
 	ar rcs $(LIB_DIR)/libmeow.a $(LIB_DIR)/*.o
 
 bin-debug:
-	$(CC) $(CPPFLAGS) -DDEBUG main.cpp -I$(INCLUDE_DIR) -L$(LIB_DIR) -lmeow -o $(OUTPUT_DIR)/$(PROJECT_NAME) -static
+	$(CC) $(CPPFLAGS) -o $(OUTPUT_DIR)/$(PROJECT_NAME) -DDEBUG main.cpp -I$(INCLUDE_DIR) -L$(LIB_DIR) -lmeow -static
 	
 bin-release:
 	$(CC) $(CPPFLAGS) main.cpp -I$(INCLUDE_DIR) -L$(LIB_DIR) -lmeow -o $(OUTPUT_DIR)/$(PROJECT_NAME) -static
 
-clean:
-	rm -r build
-	rm -r lib

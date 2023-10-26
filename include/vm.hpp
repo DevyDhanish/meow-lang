@@ -46,5 +46,7 @@ void runElseBlock();
 void runLoopBlock();
 void advance();
 void goback();
+void showEasterEgg();
 bool isOperator(Token op);
+void printBytecode();
 //void preproces();
