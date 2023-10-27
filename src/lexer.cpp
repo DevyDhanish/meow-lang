@@ -45,10 +45,25 @@ std::vector<std::string> disassembleLine(meow_line line){
 
 
         else if(operator_pair.find(lookAhead) != operator_pair.end()){
-
+            
+            std::string word;
+            word += lookAhead;
             curr_pos += 1;
+            
+            if(isdigit(curr_line[curr_pos]) && (lookAhead == '-' || lookAhead == '+'))
+            {
+                while(curr_pos < curr_line.size() && isdigit(curr_line[curr_pos])){
+                    word += curr_line[curr_pos];
+                    curr_pos += 1;
+                }
+    
+                if(word != "")
+                    output.push_back(word);
+                    
+                else output.push_back(std::string(1,lookAhead));
+            }
 
-            if(curr_line[curr_pos] == '='){
+            else if(curr_line[curr_pos] == '='){
                 output.push_back(operator_pair[lookAhead]);
                 curr_pos += 1;
             }
@@ -67,13 +82,16 @@ std::vector<std::string> disassembleLine(meow_line line){
             std::string word;
             word += '"';
             curr_pos += 1;
-            while(curr_line[curr_pos] != '"'){
+            while(1){
+                if(curr_line[curr_pos] == '"') break;
+
                 word += curr_line[curr_pos];
-                curr_pos += 1;
 
                 if(curr_pos > curr_line.size()){
                     displayError(_E_SYNTAX_ERROR, line.line, line.line_number);
                 }
+
+                curr_pos += 1;
             }
             word += '"';
             output.push_back(word);
@@ -82,6 +100,8 @@ std::vector<std::string> disassembleLine(meow_line line){
 
         else if (isdigit(lookAhead)){
             std::string word;
+            word += lookAhead;
+            curr_pos += 1;
             while(curr_pos < curr_line.size() && isdigit(curr_line[curr_pos])){
                 word += curr_line[curr_pos];
                 curr_pos += 1;
@@ -143,7 +163,7 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
             ));
         }
 
-        else if(isdigit(curr_word[0])){
+        else if(isdigit(curr_word[0]) || curr_word[0] == '-' || curr_word[0] == '+'){
             _prog_token_list.push_back(makeToken(
                 _TOKEN_INT,
                 curr_word,

@@ -568,7 +568,7 @@ Tree Parser::parse(std::vector<Token> prog_token){
                 changeContext(_C_END);
                 main.add_child(Tree(this->current_token));
                 advance();
-                if(this->current_token._TOKEN_TYPE == _TOKEN_EMPTY)
+                if(this->current_token._TOKEN_TYPE != _TOKEN_SEMI_COL)
                 {
                     displayError(_E_SYNTAX_ERROR, "missing `;` at the end", 0);
                 }
@@ -579,7 +579,7 @@ Tree Parser::parse(std::vector<Token> prog_token){
             changeContext(_C_END);
             main.add_child(Tree(this->current_token));
             advance();
-            if(this->current_token._TOKEN_TYPE == _TOKEN_EMPTY)
+            if(this->current_token._TOKEN_TYPE != _TOKEN_SEMI_COL)
             {
                 displayError(_E_SYNTAX_ERROR, "missing `;` at the end", 0);
             }

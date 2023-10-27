@@ -283,6 +283,10 @@ bool compareTokens(MEOW_BYTE_CODE cmp_type, Tree left_op, Tree right_op){
         Token l_var = get(left_op.data);
         Token r_var = get(right_op.data);
 
+        if(l_var._TOKEN_TYPE == _TOKEN_EMPTY) displayError(_E_UNDECLARED_VAR_ERROR, left_op.data._TOKEN_LINE, left_op.data._TOKEN_LINE_NUMBER);
+
+        if(r_var._TOKEN_TYPE == _TOKEN_EMPTY) displayError(_E_UNDECLARED_VAR_ERROR, right_op.data._TOKEN_LINE, right_op.data._TOKEN_LINE_NUMBER);
+
         return (*cmpfncptr)(l_var, r_var, left_op.data, right_op.data);
     }
 
@@ -291,12 +295,16 @@ bool compareTokens(MEOW_BYTE_CODE cmp_type, Tree left_op, Tree right_op){
     {
         Token l_var = get(left_op.data);
 
+        if(l_var._TOKEN_TYPE == _TOKEN_EMPTY) displayError(_E_UNDECLARED_VAR_ERROR, left_op.data._TOKEN_LINE, left_op.data._TOKEN_LINE_NUMBER);
+
         return (*cmpfncptr)(l_var, right_op.data, left_op.data, right_op.data);
     }
 
     else if(left_op.data._TOKEN_TYPE == _TOKEN_STRING && right_op.data._TOKEN_TYPE == _TOKEN_VAR)
     {
         Token r_var = get(right_op.data);
+
+        if(r_var._TOKEN_TYPE == _TOKEN_EMPTY) displayError(_E_UNDECLARED_VAR_ERROR, right_op.data._TOKEN_LINE, right_op.data._TOKEN_LINE_NUMBER);
 
         return (*cmpfncptr)(left_op.data, r_var, left_op.data, right_op.data);
     }
@@ -336,6 +344,7 @@ bool compareTokens(MEOW_BYTE_CODE cmp_type, Tree left_op, Tree right_op){
     else if(left_op.data._TOKEN_TYPE == _TOKEN_VAR && (right_op.data._TOKEN_TYPE == _TOKEN_INT || isOperator(right_op.data)))
     {
         Token l_var = get(left_op.data);
+        if(l_var._TOKEN_TYPE == _TOKEN_EMPTY) displayError(_E_UNDECLARED_VAR_ERROR, left_op.data._TOKEN_LINE, left_op.data._TOKEN_LINE_NUMBER);
         Token right_val = makeTokenFromValue(_TOKEN_INT, solveExpression(right_op));
         return (*cmpfncptr)(l_var, right_val, left_op.data, right_op.data);
     }
@@ -343,6 +352,7 @@ bool compareTokens(MEOW_BYTE_CODE cmp_type, Tree left_op, Tree right_op){
     else if((left_op.data._TOKEN_TYPE == _TOKEN_INT || isOperator(left_op.data)) && right_op.data._TOKEN_TYPE == _TOKEN_VAR)
     {
         Token r_var = get(right_op.data);
+        if(r_var._TOKEN_TYPE == _TOKEN_EMPTY) displayError(_E_UNDECLARED_VAR_ERROR, right_op.data._TOKEN_LINE, right_op.data._TOKEN_LINE_NUMBER);
         Token left_val = makeTokenFromValue(_TOKEN_INT, solveExpression(left_op));
         return (*cmpfncptr)(left_val, r_var, left_op.data, right_op.data);
     }
