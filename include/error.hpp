@@ -12,6 +12,7 @@ typedef enum ERROR_TYPE
     _E_UNKNOW_TOKEN_ERROR,      // 3
     _E_INDENTATION_ERROR,       // 4
     _E_UNDECLARED_VAR_ERROR,    // 5
+    
 } Error_T;
 
 extern std::unordered_map<Error_T, std::string> error_table;

@@ -39,7 +39,7 @@ int main(int argc, char **argv){
 
         tokenized_vector = lex.tokenize(line);
         AST = parser.parse(tokenized_vector);
-        interpreter.convertToByteCode(AST.get_child(0));
+        //interpreter.convertToByteCode(AST.get_child(0));
 
         #ifdef DEBUG
 
@@ -63,15 +63,15 @@ int main(int argc, char **argv){
         #endif
     }
 
-    for(int i=0;i<argc;i++)
-    {
-        if(string(argv[i]) == "-b" || string(argv[i]) == "--byte")
-        {
-            showByteCode();
-        }
-    }
+    // for(int i=0;i<argc;i++)
+    // {
+    //     if(string(argv[i]) == "-b" || string(argv[i]) == "--byte")
+    //     {
+    //         showByteCode();
+    //     }
+    // }
 
-    run();
+    // run();
 
     return 0;
 }
