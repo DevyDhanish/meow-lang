@@ -1,5 +1,5 @@
 CC := g++
-PROJECT_NAME = meowlang.exe
+PROJECT_NAME = meowlang
 CPPFLAGS := -Wall -Wextra
 EFLAGS := -c -g
 INCLUDE_DIR := include
