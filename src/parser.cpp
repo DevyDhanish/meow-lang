@@ -139,6 +139,12 @@ Tree Parser::parseStr(){
         return str;
     }
 
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_PLUS)
+    {
+        advance();
+        str.add_child(parseStr());
+    }
+
     else
     {
         displayError(_E_SYNTAX_ERROR, "String should be end with a `;` or `:`", 0);

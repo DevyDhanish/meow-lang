@@ -38,7 +38,33 @@ void createAndSubmitByteCode(Token oper, Tree oper1, Tree oper2){
     );
 }
 
+std::string cleanString(std::string str)
+{
+    std::string newStr = "";
+    newStr += '"';
+    for(int i = 0; i < str.size(); i++)
+    {
+        if(isalpha(str[i])) newStr+=str[i];
+    }
+    newStr += '"';
+
+    return newStr;
+}
+
+std::string resolveString(Tree root)
+{
+    std::string joinedString = root.data._TOKEN_VALUE;
+
+    if(root.childs.size() > 0) return joinedString += resolveString(root.get_child(0));
+
+    return joinedString;
+}
+
 void Interpreter::generateAssignmentByteCode(Token op, Tree op1, Tree op2) {
+    if(op2.data._TOKEN_TYPE == _TOKEN_STRING)
+    {
+        op2.data._TOKEN_VALUE = cleanString(resolveString(op2));
+    }
     createAndSubmitByteCode(op, op1, op2);
 }
 
