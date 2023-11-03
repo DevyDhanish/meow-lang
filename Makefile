@@ -7,9 +7,6 @@ SRC_DIR := src
 LIB_DIR := lib
 OUTPUT_DIR := build
 
-create:
-	mkdir build
-
 libs:
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/core.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/core.o
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/token.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/token.o
