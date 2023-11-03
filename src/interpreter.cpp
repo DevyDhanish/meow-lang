@@ -44,7 +44,7 @@ std::string cleanString(std::string str)
     newStr += '"';
     for(int i = 0; i < str.size(); i++)
     {
-        if(isalpha(str[i])) newStr+=str[i];
+        if(str[i] != '"') newStr+=str[i];
     }
     newStr += '"';
 
@@ -53,7 +53,8 @@ std::string cleanString(std::string str)
 
 std::string resolveString(Tree root)
 {
-    std::string joinedString = root.data._TOKEN_VALUE;
+    std::string joinedString = "";
+    if(root.data._TOKEN_TYPE == _TOKEN_STRING) joinedString += root.data._TOKEN_VALUE;
 
     if(root.childs.size() > 0) return joinedString += resolveString(root.get_child(0));
 
