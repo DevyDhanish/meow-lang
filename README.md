@@ -8,10 +8,10 @@ I might finish this idk, here are all the details if you want to contribute. And
 
 # BUILD v1.6.11 (First Version)
 
-# GETTING STARTED
+# CONTRIBUTIONS
 
 # ❗❗Caution❗❗
-I use ubuntu, this steps might not work on windows or mac systems.
+I use Arch Linux, this steps might not work on windows or mac systems.
 
 `fork this repo`<br />
 `git clone https://github.com/<your-user-name>/meow-lang`<br />
@@ -26,19 +26,7 @@ I use ubuntu, this steps might not work on windows or mac systems.
 1 - `make/mingw32-make` <br />
 3 - `g++/clang++` <br />
 
-# PLAN
-step 1 - Put the whole file in buffer so it is easier to work with.<br>
-step 2 - Lexer will work with this buffer to produce tokens<br>
-step 3 - read the tokenized list and generate a AST and check of syntax errors<br>
-step 4 - read the AST and genered bytecode according to it<br>
-step 5 - read the bytecode and execute it <br>
-
-
-# TODO📋
-[ PARTIALLY DONE ] - Read the whole file and put it into buffer for easy operations <br />
-[ PARTIALLY DONE ] - Read the buffer and tokenize it <br />
-[ PARTIALLY DONE ] - Write all the tokes<br />
-[ PARTIALLY DONE ] - Make a tree structure for the AST (Abstract syntax tree)<br />
-[ PARTIALLY DONE ] - Make a parser thats read the tokenized list and generates a AST <br />
-[ PARTIALLY DONE ] - Syntax check and all <br />
-[ PARTIALLY DONE ] - traverse the AST and execute it <br />
+# GETTING STARTED
+If you want to donwload and get started using meow-lang, resources listed below will help you.<br>
+[How to install meow-lang](https://github.com/DevyDhanish/meow-lang/wiki/How-to-download-and-install-Meow%E2%80%90Lang-in-Windows)<br>
+[How to use meow-lang](https://github.com/DevyDhanish/meow-lang/wiki/How-to-use-meow%E2%80%90lang)<br>
