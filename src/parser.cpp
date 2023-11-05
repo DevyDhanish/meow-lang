@@ -17,10 +17,10 @@ void Parser::advance(){
     }
 }
 
-void Parser::changeContext(Contenxt_t newContext)
-{
-    this->current_context = newContext;
-}
+// void Parser::changeContext(Contenxt_t newContext)
+// {
+//     this->current_context = newContext;
+// }
 
 Tree Parser::parseTake(){
     Tree take(this->current_token);
@@ -49,12 +49,10 @@ Tree Parser::parseEqu(){
     }
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_INT){
-        changeContext(_C_EXPR);
         equ.add_child(parseAddSub());
     }
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
-        changeContext(_C_EXPR);
         equ.add_child(parseAddSub());
     }
 
@@ -568,25 +566,25 @@ Tree Parser::parse(std::vector<Token> prog_token){
     advance();
 
         if(this->current_token._TOKEN_TYPE == _TOKEN_SHOW){
-            changeContext(_C_OUTPUT);
+            //changeContext(_C_OUTPUT);
             main.add_child(parseShow());
             return main;
         }
 
         else if(this->current_token._TOKEN_TYPE == _TOKEN_VAR){
-            changeContext(_C_ASSIGNMNET);
+            //changeContext(_C_ASSIGNMNET);
             main.add_child(parseVar());
             return main;
         }
 
         else if(this->current_token._TOKEN_TYPE == _TOKEN_IF || this->current_token._TOKEN_TYPE == _TOKEN_ELIF){
-            changeContext(_C_IF_STMT);
+           // changeContext(_C_IF_STMT);
             main.add_child(parseIf());
             return main;
         }
 
         else if(this->current_token._TOKEN_TYPE == _TOKEN_ELSE){
-            changeContext(_C_ELSE_STMT);
+            //changeContext(_C_ELSE_STMT);
             main.add_child(parseElse());
             return main;
         }
@@ -594,7 +592,7 @@ Tree Parser::parse(std::vector<Token> prog_token){
         else if(this->current_token._TOKEN_TYPE == _TOKEN_ENDIF ||
             this->current_token._TOKEN_TYPE == _TOKEN_ENDELSE)
             {
-                changeContext(_C_END);
+                //changeContext(_C_END);
                 main.add_child(Tree(this->current_token));
                 advance();
                 if(this->current_token._TOKEN_TYPE != _TOKEN_SEMI_COL)
@@ -605,7 +603,7 @@ Tree Parser::parse(std::vector<Token> prog_token){
             }
         else if(this->current_token._TOKEN_TYPE == _TOKEN_ENDWHILE)
         {
-            changeContext(_C_END);
+            //changeContext(_C_END);
             main.add_child(Tree(this->current_token));
             advance();
             if(this->current_token._TOKEN_TYPE != _TOKEN_SEMI_COL)
@@ -615,7 +613,7 @@ Tree Parser::parse(std::vector<Token> prog_token){
             return main;
         }
         else if(this->current_token._TOKEN_TYPE == _TOKEN_WHILE){
-            changeContext(_C_LOOP_STMT);
+            //changeContext(_C_LOOP_STMT);
             main.add_child(parseWhile());
             return main;
         }

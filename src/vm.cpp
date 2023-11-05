@@ -10,7 +10,10 @@
 #include <string>
 #include <cmath>
 #include <ctype.h>
+
+#ifdef __linux__
 #include <unistd.h>
+#endif
 
 #ifdef _WIN32
 #include <windows.h>
@@ -23,7 +26,7 @@ Byte_code current_instruction;
 void meow_pause()
 {
     #ifdef _WIN32
-        Sleep(10000);
+        Sleep(1);
     #endif
 
     #ifdef __linux__
@@ -554,7 +557,12 @@ void output(Tree root)
         {
             std::cout << mastrubate_emojies[i] << "\n";
             meow_pause();
+            #ifdef __linux__
             system("clear");
+            #endif
+            #ifdef _WIN32
+            system("cls");
+            #endif
             i++;
         }
         std::cout << mastrubate_emojies[mastrubate_emojies.size() - 1] << "\n";

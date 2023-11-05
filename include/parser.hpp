@@ -18,7 +18,7 @@ class Parser{
 
     private:
         Token current_token;                    // holds the token the parser is looking at right now
-        Contenxt_t current_context;             // holds the context based on this the error checking changes it's behavior
+        //Contenxt_t current_context;             // holds the context based on this the error checking changes it's behavior
         void advance();                         // sets the current token to the next token
         Token lookAhead();                      // not using currently anywhere
         Tree parseVar();
@@ -40,7 +40,7 @@ class Parser{
         Tree parseTake();
         Tree parseNewLine();
         Tree parseMastrubate();
-        void changeContext(Contenxt_t);
+        //void changeContext(Contenxt_t);
         Tree parseExpr(std::vector<Token> experTokens);
         std::vector<Token> progToken;           // stores the tokenized vector for the parser to use
         size_t counter = 0;                     // counter to keep track of where it is in the `progToken` token vector
