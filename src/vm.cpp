@@ -30,7 +30,7 @@ void meow_pause()
     #endif
 
     #ifdef __linux__
-        usleep(10000);
+        usleep(50000);
     #endif
 }
 
