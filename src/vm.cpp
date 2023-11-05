@@ -537,6 +537,8 @@ void output(Tree root)
     else if(isOperator(root.data))
     {
         std::cout << solveExpression(root);
+        std::cout << "\n";
+        return;
     }
     else if(root.data._TOKEN_TYPE == _TOKEN_STRING){
         std::cout << format_string(root.data._TOKEN_VALUE);

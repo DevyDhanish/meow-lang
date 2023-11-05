@@ -11,9 +11,9 @@ while copy != 0:
 end;
 
 if reverse == input:
-    show "Palindrome -> " input;
+    show "Palindrome -> " input nl;
 fi;
 
 else:
-    show "Not palindrome -> " input;
+    show "Not palindrome -> " input nl;
 el;
