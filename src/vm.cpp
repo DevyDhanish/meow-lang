@@ -10,10 +10,26 @@
 #include <string>
 #include <cmath>
 #include <ctype.h>
+#include <unistd.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 std::vector<Byte_code> meow_byte_code;
 size_t instruction_pointer = 0;
 Byte_code current_instruction;
+
+void meow_pause()
+{
+    #ifdef _WIN32
+        Sleep(10000);
+    #endif
+
+    #ifdef __linux__
+        usleep(10000);
+    #endif
+}
 
 void advance(){
     if(instruction_pointer < meow_byte_code.size()){
@@ -529,6 +545,21 @@ void output(Tree root)
     else if(root.data._TOKEN_TYPE == _TOKEN_PIKA || root.data._TOKEN_TYPE == _TOKEN_AYO || root.data._TOKEN_TYPE == _TOKEN_MEOWTH || root.data._TOKEN_TYPE == _TOKEN_BEERUS)
     {
         std::cout << root.data._TOKEN_VALUE;
+    }
+    else if(root.data._TOKEN_TYPE == _TOKEN_MASTRUBATE)
+    {
+        int i = 0;
+
+        while(i < mastrubate_emojies.size())
+        {
+            std::cout << mastrubate_emojies[i] << "\n";
+            meow_pause();
+            system("clear");
+            i++;
+        }
+        std::cout << mastrubate_emojies[mastrubate_emojies.size() - 1] << "\n";
+        std::cout << "Oh my......take that on your face.";
+        std::cout << "\n";
     }
     else if(root.data._TOKEN_TYPE == _TOKEN_INT)
     {

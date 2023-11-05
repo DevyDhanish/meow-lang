@@ -14,6 +14,7 @@ extern std::string BEERUS;
 extern std::string MEOWTH;
 extern std::string PIKA;
 extern std::string AYO;
+extern std::vector<std::string> mastrubate_emojies;
 
 extern std::unordered_map<std::string, TOKEN_T> knowTokens;
 extern std::unordered_map<char, std::string> operator_pair;

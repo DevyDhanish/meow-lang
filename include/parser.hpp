@@ -39,6 +39,7 @@ class Parser{
         Tree parseWhile();
         Tree parseTake();
         Tree parseNewLine();
+        Tree parseMastrubate();
         void changeContext(Contenxt_t);
         Tree parseExpr(std::vector<Token> experTokens);
         std::vector<Token> progToken;           // stores the tokenized vector for the parser to use

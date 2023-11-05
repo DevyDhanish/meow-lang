@@ -2,8 +2,8 @@ y = take "Enter a number : ";
 
 if y % 2 == 0:
     show "Even";
-endif;
+fi;
 
 else:
     show "Odd";
-endelse;
+el;

@@ -338,6 +338,24 @@ Tree Parser::parseAyo(){
     return ayo;
 }
 
+Tree Parser::parseMastrubate()
+{
+    Tree mas(this->current_token);
+
+    advance();
+
+    if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
+        mas.add_child(this->current_token);
+        return mas;
+    }
+    else
+    {
+        displayError(_E_SYNTAX_ERROR, "mastrubate continued with a invalid token", 0);
+    }
+
+    return mas;
+}
+
 Tree Parser::parseShow(){
     Tree show(this->current_token);
 
@@ -366,6 +384,11 @@ Tree Parser::parseShow(){
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_AYO){
         show.add_child(parseAyo());
+    }
+
+    else if(this->current_token._TOKEN_TYPE == _TOKEN_MASTRUBATE)
+    {
+        show.add_child(parseMastrubate());
     }
 
     else if(this->current_token._TOKEN_TYPE == _TOKEN_STRING){

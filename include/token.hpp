@@ -58,6 +58,7 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_FALSE,           // 48
     _TOKEN_ENDWHILE,        // 49
     _TOKEN_NEW_LINE,        // 50
+    _TOKEN_MASTRUBATE,      // 51
     
 }TOKEN_T;
 
