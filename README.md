@@ -1,7 +1,7 @@
 ![Meow gif](./Meow.gif)
 
 # [Meow Lang]
-
+Follow meowlang on insgram [@meow__lang](https://www.instagram.com/meow__lang/)<br>
 I might finish this idk, here are all the details if you want to contribute. And I know this code is ugly as fuck i'm going to fix it, I think.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
