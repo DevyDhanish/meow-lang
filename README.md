@@ -9,10 +9,7 @@ I might finish this idk, here are all the details if you want to contribute. And
 # BUILD v1.6.11 (First Version)
 
 # CONTRIBUTIONS
-
-# ❗❗Caution❗❗
-I use Arch Linux, this steps might not work on windows or mac systems.
-
+# if you are on windows use `mingw32-make` if linux use `make`
 `fork this repo`<br />
 `git clone https://github.com/<your-user-name>/meow-lang`<br />
 `make create`<br />
