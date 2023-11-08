@@ -14,7 +14,7 @@ libs:
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/parser.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/parser.o
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/tree.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/tree.o
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/map.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/map.o
-	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/interpreter.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/interpreter.o
+	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/compiler.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/compiler.o
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/vm.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/vm.o
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/error.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/error.o
 

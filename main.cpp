@@ -9,7 +9,7 @@
 #include "include/token.hpp"
 #include "include/tree.hpp"
 #include "include/parser.hpp"
-#include "include/interpreter.hpp"
+#include "include/compiler.hpp"
 #include "include/vm.hpp"
 #include "include/error.hpp"
 
@@ -28,18 +28,20 @@ int main(int argc, char **argv){
     // DEBUG is a macro sent through the command line.
     vector<meow_line> program_lines = file_to_vect(argv[1]);
     
+    // meowlang pipeline
     Lexer lex;
     Parser parser;
     Tree AST;
-    Interpreter interpreter;
+    Compiler compiler;
     
     std::vector<Token> tokenized_vector;
+    std::vector<bytecode> generated_bytecode;
 
     for(meow_line line : program_lines){
 
         tokenized_vector = lex.tokenize(line);
         AST = parser.parse(tokenized_vector);
-        interpreter.convertToByteCode(AST.get_child(0));
+        compiler.compile(generated_bytecode, AST.get_child(0));
 
         #ifdef DEBUG
 
@@ -57,21 +59,13 @@ int main(int argc, char **argv){
             std::cout << std::endl;
 
             std::cout << "===============[ BYTE CODE ]============\n";
-            showByteCode();
+            //showByteCode();
             std::cout << "===============[ BYTE CODE EXECUTION ]============\n";
             
         #endif
     }
 
-    for(int i=0;i<argc;i++)
-    {
-        if(string(argv[i]) == "-b" || string(argv[i]) == "--byte")
-        {
-            showByteCode();
-        }
-    }
-
-    run();
+    //run();
 
     return 0;
 }
