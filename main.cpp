@@ -57,7 +57,5 @@ int main(int argc, char **argv){
     std::cout << "===============[ BYTE CODE EXECUTION ]============\n";
     #endif
 
-    //run();
-
     return 0;
 }
