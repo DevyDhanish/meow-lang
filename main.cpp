@@ -39,31 +39,23 @@ int main(int argc, char **argv){
 
     for(meow_line line : program_lines){
 
-        tokenized_vector = lex.tokenize(line);
-        AST = parser.parse(tokenized_vector);
-        compiler.compile(generated_bytecode, AST.get_child(0));
-
-        #ifdef DEBUG
-
-            std::cout << "\nLine - " << line.line << "\n";
-
-            std::cout << "=====================[ TOKENS ]======================\n";
-
-            for(size_t i = 0; i < tokenized_vector.size(); i ++){
-                std:: cout << "Token Type = " << tokenized_vector[i]._TOKEN_TYPE << "\t\t" << "Token value = " << tokenized_vector[i]._TOKEN_VALUE << "\t\t" << tokenized_vector[i]._TOKEN_LINE << "\t\t" << "Line Number = " << tokenized_vector[i]._TOKEN_LINE_NUMBER << " INDENTATION = " << tokenized_vector[i]._INDENTATION << "\n";
-            }
-    
-            std::cout << "================[ PARSE TREE ]===================\n";
-            AST.print_tree(0);
-
-            std::cout << std::endl;
-
-            std::cout << "===============[ BYTE CODE ]============\n";
-            //showByteCode();
-            std::cout << "===============[ BYTE CODE EXECUTION ]============\n";
-            
-        #endif
+        for(Token i : lex.tokenize(line)) tokenized_vector.push_back(i);
+        //AST = parser.parse(tokenized_vector);
+        //compiler.compile(generated_bytecode, AST.get_child(0));
     }
+
+    #ifdef DEBUG
+    std::cout << "=====================[ TOKENS ]======================\n";
+    for(size_t i = 0; i < tokenized_vector.size(); i ++){
+        std:: cout << "Token Type = " << tokenized_vector[i]._TOKEN_TYPE << "\t\t" << "Token value = " << tokenized_vector[i]._TOKEN_VALUE << "\t\t" << tokenized_vector[i]._TOKEN_LINE << "\t\t" << "Line Number = " << tokenized_vector[i]._TOKEN_LINE_NUMBER << " INDENTATION = " << tokenized_vector[i]._INDENTATION << "\n";
+    }
+    std::cout << "================[ PARSE TREE ]===================\n";
+    AST.print_tree(0);
+    std::cout << std::endl;
+    std::cout << "===============[ BYTE CODE ]============\n";
+    //showByteCode();
+    std::cout << "===============[ BYTE CODE EXECUTION ]============\n";
+    #endif
 
     //run();
 

@@ -20,3 +20,4 @@ typedef struct
     Token operand;             // some mnemonic like cmp don't need a operand that's why operand is a pointer so that when used with logical mnemonic the operand can be set to nullptr
 } bytecode;
 
+bytecode makebytecode(bytecode_type _mne, Token _op);

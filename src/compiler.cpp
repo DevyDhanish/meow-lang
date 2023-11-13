@@ -11,15 +11,6 @@
 // add
 // store x
 
-bytecode makebytecode(bytecode_type _mne, Token _op)
-{
-    bytecode bc;
-    bc.mnemonic = _mne;
-    bc.operand = _op;
-
-    return bc;
-}
-
 void resolveExpr(std::vector<bytecode> &bcv, Tree root)
 {
     if(root.data._TOKEN_TYPE != _TOKEN_PLUS)

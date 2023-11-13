@@ -10,6 +10,7 @@ OUTPUT_DIR := build
 libs:
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/core.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/core.o
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/token.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/token.o
+	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/bytecode.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/bytecode.o
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/lexer.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/lexer.o
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/parser.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/parser.o
 	$(CC) $(CPPFLAGS) $(EFLAGS) $(SRC_DIR)/tree.cpp -I$(INCLUDE_DIR) -o $(LIB_DIR)/tree.o

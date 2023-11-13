@@ -267,93 +267,6 @@ Tree Parser::parseInt(){
     return _int;
 }
 
-Tree Parser::parseBee(){
-    Tree bee(makeToken(_TOKEN_BEERUS, BEERUS, "beerus", 0, 0));
-
-    advance();
-
-    if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
-        bee.add_child(this->current_token);
-        return bee;
-    }
-    else
-    {
-        displayError(_E_SYNTAX_ERROR, "beerus continued with a invalid token", 0);
-    }
-
-    return bee;
-}
-
-Tree Parser::parseMeo(){
-    Tree meo(makeToken(_TOKEN_MEOWTH, MEOWTH, "meowth", 0, 0));
-
-    advance();
-
-    if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
-        meo.add_child(this->current_token);
-        return meo;
-    }
-    else
-    {
-        displayError(_E_SYNTAX_ERROR, "meowth continued with a invalid token", 0);
-    }
-
-    return meo;
-}
-
-Tree Parser::parsePika(){
-    Tree pika(makeToken(_TOKEN_PIKA, PIKA, "pika", 0, 0));
-
-    advance();
-
-    if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
-        pika.add_child(this->current_token);
-        return pika;
-    }
-    else
-    {
-        displayError(_E_SYNTAX_ERROR, "pika continued with a invalid token", 0);
-    }
-
-    return pika;
-}
-
-Tree Parser::parseAyo(){
-    Tree ayo(makeToken(_TOKEN_AYO, AYO, "ayo", 0, 0));
-
-    advance();
-
-
-    if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
-        ayo.add_child(this->current_token);
-        return ayo;
-    }
-    else
-    {
-        displayError(_E_SYNTAX_ERROR, "ayo continued with a invalid token", 0);
-    }
-
-    return ayo;
-}
-
-Tree Parser::parseMastrubate()
-{
-    Tree mas(this->current_token);
-
-    advance();
-
-    if(this->current_token._TOKEN_TYPE == _TOKEN_SEMI_COL){
-        mas.add_child(this->current_token);
-        return mas;
-    }
-    else
-    {
-        displayError(_E_SYNTAX_ERROR, "mastrubate continued with a invalid token", 0);
-    }
-
-    return mas;
-}
-
 Tree Parser::parseShow(){
     Tree show(this->current_token);
 
@@ -368,27 +281,6 @@ Tree Parser::parseShow(){
         show.add_child(parseNewLine());
     }
     
-    else if(this->current_token._TOKEN_TYPE == _TOKEN_BEERUS){
-        show.add_child(parseBee());
-    }
-
-    else if(this->current_token._TOKEN_TYPE == _TOKEN_MEOWTH){
-        show.add_child(parseMeo());
-    }
-
-    else if(this->current_token._TOKEN_TYPE == _TOKEN_PIKA){
-        show.add_child(parsePika());
-    }
-
-    else if(this->current_token._TOKEN_TYPE == _TOKEN_AYO){
-        show.add_child(parseAyo());
-    }
-
-    else if(this->current_token._TOKEN_TYPE == _TOKEN_MASTRUBATE)
-    {
-        show.add_child(parseMastrubate());
-    }
-
     else if(this->current_token._TOKEN_TYPE == _TOKEN_STRING){
         show.add_child(parseShowStr());
     }
