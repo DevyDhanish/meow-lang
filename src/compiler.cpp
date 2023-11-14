@@ -43,7 +43,7 @@ void Compiler::compile(std::vector<bytecode> byte_vector, Tree root) {
     }
 
     for(size_t i = 0; i < byte_vector.size(); i++)
-    {
+    {   
         std::cout << byte_vector[i].mnemonic << "," << byte_vector[i].operand._TOKEN_VALUE;
         std::cout << "\n";
     }

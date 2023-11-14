@@ -509,26 +509,6 @@ Tree Parser::parse(std::vector<Token> prog_token){
             main.add_child(parseWhile());
             return main;
         }
-        else if(this->current_token._TOKEN_TYPE == _TOKEN_PIKA)
-        {
-            main.add_child(parsePika());
-            return main;
-        }
-        else if(this->current_token._TOKEN_TYPE == _TOKEN_MEOWTH)
-        {
-            main.add_child(parseMeo());
-            return main;
-        }
-        else if(this->current_token._TOKEN_TYPE == _TOKEN_BEERUS)
-        {
-            main.add_child(parseBee());
-            return main;
-        }
-        else if(this->current_token._TOKEN_TYPE == _TOKEN_AYO)
-        {
-            main.add_child(parseAyo());
-            return main;
-        }
 
         else
         {
