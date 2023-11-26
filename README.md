@@ -8,6 +8,8 @@ I might finish this idk, here are all the details if you want to contribute. And
 
 # BUILD v1.6.11 (First Version)
 
+`show "This language is pretty stupid so be aware";`
+
 # CONTRIBUTIONS
 # if you are on windows use `mingw32-make` if linux use `make`
 `fork this repo`<br />
