@@ -2,6 +2,7 @@
 
 #include <string>
 #include <functional>
+#include <vector>
 
 
 // ALL possible type of tokens
@@ -59,8 +60,13 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_ENDWHILE,        // 49
     _TOKEN_NEW_LINE,        // 50
     _TOKEN_MASTRUBATE,      // 51
+    _TOKEN_FUNC,            // 52
     
 }TOKEN_T;
+
+/// @brief No actual use of this vector, just for seeing the names of the token type when printing the debug info in main.cpp 
+extern std::vector<std::string> token_names_for_loging;
+
 
 // typedef enum _CONTEXT{
 //     _C_ASSIGNMNET,              // 0

@@ -8,11 +8,6 @@
 
 std::unordered_map<std::string, TOKEN_T> knowTokens = {
         {"show", _TOKEN_SHOW},
-        {"beerus", _TOKEN_BEERUS},
-        {"meowth", _TOKEN_MEOWTH},
-        {"pika", _TOKEN_PIKA},
-        {"ayo", _TOKEN_AYO},
-        {"mastrubate", _TOKEN_MASTRUBATE},
         {"return", _TOKEN_RETURN},
         {"null", _TOKEN_NULL},
         {"=", _TOKEN_EQU},
@@ -76,6 +71,8 @@ std::set<char> brackets = {
     '[',
     ']',
 };
+
+const char commentChar = '#';
 
 bool isEmpty(std::string curr_line){
     for(char i : curr_line){

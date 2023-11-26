@@ -39,10 +39,14 @@ std::vector<std::string> disassembleLine(meow_line line){
     while(curr_pos < curr_line.size()){                             // loop until it reaches the end of the line
         char lookAhead = curr_line[curr_pos];
 
-        if(lookAhead == ' '){                                       // ignore space
+        if(lookAhead == ' ' || lookAhead == '\r' || lookAhead == '\t' || lookAhead == '\n'){                                       // ignore space
             curr_pos += 1;
         }
 
+        else if(lookAhead == commentChar)
+        {
+            while(curr_line[curr_pos] != '\n') curr_pos += 1;
+        }
 
         else if(operator_pair.find(lookAhead) != operator_pair.end()){
             
@@ -143,6 +147,7 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
 
     for(std::string curr_word : words){
         
+        // current word is keyword or is present in the tokens map
         if(knowTokens.find(curr_word) != knowTokens.end()){
             _prog_token_list.push_back(makeToken(
                 knowTokens[curr_word],
@@ -172,7 +177,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 LINE_IDENTATION
             ));
         }
-
+        
+        // if current word is not present in the token map then it must a variable name
         else if(knowTokens.find(curr_word) == knowTokens.end()){
             _prog_token_list.push_back(makeToken(
                 _TOKEN_VAR,
