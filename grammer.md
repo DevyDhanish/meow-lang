@@ -1,11 +1,18 @@
-Yes, I know this is straight from the crafting compilers <br>
+program ::= import stmts | simple stmts | compound stmts
 
-expression     → equality ;
-equality       → comparison ( ( "!=" | "==" ) comparison )* ;
-comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
-term           → factor ( ( "-" | "+" ) factor )* ;
-factor         → unary ( ( "/" | "*" ) unary )* ;
-unary          → ( "!" | "-" ) unary
-               | primary ;
-primary        → NUMBER | STRING | "true" | "false" | "nil"
-               | "(" expression ")" ;
+import stmts ::= "import" module-name
+
+simple stmts ::= assignment | expression
+
+assignment ::= identifier "=" expression | identifier
+
+compound stmts ::= if stmts
+                |  elif stmts
+                |  else stmts
+                |  function def
+                |  class def
+                |  function calls
+
+if stmts ::= "if" expression | function call "{ ... }"<br>
+else stmts ::= "elif" experession | function call "{ ... }"<br>
+else ::= "else"

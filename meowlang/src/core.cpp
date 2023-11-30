@@ -1,5 +1,5 @@
-#include "../include/core.hpp"
-#include "../include/token.hpp"
+#include "../../include/core.hpp"
+#include "../../include/token.hpp"
 #include <vector>
 #include <fstream>
 #include <iostream>
@@ -8,11 +8,6 @@
 
 std::unordered_map<std::string, TOKEN_T> knowTokens = {
         {"show", _TOKEN_SHOW},
-        {"beerus", _TOKEN_BEERUS},
-        {"meowth", _TOKEN_MEOWTH},
-        {"pika", _TOKEN_PIKA},
-        {"ayo", _TOKEN_AYO},
-        {"mastrubate", _TOKEN_MASTRUBATE},
         {"return", _TOKEN_RETURN},
         {"null", _TOKEN_NULL},
         {"=", _TOKEN_EQU},
@@ -77,6 +72,8 @@ std::set<char> brackets = {
     ']',
 };
 
+const char commentChar = '#';
+
 bool isEmpty(std::string curr_line){
     for(char i : curr_line){
         if(i != ' ') return 0;
@@ -108,14 +105,4 @@ std::vector<meow_line> file_to_vect(std::string _prog_filename){
     }
 
     return _prog_lines_vect;
-}
-
-std::string format_string(std::string _str){
-    std::string f_string =  "";
-
-    for(char i : _str){
-        if(i != '"') f_string += i;
-    }
-
-    return f_string;
 }
