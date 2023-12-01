@@ -66,8 +66,8 @@ int main(int argc, char **argv){
         std::cout << "Failed to parser\n";
     }
 
+    printf("\nVariable name main -> %s\n", module->v.Module.body[0]->v.Assign.body->v.NameExpr.target->v.Name.id->data.Char.val);
     std::cout << module->v.Module.body[0]->v.Assign.body->v.NameExpr.value->v.Const.value->data.Integer.val << "\n";
-    printf("%c", module->v.Module.body[0]->v.Assign.body->v.NameExpr.value->v.Name.id->data.Char.val);
     std::cout << "Parsed sucessfully\n";
     
     // compile the tokens to bytecode and send the bytecode to VM

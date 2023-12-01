@@ -6,6 +6,8 @@
 #include <string.h>
 #include <iostream>
 
+Token empty_token = makeToken(_TOKEN_EMPTY, "", "", 0, 0);
+
 bool comsume_token(Parser &p, TOKEN_T type)
 {
     if(p.tokens[p.counter]._TOKEN_TYPE == type)
@@ -19,41 +21,145 @@ bool comsume_token(Parser &p, TOKEN_T type)
     }
 }
 
-void *genNameAST_fromToken(Parser &p) {
-    if (p.tokens[p.counter]._TOKEN_TYPE != _TOKEN_VAR) {
-        printf("Expected a var token but got Token of type - %d\n", p.tokens[p.counter]._TOKEN_TYPE);
-        return NULL;
-    }
-
-    meowConstObj *varName = (meowConstObj *)malloc(sizeof(meowConstObj));
-    if (varName == NULL) {
-        std::cout << "Failed to allocate memory for variable obj\n";
-        return NULL; // Return NULL on allocation failure
-    }
-
-    varName->kind = _const_kind::Char;
-
-    const char *var_name = p.tokens[p.counter]._TOKEN_VALUE.c_str();
-    //size_t len = strlen(var_name) + 1; // Add 1 for null terminator
-    varName->data.Char.val = (char *)var_name;
-    printf("%c", varName->data.Char.val);
-    p.counter++;
-    return varName;
+bool expect_token(Parser &p, TOKEN_T type)
+{
+    return (p.tokens[p.counter]._TOKEN_TYPE == type);
 }
 
-meowConstObj *const_rule(Parser &p)
+struct Parser gen_parser(const std::vector<Token> &toks, size_t c, size_t l)
+{
+    struct Parser p;
+    p.tokens = toks,
+    p.counter = c;
+    p.level = l;
+
+    return p;
+}
+
+// creates a meowConstObj with the given type, you have to manually set the data
+// a - > int
+// b - > float
+// c - > char
+void *genMeowConstObj(Parser &p, Token a, Token b, Token c, _const_kind type)
+{
+    meowConstObj *const_obj = (meowConstObj *) malloc(sizeof(meowConstObj));
+    if(!const_obj)
+    {
+        printf("Failed allocate mem for meowConstObj\n");
+        return NULL;
+    }
+    const_obj->kind = type;
+
+    if(type == _const_kind::Char)
+    {
+        const_obj->data.Char.val = (char *)malloc(c._TOKEN_VALUE.size());
+        if(!const_obj->data.Char.val)
+        {
+            printf("Failed to allocate mem for copying variable name\n");
+            return NULL;
+        }
+        strncpy(const_obj->data.Char.val, c._TOKEN_VALUE.c_str(), c._TOKEN_VALUE.size());
+    }
+
+    else if(type == _const_kind::Int)
+    {
+        const_obj->data.Integer.val = stoll(a._TOKEN_VALUE);
+    }
+
+    else
+    {
+        const_obj->data.Float.val = stold(b._TOKEN_VALUE);
+    }
+
+    p.counter++;
+    return const_obj;
+}
+
+void *genConst_expr(meowConstObj *a)
+{
+    expr_ty *const_obj = (expr_ty *) malloc(sizeof(expr_ty));
+    if(!const_obj)
+    {
+        printf("Failed to allocate mem for expr_ty obj\n");
+        return NULL;
+    }
+    const_obj->kind == _expr_kind::Const;
+    const_obj->v.Const.value = a;
+
+    return const_obj;
+}
+
+void *genName_expr(meowConstObj *a)
+{
+    expr_ty *Name_expr = (expr_ty *) malloc(sizeof(expr_ty));
+    if(!Name_expr)
+    {
+        printf("Failed to allocate mem for Name_expr\n");
+        return NULL;
+    }
+    Name_expr->kind = _expr_kind::VarName;
+    Name_expr->v.Name.id = a;
+
+    return Name_expr;
+}
+
+// a -> target
+// b -> value
+void *genNameexpr_expr(expr_ty *a, expr_ty *b)
+{
+    expr_ty *variable = (expr_ty *) malloc(sizeof(expr_ty));
+    if(!variable)
+    {
+        printf("Failed to allocate mem for variable expr\n");
+        return NULL;
+    }
+    variable->kind = _expr_kind::NameExpr;
+    variable->v.NameExpr.target = a;
+    variable->v.NameExpr.value = b;
+    
+    return variable;
+}
+
+void *genAssign_stmt(expr_ty *a)
+{
+    stmt_ty *assign_stmt = (stmt_ty *) malloc(sizeof(stmt_ty));
+    if(!assign_stmt)
+    {
+        printf("Failed to allocate mem for Assign stmt\n");
+        return NULL;
+    }
+    assign_stmt->kind = _stmt_kind::Assign;
+    assign_stmt->v.Assign.body = a;
+
+    return assign_stmt;
+}
+
+// void *genModule_mod(Parser &p, stmt_ty *body)
+// {
+//     mod_ty *result = (mod_ty *) malloc(sizeof(mod_ty));
+//     result->Kind = _mod_kind::Module;
+//     result->v.Module.body = (stmt_ty **) malloc(sizeof(body));
+//     result->v.Module.body[p.level] = ( stmt_ty *) body;
+// }
+
+void *const_rule(Parser &p)
 {
     void *a;
     if(
         p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_INT    
     )
     {
-        meowConstObj *const_val = (meowConstObj *) malloc(sizeof(meowConstObj));
-        const_val->kind = _const_kind::Int;
-        const_val->data.Integer.val = stoll(p.tokens[p.counter]._TOKEN_VALUE);
+        meowConstObj *const_val = (meowConstObj *) genMeowConstObj(p, p.tokens[p.counter], empty_token, empty_token, _const_kind::Int);
+
         p.counter++;
         return const_val;
     }
+    if( p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_STRING )
+    {
+        meowConstObj *const_val = (meowConstObj *) genMeowConstObj(p, empty_token, empty_token, p.tokens[p.counter], _const_kind::Char);
+        p.counter++;
+        return const_val;
+    }   
     else
     {
         std::cout << "Failed to parser const\n";
@@ -67,9 +173,7 @@ void *expression_rule(Parser &p)
 
     if(a = const_rule(p))
     {
-        expr_ty *const_val = (expr_ty *) malloc(sizeof(const_val));
-        const_val->kind = _expr_kind::Const;
-        const_val->v.Const.value = (meowConstObj *)a;
+        expr_ty *const_val = (expr_ty *) genConst_expr((meowConstObj *)a);
         return const_val;
     }
     else
@@ -79,7 +183,7 @@ void *expression_rule(Parser &p)
     }
 }
 
-expr_ty *assign_stmt(Parser &p)
+void *assign_stmt(Parser &p)
 {
     // get name
     // consume '='
@@ -87,25 +191,16 @@ expr_ty *assign_stmt(Parser &p)
     void *var_name;
     void *value;
     if(
-       (var_name = genNameAST_fromToken(p))
+       (var_name = genMeowConstObj(p, empty_token, empty_token, p.tokens[p.counter], _const_kind::Char)) // store variable name
         &&
         comsume_token(p, _TOKEN_EQU) // `=`
         &&
         (value = expression_rule(p))
     )
     {
-        // make assignment token
-        expr_ty *_var = (expr_ty *) malloc(sizeof(expr_ty));
-        _var->kind = _expr_kind::NameExpr;
-        
-        expr_ty *var_name_expr = (expr_ty *) malloc(sizeof(var_name));
-        var_name_expr->kind = _expr_kind::VarName;
-        var_name_expr->v.Name.id = (meowConstObj *)var_name;
-
-        _var->v.NameExpr.target = (expr_ty *) var_name_expr;
-        _var->v.NameExpr.value = (expr_ty *)value;
-        printf("%c", _var->v.NameExpr.target->v.Name.id);
-        return _var;
+        expr_ty *varname_expr = (expr_ty *) genName_expr( (meowConstObj *) var_name);
+        expr_ty *variable = (expr_ty *) genNameexpr_expr(varname_expr, (expr_ty *) value);
+        return variable;
     }
     else
     {
@@ -114,15 +209,14 @@ expr_ty *assign_stmt(Parser &p)
     }
 }
 
-stmt_ty *simple_stmt(Parser &p)
+void *simple_stmt(Parser &p)
 {
     void *a;
     if(a = assign_stmt(p))
     {
-        stmt_ty *assstmt = (stmt_ty *) malloc(sizeof(stmt_ty));
-        assstmt->kind = _stmt_kind::Assign;
-        assstmt->v.Assign.body = (expr_ty *) a;
-        return assstmt;
+        stmt_ty *assign_stmt = (stmt_ty *) genAssign_stmt((expr_ty *) a);
+        printf("Variable name -> %s\n", assign_stmt->v.Assign.body->v.NameExpr.target->v.Name.id->data.Char.val);
+        return assign_stmt;
     }
     else
     {
@@ -133,12 +227,10 @@ stmt_ty *simple_stmt(Parser &p)
 
 void *file_rule(Parser &p)
 {
-    mod_ty *result;
-
     void *a;
     if(a = simple_stmt(p))
     {
-        result = (mod_ty *) malloc(sizeof(mod_ty));
+        mod_ty *result = (mod_ty *) malloc(sizeof(mod_ty));
         result->Kind = _mod_kind::Module;
         result->v.Module.body = (stmt_ty **) malloc(sizeof(a));
         result->v.Module.body[p.level] = ( stmt_ty *) a;
@@ -149,16 +241,6 @@ void *file_rule(Parser &p)
         std::cout << "simple_stmt returned NULL\n";
         return NULL;
     }
-}
-
-struct Parser gen_parser(const std::vector<Token> &toks, size_t c, size_t l)
-{
-    struct Parser p;
-    p.tokens = toks,
-    p.counter = c;
-    p.level = l;
-
-    return p;
 }
 
 void *parse(const std::vector<Token> &token_list, _rule rule)

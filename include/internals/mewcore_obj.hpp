@@ -6,7 +6,6 @@
 // string will be a class in meowlang
 
 #include <cstdint>
-#include <string>
 
 enum _const_kind { Int, Float, Char};
 
@@ -22,7 +21,7 @@ struct _const_obj
 
     struct  
         {
-            double val;    
+            long double val;    
         } Float;
 
         struct
