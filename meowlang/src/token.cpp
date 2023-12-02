@@ -27,7 +27,7 @@ std::vector<std::string> token_names_for_loging
     "_TOKEN_IF",    // 20
     "_TOKEN_ELSE",    // 21
     "_TOKEN_ELIF",    // 22
-    "_TOKEN_START",    // 23
+    "_TOKEN_START",    // fl
     "_TOKEN_EQU",    // 24
     "_TOKEN_CURLOPEN",    // 25
     "_TOKEN_CURLCLOSE",    // 26
@@ -55,7 +55,9 @@ std::vector<std::string> token_names_for_loging
     "_TOKEN_FALSE",    // 48
     "_TOKEN_ENDWHILE",    // 49
     "_TOKEN_NEW_LINE",    // 50
-    "_TOKEN_MASTRUBATE",    // 51  
+    "_TOKEN_MASTRUBATE",    // 51
+    "_TOKEN_FUNC",           // 52  
+    "_TOKEN_FLOAT",         // 53
 };
 
 Token makeToken(TOKEN_T _token_type, std::string _token_value, std::string _token_line, size_t _token_line_number, int _indentation){

@@ -7,5 +7,3 @@ all:
 	ar rcs lib/libmeow.a lib/*.o
 
 	g++ -g meowlang/main.cpp -Iinclude/ -Llib/ -lmeow
-
-	a.exe main.meow

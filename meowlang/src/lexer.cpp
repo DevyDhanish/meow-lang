@@ -17,6 +17,35 @@ int isString(std::string word){
     else return 0;
 }
 
+bool isfloat(const std::string& word) {
+    bool dotFound = false;
+    bool hasDigits = false;
+
+    for (char w : word) {
+        if (w == '.') {
+            if (dotFound) return false; // More than one dot means it's not a valid float
+            dotFound = true;
+        } else if (!isdigit(w) && w != '-' && w != '+') {
+            return false; // Non-digit characters, excluding '-' and '+', make it not a float
+        } else if (isdigit(w)) {
+            hasDigits = true; // Set the flag to true if at least one digit is found
+        }
+    }
+
+    // Return true only if at least one digit and a dot are found
+    return hasDigits && dotFound;
+}
+
+bool isdigit(const std::string &word)
+{
+    for (char w : word)
+    {
+        if ( !(w >= '0') && !(w <= '9') ) return false;
+    }
+
+    return true;
+}
+
 int isTypeOfBracket(char _bra){
     if(brackets.find(_bra) != brackets.end()) return 1;
 
@@ -54,7 +83,9 @@ std::vector<std::string> disassembleLine(meow_line line){
             word += lookAhead;
             curr_pos += 1;
 
-            while(curr_pos < curr_line.size() && isdigit(curr_line[curr_pos])){
+            while(1){
+                if(curr_pos > curr_line.size()) break;
+                if(!isdigit(curr_line[curr_pos]) && curr_line[curr_pos] != '.') break;
                 word += curr_line[curr_pos];
                 curr_pos += 1;
             }
@@ -90,8 +121,8 @@ std::vector<std::string> disassembleLine(meow_line line){
         }
 
         // 34 = "
-        // 39 = '
-        else if (lookAhead == 34 || lookAhead == 39){    // if a string is detected surround it with `"` for example `this is a string` will become "this is a string"
+        // 39 = ' <- won't work
+        else if (lookAhead == 34){    // if a string is detected surround it with `"` for example `this is a string` will become "this is a string"
             std::string word;
             curr_pos += 1;
             while(1){
@@ -111,9 +142,11 @@ std::vector<std::string> disassembleLine(meow_line line){
 
         else if (isdigit(lookAhead)){
             std::string word;
-            word += lookAhead;
-            curr_pos += 1;
-            while(curr_pos < curr_line.size() && isdigit(curr_line[curr_pos])){
+            // word += lookAhead;
+            // curr_pos += 1;
+            while(1){
+                if(curr_pos > curr_line.size()) break;
+                if(!isdigit(curr_line[curr_pos]) && curr_line[curr_pos] != '.') break;
                 word += curr_line[curr_pos];
                 curr_pos += 1;
             }
@@ -175,14 +208,30 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
             ));
         }
 
-        else if(isdigit(curr_word[0]) || curr_word[0] == '-' || curr_word[0] == '+'){
-            _prog_token_list.push_back(makeToken(
-                _TOKEN_INT,
-                curr_word,
-                _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
-            ));
+        else if((isfloat(curr_word) || curr_word[0] == '-' || curr_word[0] == '+') && isdigit(curr_word[0]))
+        {
+            _prog_token_list.push_back(
+                makeToken(
+                    _TOKEN_FLOAT,
+                    curr_word,
+                    _prog_lines.line,
+                    _prog_lines.line_number,
+                    LINE_IDENTATION
+                )
+            );
+        }
+
+        else if(isdigit(curr_word))
+        {
+            _prog_token_list.push_back(
+                makeToken(
+                    _TOKEN_INT,
+                    curr_word,
+                    _prog_lines.line,
+                    _prog_lines.line_number,
+                    LINE_IDENTATION
+                )
+            );
         }
         
         // if current word is not present in the token map then it must a variable name
@@ -196,7 +245,7 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
             ));
         }
         else{
-            //displayError(_E_UNKNOW_TOKEN_ERROR, _prog_lines.line, _prog_lines.line_number);
+            std::cout << "Error while lexing\n";
         }
     }
 

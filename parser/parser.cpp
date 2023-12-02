@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
+#include <cerrno>
+#include <cstdlib>
 
 Token empty_token = makeToken(_TOKEN_EMPTY, "", "", 0, 0);
 
@@ -59,6 +61,7 @@ void *genMeowConstObj(Parser &p, Token a, Token b, Token c, _const_kind type)
             return NULL;
         }
         strncpy(const_obj->data.Char.val, c._TOKEN_VALUE.c_str(), c._TOKEN_VALUE.size());
+        const_obj->data.Char.val[c._TOKEN_VALUE.size()] = '\0';
     }
 
     else if(type == _const_kind::Int)
@@ -68,7 +71,9 @@ void *genMeowConstObj(Parser &p, Token a, Token b, Token c, _const_kind type)
 
     else
     {
-        const_obj->data.Float.val = stold(b._TOKEN_VALUE);
+        char *e;
+        errno = 0;
+        const_obj->data.Float.val = std::strtold(b._TOKEN_VALUE.c_str(), &e);
     }
 
     p.counter++;
@@ -159,7 +164,13 @@ void *const_rule(Parser &p)
         meowConstObj *const_val = (meowConstObj *) genMeowConstObj(p, empty_token, empty_token, p.tokens[p.counter], _const_kind::Char);
         p.counter++;
         return const_val;
-    }   
+    }
+    if ( p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_FLOAT )
+    {
+        meowConstObj *const_val = (meowConstObj *) genMeowConstObj(p, empty_token, p.tokens[p.counter], empty_token, _const_kind::Float);
+        p.counter++;
+        return const_val;
+    }
     else
     {
         std::cout << "Failed to parser const\n";
