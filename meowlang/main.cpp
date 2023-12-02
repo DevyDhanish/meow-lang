@@ -38,13 +38,14 @@ int main(int argc, char **argv){
     std::vector<Token> tokenized_vector;
     //std::vector<bytecode> generated_bytecode;
 
-    // for(meow_line line : program_lines){
+    for(meow_line line : program_lines){
 
-    //     for(const Token &toks : lex.tokenize(line)) tokenized_vector.push_back(toks);
-    //     //AST = parser.parse(tokenized_vector);
-    //     //compiler.compile(generated_bytecode, AST.get_child(0));
-    // }
-
+        for(const Token &toks : lex.tokenize(line)) tokenized_vector.push_back(toks);
+        //AST = parser.parse(tokenized_vector);
+        //compiler.compile(generated_bytecode, AST.get_child(0));
+    }
+    tokenized_vector.push_back(makeToken(_TOKEN_EOT, "end of token", "none", 0));
+    
     #ifdef DEBUG
     std::cout << "=====================[ TOKENS ]======================\n";
     for(size_t i = 0; i < tokenized_vector.size(); i ++){
@@ -61,20 +62,24 @@ int main(int argc, char **argv){
 
     //std::vector<Token> extoks = { makeToken(_TOKEN_VAR, "x", "none", 0, 0),  makeToken(_TOKEN_EQU, "=", "none", 0, 0),  makeToken(_TOKEN_FLOAT, "1.232", "none", 0, 0),  makeToken(_TOKEN_SEMI_COL, ";", "none", 0, 0)};
 
-    //mod_ty *module = (mod_ty *) parse(extoks, File_Rule);
+    mod_ty *module = (mod_ty *) parse(tokenized_vector, File_Rule);
 
     // if(module == NULL)
     // {
     //     std::cout << "Failed to parser\n";
+    //     return 0;
     // }
+
+    display(module->v.Module.body);
 
     // std::cout << module->v.Module.body[0]->v.Assign.body->v.NameExpr.target->v.Name.id->data.Char.val << "\n";
     // std::cout << module->v.Module.body[0]->v.Assign.body->v.NameExpr.value->v.Const.value->data.Float.val << "\n";
     // std::cout << module->v.Module.body[0]->v.Assign.body->v.NameExpr.value->v.Const.value->data.Integer.val << "\n";
     // std::cout << module->v.Module.body[0]->v.Assign.body->v.NameExpr.value->v.Const.value->data.Char.val << "\n";
-    // std::cout << "Parsed sucessfully\n";
+    
     
     // compile the tokens to bytecode and send the bytecode to VM
 
+    std::cout << "Parsed sucessfully\n";
     return 0;
 }

@@ -7,49 +7,61 @@
 #include <vector>
 #include <ctype.h>
 #include <iostream>
+#include <sstream>
 
-
-int LINE_IDENTATION = 0;
-
-int isString(std::string word){
-    if(word[0] == '"' && word[word.size() - 1] == '"') return 1;
-
-    else return 0;
+bool isdigitC(char w)
+{
+    return w >= '0' && w <= '9';
 }
 
-bool isfloat(const std::string& word) {
-    bool dotFound = false;
-    bool hasDigits = false;
-
-    for (char w : word) {
-        if (w == '.') {
-            if (dotFound) return false; // More than one dot means it's not a valid float
-            dotFound = true;
-        } else if (!isdigit(w) && w != '-' && w != '+') {
-            return false; // Non-digit characters, excluding '-' and '+', make it not a float
-        } else if (isdigit(w)) {
-            hasDigits = true; // Set the flag to true if at least one digit is found
-        }
-    }
-
-    // Return true only if at least one digit and a dot are found
-    return hasDigits && dotFound;
-}
-
-bool isdigit(const std::string &word)
+bool isdigitS(const std::string &word)
 {
     for (char w : word)
     {
-        if ( !(w >= '0') && !(w <= '9') ) return false;
+        if(!isdigitC(w)) return false;
     }
 
     return true;
 }
 
-int isTypeOfBracket(char _bra){
-    if(brackets.find(_bra) != brackets.end()) return 1;
+bool isalphaC(char w)
+{
+    return (w >= 'a' && w <= 'z') || (w >= 'A' && w <= 'Z');
+}
 
-    else return 0;
+bool isTypeOfBracket(char w)
+{
+    if ( brackets.find(w) == brackets.end()) return false;
+    else return true;
+}
+
+bool isStringS(const std::string &word)
+{
+    if(word[0] != '"' && word[word.size() - 1] != '"') return false;
+
+    return true;
+}
+
+bool isFloat( const std::string &word ) {
+
+    if(!isdigitC(word[0])) return false;    // if the first letter is not a digit then it is not a float
+
+    for( char w : word)
+    {
+        if(w == '.') return true;
+    }
+
+    return false;
+}
+
+bool isInt( const std::string &word )
+{
+    for( char w : word )
+    {
+        if(!isdigitC(w)) return false;
+    }
+
+    return true;
 }
 
 // used to disassemble line into words for example line ` x = 5 + 5;` will be disassembled into `x,=,5,+,5,;`
@@ -59,11 +71,6 @@ std::vector<std::string> disassembleLine(meow_line line){
     std::vector<std::string> output;                                // each disassembled word will be pushed into this vector
     std::string curr_line = line.line;
     size_t curr_pos = 0;
-
-    for(char i : curr_line){
-        if(i != ' ') break;
-        else LINE_IDENTATION += 1;
-    }
 
     while(curr_pos < curr_line.size()){                             // loop until it reaches the end of the line
         char lookAhead = curr_line[curr_pos];
@@ -77,7 +84,7 @@ std::vector<std::string> disassembleLine(meow_line line){
             while(curr_line[curr_pos] != '\n') curr_pos += 1;
         }
 
-        else if(lookAhead == '-' || lookAhead == '+')
+        else if(isdigitC(lookAhead) || lookAhead == '-' || lookAhead == '+')
         {
             std::string word;
             word += lookAhead;
@@ -124,6 +131,7 @@ std::vector<std::string> disassembleLine(meow_line line){
         // 39 = ' <- won't work
         else if (lookAhead == 34){    // if a string is detected surround it with `"` for example `this is a string` will become "this is a string"
             std::string word;
+            word += '"';
             curr_pos += 1;
             while(1){
                 if(curr_line[curr_pos] == 34) break;
@@ -136,28 +144,12 @@ std::vector<std::string> disassembleLine(meow_line line){
 
                 curr_pos += 1;
             }
+            word += '"';
             output.push_back(word);
             curr_pos += 1;
         }
 
-        else if (isdigit(lookAhead)){
-            std::string word;
-            // word += lookAhead;
-            // curr_pos += 1;
-            while(1){
-                if(curr_pos > curr_line.size()) break;
-                if(!isdigit(curr_line[curr_pos]) && curr_line[curr_pos] != '.') break;
-                word += curr_line[curr_pos];
-                curr_pos += 1;
-            }
-
-            if(word != "")
-                output.push_back(word);
-                
-            else output.push_back(std::string(1,lookAhead));
-        }
-
-        else if (isalpha(lookAhead)){
+        else if (isalphaC(lookAhead)){
             std::string word;
             while(curr_pos < curr_line.size() && isalpha(curr_line[curr_pos])){
                 word += curr_line[curr_pos];
@@ -182,7 +174,6 @@ std::vector<std::string> disassembleLine(meow_line line){
 std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
 
     std::vector<Token> _prog_token_list;
-    LINE_IDENTATION = 0;
     std::vector<std::string> words = disassembleLine(_prog_lines);
 
     for(std::string curr_word : words){
@@ -193,43 +184,39 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 knowTokens[curr_word],
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
+                _prog_lines.line_number
             ));
         }
 
-        else if(isString(curr_word)){
+        else if(isStringS(curr_word)){
             _prog_token_list.push_back(makeToken(
                 _TOKEN_STRING,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
+                _prog_lines.line_number
             ));
         }
 
-        else if((isfloat(curr_word) || curr_word[0] == '-' || curr_word[0] == '+') && isdigit(curr_word[0]))
+        else if(isFloat(curr_word))
         {
             _prog_token_list.push_back(
                 makeToken(
                     _TOKEN_FLOAT,
                     curr_word,
                     _prog_lines.line,
-                    _prog_lines.line_number,
-                    LINE_IDENTATION
+                    _prog_lines.line_number
                 )
             );
         }
 
-        else if(isdigit(curr_word))
+        else if(isInt(curr_word))
         {
             _prog_token_list.push_back(
                 makeToken(
                     _TOKEN_INT,
                     curr_word,
                     _prog_lines.line,
-                    _prog_lines.line_number,
-                    LINE_IDENTATION
+                    _prog_lines.line_number
                 )
             );
         }
@@ -240,14 +227,13 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
                 _TOKEN_VAR,
                 curr_word,
                 _prog_lines.line,
-                _prog_lines.line_number,
-                LINE_IDENTATION
+                _prog_lines.line_number
             ));
         }
         else{
             std::cout << "Error while lexing\n";
         }
     }
-
+    
     return _prog_token_list;
 }    

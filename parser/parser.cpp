@@ -1,14 +1,16 @@
 #include "../include/internals/mewcore_ast.hpp"
 #include "../include/internals/mewdefs.hpp"
 #include "../include/token.hpp"
+#include "../include/internals/list/list.hpp"
 #include "parser.hpp"
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
 #include <cerrno>
 #include <cstdlib>
+#include <assert.h>
 
-Token empty_token = makeToken(_TOKEN_EMPTY, "", "", 0, 0);
+Token empty_token = makeToken(_TOKEN_EMPTY, "", "", 0);
 
 bool comsume_token(Parser &p, TOKEN_T type)
 {
@@ -69,7 +71,7 @@ void *genMeowConstObj(Parser &p, Token a, Token b, Token c, _const_kind type)
         const_obj->data.Integer.val = stoll(a._TOKEN_VALUE);
     }
 
-    else
+    else if( type == _const_kind::Float)
     {
         char *e;
         errno = 0;
@@ -201,6 +203,7 @@ void *assign_stmt(Parser &p)
     // parser expression
     void *var_name;
     void *value;
+    assert(p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_VAR);
     if(
        (var_name = genMeowConstObj(p, empty_token, empty_token, p.tokens[p.counter], _const_kind::Char)) // store variable name
         &&
@@ -226,7 +229,6 @@ void *simple_stmt(Parser &p)
     if(a = assign_stmt(p))
     {
         stmt_ty *assign_stmt = (stmt_ty *) genAssign_stmt((expr_ty *) a);
-        printf("Variable name -> %s\n", assign_stmt->v.Assign.body->v.NameExpr.target->v.Name.id->data.Char.val);
         return assign_stmt;
     }
     else
@@ -239,19 +241,26 @@ void *simple_stmt(Parser &p)
 void *file_rule(Parser &p)
 {
     void *a;
+    mod_ty *result = (mod_ty *) malloc(sizeof(mod_ty));
+    result->Kind = _mod_kind::Module;
+    result->v.Module.body = NULL;
+
+again:
     if(a = simple_stmt(p))
     {
-        mod_ty *result = (mod_ty *) malloc(sizeof(mod_ty));
-        result->Kind = _mod_kind::Module;
-        result->v.Module.body = (stmt_ty **) malloc(sizeof(a));
-        result->v.Module.body[p.level] = ( stmt_ty *) a;
-        return result;
+        result->v.Module.body = insert(result->v.Module.body, (stmt_ty *) a);
+        p.level++;  // no use tbh
+        //p.counter++;
     }
     else
     {
         std::cout << "simple_stmt returned NULL\n";
         return NULL;
     }
+
+    if(p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_EOT) return result;
+
+    goto again;
 }
 
 void *parse(const std::vector<Token> &token_list, _rule rule)

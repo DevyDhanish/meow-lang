@@ -1,6 +1,7 @@
 #pragma once
 
 #include "mewdefs.hpp"
+#include "list/list.hpp"
 #include <vector>
 
 typedef struct _mod mod_ty;
@@ -25,6 +26,11 @@ enum _stmt_kind { FunctionDef, ClassDef,
 // a file is a module
 enum _mod_kind { Module };
 
+void displayAssignStmt(stmt_ty *);
+void displayNameexpr(expr_ty *expr);
+void displayValueExpr(expr_ty *value);
+void displayTargetexpr(expr_ty *target);
+
 struct _mod
 {
     _mod_kind Kind;
@@ -32,7 +38,7 @@ struct _mod
     {
         struct
         {
-            _stmt **body;
+            list *body; // list of _stmt
         } Module;
     } v;
 };

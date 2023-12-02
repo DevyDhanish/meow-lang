@@ -62,6 +62,7 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_MASTRUBATE,      // 51
     _TOKEN_FUNC,            // 52
     _TOKEN_FLOAT,           // 53
+    _TOKEN_EOT,             // 54 -> end of token
     
 }TOKEN_T;
 
@@ -85,4 +86,4 @@ typedef struct _STRUCT_TOKEN{
 
 
 // @brief returns a token made out of given arguments, `Token_type` can only have values difined in this TOKEN_T enum.
-Token makeToken(TOKEN_T _token_type, std::string _token_value, std::string _token_line, size_t _token_line_number, int _indentation);
+Token makeToken(TOKEN_T _token_type, std::string _token_value, std::string _token_line, size_t _token_line_number);
