@@ -51,12 +51,7 @@ int main(int argc, char **argv){
     for(size_t i = 0; i < tokenized_vector.size(); i ++){
         std:: cout << "Token Type = " << token_names_for_loging[tokenized_vector[i]._TOKEN_TYPE] << "\t\t\t" << "Token value = " << tokenized_vector[i]._TOKEN_VALUE << "\t\t\t" << "Token Line - " << tokenized_vector[i]._TOKEN_LINE << "\t\t\t" << "Line Number - " << tokenized_vector[i]._TOKEN_LINE_NUMBER << "\t\t\t" << " INDENTATION - " << tokenized_vector[i]._INDENTATION << "\n";
     }
-    std::cout << "================[ PARSE TREE ]===================\n";
-    //AST.print_tree(0);
-    std::cout << std::endl;
-    std::cout << "===============[ BYTE CODE ]============\n";
-    //showByteCode();
-    std::cout << "===============[ BYTE CODE EXECUTION ]============\n";
+    std::cout << "========================================================\n";
     #endif
     #undef DEBUG
 
@@ -70,7 +65,7 @@ int main(int argc, char **argv){
     //     return 0;
     // }
 
-    display(module->v.Module.body);
+    //display(module->v.Module.body);
 
     // std::cout << module->v.Module.body[0]->v.Assign.body->v.NameExpr.target->v.Name.id->data.Char.val << "\n";
     // std::cout << module->v.Module.body[0]->v.Assign.body->v.NameExpr.value->v.Const.value->data.Float.val << "\n";

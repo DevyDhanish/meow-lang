@@ -26,7 +26,7 @@ void displayTargetexpr(expr_ty *target)
 void displayValueExpr(expr_ty *value)
 {
     std::cout << "expr kind : Const\n";
-    switch (value->v.Name.id->kind)
+    switch (value->v.Const.value->kind)
     {
     case _const_kind::Char :
         std::cout << " id : Char : " << value->v.Const.value->data.Char.val << "\n";
@@ -44,19 +44,54 @@ void displayValueExpr(expr_ty *value)
     }
 }
 
+void displayBinopexpr(expr_ty *expr)
+{
+    std::cout << "left - >" << expr->v.BinOp.left->v.Const.value->data.Integer.val;
+    std::cout << "Add\n";
+    std::cout << "right -> " << expr->v.BinOp.right->v.Const.value->data.Integer.val;
+}
+
 void displayNameexpr(expr_ty *expr)
 {
     std::cout << "expr kind : Name expr\n";
     std::cout << "target -> ";
-    displayTargetexpr(expr->v.NameExpr.target);
+    switch (expr->v.NameExpr.target->kind)
+    {
+    case _expr_kind::VarName :
+        std::cout << expr->v.NameExpr.target->v.Name.id->data.Char.val << "\n";
+        break;
+    case _expr_kind::BinOp :
+        displayBinopexpr(expr->v.NameExpr.target);
+        break;
+
+    default:
+        break;
+    }
     std::cout << "\n";
-    std::cout << "value -> ";
-    displayValueExpr(expr->v.NameExpr.value);
+    std::cout << "value -> \n";
+    switch (expr->v.NameExpr.value->kind)
+    {
+    case _expr_kind::BinOp :
+        displayBinopexpr(expr->v.NameExpr.target);
+        break;
+    default:
+        break;
+    }
     std::cout << "\n";
 }
 
 void displayAssignStmt(stmt_ty *stmt)
 {
     std::cout << "stmt kind : Assign\n";
-    displayNameexpr(stmt->v.Assign.body);
+    switch (stmt->v.Assign.body->kind)
+    {
+    case _expr_kind::NameExpr :
+        displayNameexpr(stmt->v.Assign.body);
+        break;
+    case _expr_kind::BinOp :
+        displayBinopexpr(stmt->v.Assign.body);
+        break;
+    default:
+        break;
+    }
 }
