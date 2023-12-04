@@ -113,7 +113,7 @@ void *genConst_expr(meowConstObj *a)
         printf("DEBUG::Created a const of value {%s}\n", a->data.Char.val);
         break;
     case _const_kind::Float :
-        printf("DEBUG::Created a const of value {%ld}\n", a->data.Float.val);
+        std::cout << "DEBUG::Created a const of value {" << a->data.Float.val << "}" << "\n";
         break;
     case _const_kind::Int :
         printf("DEBUG::Created a const of value {%d}\n", a->data.Integer.val);
@@ -223,10 +223,13 @@ void *const_rule(Parser &p)
     {
         p.counter++;
         a = expression_rule(p);
+        p.counter--;
         if(p.tokens[p.counter]._TOKEN_TYPE != _TOKEN_BRACLOSE)
         {
-            printf("Error acpected `)` but got token %d\n", p.tokens[p.counter]);
+            printf("Error acpected `)` but got token %d\n", p.tokens[p.counter]._TOKEN_TYPE);
         }
+
+        return a;
     }
     else if(
         p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_INT    
