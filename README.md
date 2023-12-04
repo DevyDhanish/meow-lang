@@ -1,6 +1,7 @@
 ![Meow gif](./Meow.gif)
 
 # [Meow Lang]
+I merged dev branced into prod : ( <br>
 Follow meowlang on insgram [@meow__lang](https://www.instagram.com/meow__lang/)<br>
 I might finish this idk, here are all the details if you want to contribute. And I know this code is ugly as fuck i'm going to fix it, I think.
 
