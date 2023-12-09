@@ -1,0 +1,167 @@
+#include "parser.hpp"
+#include "../include/internals/mewcore_ast.hpp"
+#include "../include/internals/mewcore_obj.hpp"
+
+enum PARSER_RESULT { 
+    PARSER_ERROR,    // 0 
+    PARSER_OK,      // 1
+};
+
+struct Parser gen_parser(const std::vector<Token> &toks, size_t c, size_t l)
+{
+    struct Parser p;
+    p.counter = 0;
+    p.level = 0;
+    p.tokens = toks;
+
+    return p;
+}
+
+bool consume_token(Parser &p, TOKEN_T type)
+{
+    if(p.tokens[p.counter]._TOKEN_TYPE == type)
+    {
+        ++p.counter;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool expect_token(Parser &p, TOKEN_T type)
+{
+    if(p.tokens[p.counter]._TOKEN_TYPE == type)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void *parse_varname(Parser &p)
+{
+    if(expect_token(p, _TOKEN_VAR))
+    {
+        String *varname = nullptr;
+        varname = new String(p.tokens[p.counter]._TOKEN_VALUE); // get the var name
+        std::cout << "DEBUG::Created a variable name const with value : " << *(std::string *)varname->getValue() << "\n";
+        ++p.counter;
+        return varname;
+    }
+    else
+    {
+        std::cout << "expected Token_var but got" << p.tokens[p.counter]._TOKEN_TYPE << "\n";
+        return NULL;
+    }
+}
+
+void *const_rule(Parser &p)
+{
+    std::string curr_token_value = p.tokens[p.counter]._TOKEN_VALUE;
+    MeowObject *const_obj = nullptr;
+    switch(p.tokens[p.counter]._TOKEN_TYPE)
+    {
+        case _TOKEN_INT:
+        {
+            long long val = std::stoll(curr_token_value);
+            Integer *mewint = new Integer(val);
+            const_obj = mewint;
+            break;
+        }
+        case _TOKEN_STRING:
+        {
+            String *mewstr = new String(curr_token_value);
+            const_obj = mewstr;
+            break;
+        }
+        case _TOKEN_FLOAT:
+        {
+            long double val = std::stold(curr_token_value);
+            Float *mewfloat = new Float(val);
+            const_obj = mewfloat;
+            break;
+        }
+        default:
+            std::cout << "Unknow token encountered\n";
+            return NULL;
+            break;
+    }
+    ++p.counter;
+    return const_obj;
+}
+
+void *expression_rule(Parser &p)
+{
+    void *a;
+
+    if(a = const_rule(p))
+    {
+        Const *const_node = new Const((MeowObject *)a, "const");
+        std::cout << "DEBUG::Created a const with value : " << *(int64_t *)((MeowObject *)const_node->getValue())->getValue() << "\n";
+        return const_node;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+void *assign_stmt_rule(Parser &p)
+{
+    void *var_name = nullptr;
+    void *value = nullptr;
+    if(
+        (var_name = parse_varname(p))
+        &&
+        (consume_token(p, _TOKEN_EQU)) // consume `=`
+        &&
+        (value = expression_rule(p))
+    )
+    {
+        Const *var_name_const_node = new Const((MeowObject *)var_name, "const");
+        NameExpr *name_expr_node = new NameExpr((Expr *)var_name_const_node, (Expr *)value, "name expr");
+        return name_expr_node;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+void *statment_rule(Parser &p)
+{
+    void *a = nullptr;
+
+    if(a = assign_stmt_rule(p))
+    {
+        AssignmnetStmt *assignstmt = new AssignmnetStmt((Expr *)a, "assign stmt");
+        return assignstmt;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+void *parse(const std::vector<Token> &tok_list, _rule rule)
+{
+    Parser p = gen_parser(tok_list, 0, 0);
+
+    Module *mod = new Module();
+    void *a = nullptr;
+
+    if(a = statment_rule(p))
+    {
+        mod->addStmt((Stmts *) a);
+    }
+    else 
+    {
+        return NULL;
+    }
+
+    return mod;
+}
