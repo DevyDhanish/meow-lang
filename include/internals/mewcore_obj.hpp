@@ -1,33 +1,63 @@
 #pragma once
-
-// char obj
-// int obj
-// float obj
-// string will be a class in meowlang
-
 #include <cstdint>
+#include <iostream>
 
-enum _const_kind { Int, Float, Char};
-
-struct _const_obj
+class MeowObject
 {
-    _const_kind kind;
-    union
+public:
+    virtual void printInfo() = 0;
+    virtual void *getValue() = 0;
+    virtual ~MeowObject() = default;
+};
+
+class Integer : public MeowObject
+{
+public:
+    int64_t value;
+    Integer() {};
+    Integer(int64_t a) { value = a; }
+
+    void printInfo() override
     {
-        struct
-        {
-            int64_t val; 
-        } Integer;
+        std::cout << "type <Integer>\n";
+    }
 
-    struct  
-        {
-            long double val;    
-        } Float;
+    void *getValue() override
+    {
+        return &value;
+    }
+};
 
-        struct
-        {
-            char *val;
-        } Char;
+class String : public MeowObject
+{
+public:
+    std::string value;
+    String(){}
+    String(std::string val) : value(val) {}
 
-    } data;
+    void printInfo() override
+    {
+        std::cout << "type <String>\n";
+    }
+    void *getValue() override
+    {
+        return &value;
+    }
+};
+
+class Float : public MeowObject
+{
+public:
+    long double value;
+    Float() {}
+    Float(long double a) : value(a) {}
+
+    void printInfo() override
+    {
+        std::cout << "type <Float>\n";
+    }
+    void *getValue() override
+    {
+        return &value;
+    }
 };
