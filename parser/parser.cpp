@@ -43,7 +43,6 @@ int getPrecedence(TOKEN_T optype)
     {
         case _TOKEN_PLUS: case _TOKEN_MINUS: return 1; break;
         case _TOKEN_MUL: case _TOKEN_DIV: case _TOKEN_MOD: return 2; break;
-        default: return 0; break;
     }
 }
 
@@ -100,10 +99,11 @@ void *const_rule(Parser &p)
 
 void *expression_rule(Parser &p, int prec)
 {
+
     if(expect_token(p, _TOKEN_BRAOPEN))
     {
         ++p.counter;
-        void *val = expression_rule(p, 1);
+        void *val = expression_rule(p);
 
         if(!consume_token(p, _TOKEN_BRACLOSE))
             std::cout << "Expected `)` after expression\n";
@@ -113,32 +113,13 @@ void *expression_rule(Parser &p, int prec)
 
     void *a = const_rule(p); // lhs
 
-    void *lhs = new Const((MeowObject *)a, EXPR_TYPES::ConstExpr);
-
-    while(1)
+    while(getPrecedence(p.tokens[p.counter]._TOKEN_TYPE) < prec)
     {
-        if(getPrecedence(p.tokens[p.counter]._TOKEN_TYPE) < prec) break;
-
-        OP_TYPES op;
-
-        switch (p.tokens[p.counter]._TOKEN_TYPE)
-        {
-            case _TOKEN_PLUS: op = OP_TYPES::Add; break;
-            case _TOKEN_MUL: op = OP_TYPES::Mul; break;
-            case _TOKEN_DIV: op = OP_TYPES::Div; break;
-            case _TOKEN_MINUS: op = OP_TYPES::Sub; break;
-            case _TOKEN_MOD: op = OP_TYPES::Mod; break;
-            default: std::cout << "Unsuported operator encoutered\n"; break;
-        }
-
-        int nextPrec = getPrecedence(p.tokens[p.counter]._TOKEN_TYPE);
         ++p.counter;
-        void *rhs = expression_rule(p, nextPrec);
-        //std::cout << ((Expr *)rhs)->getKind() << "\n";
-        lhs = new BinOpExpr((Expr *)lhs, op, (Expr *)rhs, EXPR_TYPES::BinopExpr);
+        void *rhs = expression_rule(p, 1);
     }
 
-    return lhs;
+    return a;
 }
 
 void *assign_stmt_rule(Parser &p)
@@ -150,7 +131,7 @@ void *assign_stmt_rule(Parser &p)
         &&
         (consume_token(p, _TOKEN_EQU)) // consume `=`
         &&
-        (value = expression_rule(p, 1))
+        (value = expression_rule(p))
     )
     {
         Const *var_name_const_node = new Const((MeowObject *)var_name, EXPR_TYPES::ConstExpr);
