@@ -6,6 +6,7 @@ typedef struct _CODE_UINT bytecode;
 enum OP_CODES
 {
     ADD,
+    SUB,
     MUL,
     DIV,
     MOD,

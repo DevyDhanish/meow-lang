@@ -70,6 +70,8 @@ int main(int argc, char **argv){
         std::cout << "Op : " << (int)bc.op << "\t" << "Arg : " << bc.arg << "\n";
     }
 
+    startexec(bytecodevect);
+
     // TODO:: free all the head allocated class that you made in parse method
 
     return 0;
