@@ -15,7 +15,6 @@ enum OP_CODES
     MAKE_FUNC,
     MAKE_CLASS,
 };
-
 struct _CODE_UINT
 {
     uint8_t op;
