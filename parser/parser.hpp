@@ -13,6 +13,8 @@ struct Parser
     size_t level;
 };
 
-void *expression_rule(Parser &p);
+typedef Parser Parser;
+
+void *expression_rule(Parser &p, int prec);
 void *parse(const std::vector<Token> &tok_list, _rule rule);
 struct Parser gen_parser(const std::vector<Token> &toks, size_t c, size_t l);

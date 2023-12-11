@@ -9,6 +9,7 @@
 #include "../include/token.hpp"
 #include "../include/compiler.hpp"
 #include "../include/internals/mewcore_ast.hpp"
+#include "../include/code.hpp"
 #include "../parser/parser.hpp"
 #include "../include/vm.hpp"
 #include "../include/error.hpp"
@@ -57,24 +58,21 @@ int main(int argc, char **argv){
 
     //std::vector<Token> extoks = { makeToken(_TOKEN_VAR, "x", "none", 0, 0),  makeToken(_TOKEN_EQU, "=", "none", 0, 0),  makeToken(_TOKEN_FLOAT, "1.232", "none", 0, 0),  makeToken(_TOKEN_SEMI_COL, ";", "none", 0, 0)};
 
-    mod_ty *module = (mod_ty *) parse(tokenized_vector, File_Rule);
-
-    // if(module == NULL)
-    // {
-    //     std::cout << "Failed to parser\n";
-    //     return 0;
-    // }
-
-    //display(module->v.Module.body);
-
-    // std::cout << module->v.Module.body[0]->v.Assign.body->v.NameExpr.target->v.Name.id->data.Char.val << "\n";
-    // std::cout << module->v.Module.body[0]->v.Assign.body->v.NameExpr.value->v.Const.value->data.Float.val << "\n";
-    // std::cout << module->v.Module.body[0]->v.Assign.body->v.NameExpr.value->v.Const.value->data.Integer.val << "\n";
-    // std::cout << module->v.Module.body[0]->v.Assign.body->v.NameExpr.value->v.Const.value->data.Char.val << "\n";
-    
-    
-    // compile the tokens to bytecode and send the bytecode to VM
-
+    Module *module = (Module *) parse(tokenized_vector, File_Rule);
     std::cout << "Parsed sucessfully\n";
+
+    std::vector<bytecode> bytecodevect;
+
+    bytecodevect  = compile(module);
+
+    for(bytecode &bc : bytecodevect)
+    {
+        std::cout << "Op : " << (int)bc.op << "\t" << "Arg : " << bc.arg << "\n";
+    }
+
+    startexec(bytecodevect);
+
+    // TODO:: free all the head allocated class that you made in parse method
+
     return 0;
 }

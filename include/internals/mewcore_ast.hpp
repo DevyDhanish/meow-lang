@@ -1,86 +1,115 @@
 #pragma once
 
-#include "mewdefs.hpp"
-#include "list/list.hpp"
 #include <vector>
+#include "mewcore_obj.hpp"
 
-typedef struct _mod mod_ty;
-typedef struct _stmt stmt_ty;
-typedef struct _expr expr_ty;
+// base class for stmts, does nothing by default
 
-enum _oper { Add, Sub, Mult, MatMult, Div, Mod, Pow,
-                         LShift, RShift, BitOr, BitXor, BitAnd,
-                         FloorDiv };
-
-enum _expr_kind { BinOp, NameExpr, Const, VarName };
-
-enum _stmt_kind { FunctionDef, ClassDef,
-                  Return, Delete, Assign,
-                  For, While, If,
-                  Match,
-                  Raise, Try, Assert,
-                  Import, ImportFrom, Global,
-                  Nonlocal, Expr, Pass, Break,
-                  Continue };
-
-// a file is a module
-enum _mod_kind { Module };
-
-void displayAssignStmt(stmt_ty *);
-void displayNameexpr(expr_ty *expr);
-void displayValueExpr(expr_ty *value);
-void displayTargetexpr(expr_ty *target);
-
-struct _mod
+enum STMT_TYPES { AssignStmt };
+enum EXPR_TYPES { ConstExpr, NameExprssion, BinopExpr };
+enum OP_TYPES {Add, Sub, Mul, Div, Mod};
+class Stmts 
 {
-    _mod_kind Kind;
-    union 
-    {
-        struct
-        {
-            list *body; // list of _stmt
-        } Module;
-    } v;
+public:
+    virtual int getKind() = 0;
+    virtual void printInfo() = 0;
+    virtual ~Stmts() = default;
+};
+class Expr 
+{
+public:
+    virtual int getKind() = 0;
+    virtual void printInfo() = 0;
+    virtual ~Expr() = default;
 };
 
-struct _stmt
+class Const : public Expr
 {
-    _stmt_kind kind;
-    union 
+public:
+    EXPR_TYPES kind;
+    MeowObject *value;       // Integer, Float, String etc
+    Const() {}  // default constructor
+    Const(MeowObject *a, EXPR_TYPES k) : value(a), kind(k) {};
+
+    void printInfo() override
     {
-        struct
-        {
-            expr_ty *body;
-        } Assign;
-    } v;
+        std::cout << "Kind:"<<kind<<"\n";
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
 };
 
-struct _expr
+class NameExpr : public Expr
 {
-    _expr_kind kind;
-    union 
+public:
+    EXPR_TYPES kind;
+    Expr *target;        // this will be a const like String
+    Expr *value;         // this will be any class inheriting Expr
+    NameExpr(){}
+    NameExpr(Expr *a, Expr *b, EXPR_TYPES k) : target(a), value(b), kind(k) {};
+
+    void printInfo()
     {
-        struct
-        {
-            expr_ty *left;
-            _oper op;
-            expr_ty *right;
-        } BinOp;
+        std::cout << "Kind:"<<kind<<"\n"; 
+    }
 
-        struct 
-        {
-            expr_ty *target;
-            expr_ty *value;
-        } NameExpr;
+    int getKind() override
+    {
+        return kind;
+    }
+};
 
-        struct 
-        {
-            meowConstObj *value;
-        } Const;
+class BinOpExpr : public Expr
+{
+    public:
+    EXPR_TYPES kind;
+    Expr *left;
+    OP_TYPES op;
+    Expr *right;
+    BinOpExpr(){}
+    BinOpExpr(Expr *a, OP_TYPES o, Expr *b, EXPR_TYPES k) : left(a), op(o), right(b), kind(k) {}
 
-        struct
-        {
-            meowConstObj *id;
-        } Name;
-    } v;
+    void printInfo()
+    {
+        std::cout << "Kind:" << kind << "\n";
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
+};
+
+class AssignmnetStmt : public Stmts
+{
+public:
+    STMT_TYPES kind;
+    Expr *value;
+    AssignmnetStmt() {}
+    AssignmnetStmt(Expr *a, STMT_TYPES k) : value(a), kind(k) {}
+
+    void printInfo()
+    {
+        std::cout << "Kind:"<<kind<<"\n"; 
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
+};
+
+class Module
+{
+public:
+    std::vector<Stmts *> body;
+
+    void addStmt(Stmts *newStmt)
+    {
+        body.push_back(newStmt);
+    }
+    void displayStmts();
 };

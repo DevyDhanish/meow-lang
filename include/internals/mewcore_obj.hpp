@@ -1,33 +1,68 @@
 #pragma once
-
-// char obj
-// int obj
-// float obj
-// string will be a class in meowlang
-
 #include <cstdint>
+#include <iostream>
 
-enum _const_kind { Int, Float, Char};
+enum MEOWOBJECTKIND { IntObj, StringObj, FloatObj };
 
-struct _const_obj
+class MeowObject
 {
-    _const_kind kind;
-    union
+public:
+    virtual void printInfo() = 0;
+    virtual int getKind() = 0;
+    virtual ~MeowObject() = default;
+};
+
+class Integer : public MeowObject
+{
+public:
+    MEOWOBJECTKIND kind;
+    int64_t value;
+    Integer() {};
+    Integer(int64_t a, MEOWOBJECTKIND k) : value(a), kind(k) { }
+
+    void printInfo() override
     {
-        struct
-        {
-            int64_t val; 
-        } Integer;
+        std::cout << "type <Integer>\n";
+    }
 
-    struct  
-        {
-            long double val;    
-        } Float;
+    int getKind() override
+    {
+        return kind;
+    }
+};
 
-        struct
-        {
-            char *val;
-        } Char;
+class String : public MeowObject
+{
+public:
+    std::string value;
+    MEOWOBJECTKIND kind;
+    String(){}
+    String(std::string val, MEOWOBJECTKIND k) : value(val), kind(k) {}
 
-    } data;
+    void printInfo() override
+    {
+        std::cout << "type <String>\n";
+    }
+    int getKind() override
+    {
+        return kind;
+    }
+};
+
+class Float : public MeowObject
+{
+public:
+    long double value;
+    MEOWOBJECTKIND kind;
+    Float() {}
+    Float(long double a, MEOWOBJECTKIND k) : value(a), kind(k) {}
+
+    void printInfo() override
+    {
+        std::cout << "type <Float>\n";
+    }
+    int getKind() override
+    {
+        return kind;
+    }
 };

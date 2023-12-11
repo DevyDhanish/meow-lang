@@ -1,22 +1,22 @@
-#include "../include/internals/mewcore_ast.hpp"
-#include "../include/internals/mewdefs.hpp"
-#include "../include/token.hpp"
-#include "../include/internals/list/list.hpp"
 #include "parser.hpp"
-#include <stdlib.h>
-#include <string.h>
-#include <iostream>
-#include <cerrno>
-#include <cstdlib>
-#include <assert.h>
+#include "../include/internals/mewcore_ast.hpp"
+#include "../include/internals/mewcore_obj.hpp"
 
-Token empty_token = makeToken(_TOKEN_EMPTY, "", "", 0);
+struct Parser gen_parser(const std::vector<Token> &toks, size_t c, size_t l)
+{
+    struct Parser p;
+    p.counter = 0;
+    p.level = 0;
+    p.tokens = toks;
+
+    return p;
+}
 
 bool consume_token(Parser &p, TOKEN_T type)
 {
     if(p.tokens[p.counter]._TOKEN_TYPE == type)
     {
-        p.counter++;
+        ++p.counter;
         return true;
     }
     else
@@ -27,345 +27,172 @@ bool consume_token(Parser &p, TOKEN_T type)
 
 bool expect_token(Parser &p, TOKEN_T type)
 {
-    return (p.tokens[p.counter]._TOKEN_TYPE == type);
-}
-
-struct Parser gen_parser(const std::vector<Token> &toks, size_t c, size_t l)
-{
-    struct Parser p;
-    p.tokens = toks,
-    p.counter = c;
-    p.level = l;
-
-    return p;
-}
-
-void *genModule_mod()
-{
-    mod_ty *result = (mod_ty *) malloc(sizeof(mod_ty));
-    if(!result)
+    if(p.tokens[p.counter]._TOKEN_TYPE == type)
     {
-        printf("Failed to allocate mem for mod_ty\n");
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+int getPrecedence(TOKEN_T optype)
+{
+    switch(optype)
+    {
+        case _TOKEN_PLUS: case _TOKEN_MINUS: return 1; break;
+        case _TOKEN_MUL: case _TOKEN_DIV: case _TOKEN_MOD: return 2; break;
+        default: return 0; break;
+    }
+}
+
+void *parse_varname(Parser &p)
+{
+    if(expect_token(p, _TOKEN_VAR))
+    {
+        String *varname = nullptr;
+        varname = new String(p.tokens[p.counter]._TOKEN_VALUE, MEOWOBJECTKIND::StringObj); // get the var name
+        ++p.counter;
+        return varname;
+    }
+    else
+    {
+        std::cout << "expected Token_var but got" << p.tokens[p.counter]._TOKEN_TYPE << "\n";
         return NULL;
     }
-    result->Kind = _mod_kind::Module;
-    result->v.Module.body = NULL;
-
-    return result;
-}
-
-// creates a meowConstObj with the given type, you have to manually set the data
-// a - > int
-// b - > float
-// c - > char
-void *genMeowConstObj(Parser &p, Token a, Token b, Token c, _const_kind type)
-{
-    meowConstObj *const_obj = (meowConstObj *) malloc(sizeof(meowConstObj));
-    if(!const_obj)
-    {
-        printf("Failed allocate mem for meowConstObj\n");
-        return NULL;
-    }
-    const_obj->kind = type;
-
-    if(type == _const_kind::Char)
-    {
-        const_obj->data.Char.val = (char *)malloc(c._TOKEN_VALUE.size());
-        if(!const_obj->data.Char.val)
-        {
-            printf("Failed to allocate mem for copying variable name\n");
-            return NULL;
-        }
-        strncpy(const_obj->data.Char.val, c._TOKEN_VALUE.c_str(), c._TOKEN_VALUE.size());
-        const_obj->data.Char.val[c._TOKEN_VALUE.size()] = '\0';
-    }
-
-    else if(type == _const_kind::Int)
-    {
-        const_obj->data.Integer.val = stoll(a._TOKEN_VALUE);
-    }
-
-    else if( type == _const_kind::Float)
-    {
-        char *e;
-        errno = 0;
-        const_obj->data.Float.val = std::strtold(b._TOKEN_VALUE.c_str(), &e);
-    }
-
-    p.counter++;
-    return const_obj;
-}
-
-void *genConst_expr(meowConstObj *a)
-{
-    expr_ty *const_obj = (expr_ty *) malloc(sizeof(expr_ty));
-    if(!const_obj)
-    {
-        printf("Failed to allocate mem for expr_ty obj\n");
-        return NULL;
-    }
-    const_obj->kind = _expr_kind::Const;
-    const_obj->v.Const.value = a;
-
-    switch (const_obj->v.Const.value->kind)
-    {
-    case _const_kind::Char :
-        printf("DEBUG::Created a const of value {%s}\n", a->data.Char.val);
-        break;
-    case _const_kind::Float :
-        printf("DEBUG::Created a const of value {%ld}\n", a->data.Float.val);
-        break;
-    case _const_kind::Int :
-        printf("DEBUG::Created a const of value {%d}\n", a->data.Integer.val);
-        break;
-    default:
-        break;
-    }
-
-    return const_obj;
-}
-
-void *genName_expr(meowConstObj *a)
-{
-    expr_ty *Name_expr = (expr_ty *) malloc(sizeof(expr_ty));
-    if(!Name_expr)
-    {
-        printf("Failed to allocate mem for Name_expr\n");
-        return NULL;
-    }
-    Name_expr->kind = _expr_kind::VarName;
-    Name_expr->v.Name.id = a;
-
-    return Name_expr;
-}
-
-// a -> target
-// b -> value
-void *genNameexpr_expr(expr_ty *a, expr_ty *b)
-{
-    expr_ty *variable = (expr_ty *) malloc(sizeof(expr_ty));
-    if(!variable)
-    {
-        printf("Failed to allocate mem for variable expr\n");
-        return NULL;
-    }
-    variable->kind = _expr_kind::NameExpr;
-    variable->v.NameExpr.target = a;
-    variable->v.NameExpr.value = b;
-    
-    return variable;
-}
-
-void *genAssign_stmt(expr_ty *a)
-{
-    stmt_ty *assign_stmt = (stmt_ty *) malloc(sizeof(stmt_ty));
-    if(!assign_stmt)
-    {
-        printf("Failed to allocate mem for Assign stmt\n");
-        return NULL;
-    }
-    assign_stmt->kind = _stmt_kind::Assign;
-    assign_stmt->v.Assign.body = a;
-
-    return assign_stmt;
-}
-
-void *genBinop_expr(expr_ty *left, _oper op, expr_ty *right)
-{   
-    expr_ty *a = (expr_ty *) malloc(sizeof(expr_ty));
-    if(!a)
-    {
-        printf("Failed to allocate mem for bin op\n");
-    }
-    a->kind = _expr_kind::BinOp;
-    a->v.BinOp.left = left;
-    a->v.BinOp.op = op;
-    a->v.BinOp.right = right;
-
-    switch(left->kind)
-    {
-        case _expr_kind::BinOp:
-            printf("DEBUG::Created a binary operator node - lhs kind : {BinOp}\n");
-            break;
-        
-        case _expr_kind::Const:
-            printf("DEBUG::Created a binary operator node - lhs kind : {Const}\n");
-            break;
-        
-        default:
-            break;
-    }
-
-    switch (right->kind)
-    {
-        case _expr_kind::BinOp:
-            printf("DEBUG::Created a binary operator node - rhs kind : {BinOp}\n");
-            break;
-        
-        case _expr_kind::Const:
-            printf("DEBUG::Created a binary operator node - rhs kind : {Const}\n");
-            break;
-        
-        default:
-            break;
-    }
-
-    return a;
 }
 
 void *const_rule(Parser &p)
 {
-    void *a;
-    meowConstObj *const_val;
-    if(
-        p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_BRAOPEN
-    )
+    std::string curr_token_value = p.tokens[p.counter]._TOKEN_VALUE;
+    MeowObject *const_obj = nullptr;
+    switch(p.tokens[p.counter]._TOKEN_TYPE)
     {
-        p.counter++;
-        a = expression_rule(p);
-        if(p.tokens[p.counter]._TOKEN_TYPE != _TOKEN_BRACLOSE)
+        case _TOKEN_INT:
         {
-            printf("Error acpected `)` but got token %d\n", p.tokens[p.counter]);
+            long long val = std::stoll(curr_token_value);
+            Integer *mewint = new Integer(val, MEOWOBJECTKIND::IntObj);
+            const_obj = mewint;
+            break;
         }
+        case _TOKEN_STRING:
+        {
+            String *mewstr = new String(curr_token_value, MEOWOBJECTKIND::StringObj);
+            const_obj = mewstr;
+            break;
+        }
+        case _TOKEN_FLOAT:
+        {
+            long double val = std::stold(curr_token_value);
+            Float *mewfloat = new Float(val, MEOWOBJECTKIND::FloatObj);
+            const_obj = mewfloat;
+            break;
+        }
+        default:
+            std::cout << "Unknow token encountered\n";
+            return NULL;
+            break;
     }
-    else if(
-        p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_INT    
-    )
-    {
-        const_val = (meowConstObj *) genMeowConstObj(p, p.tokens[p.counter], empty_token, empty_token, _const_kind::Int);
-    }
-    else if( p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_STRING )
-    {
-        const_val = (meowConstObj *) genMeowConstObj(p, empty_token, empty_token, p.tokens[p.counter], _const_kind::Char);
-    }
-    else if ( p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_FLOAT )
-    {
-        const_val = (meowConstObj *) genMeowConstObj(p, empty_token, p.tokens[p.counter], empty_token, _const_kind::Float);
-    }
-    else
-    {
-        std::cout << "Failed to parser const\n";
-        return NULL;
-    }
-
-    return const_val;
+    ++p.counter;
+    return const_obj;
 }
 
-void *expression_rule(Parser &p)
+void *expression_rule(Parser &p, int prec)
 {
-    // re write
-    //assert(p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_INT);
-    void *a = const_rule(p);
-
-    expr_ty *lhs = (expr_ty *) genConst_expr((meowConstObj *) a);
-
-    //assert(p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_PLUS);
-    while(
-        p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_PLUS
-    )
+    if(expect_token(p, _TOKEN_BRAOPEN))
     {
-        consume_token(p, _TOKEN_PLUS);  // eat `+`
-        expr_ty *rhs;
-        rhs = (expr_ty *) genConst_expr ( (meowConstObj *) const_rule (p));
+        ++p.counter;
+        void *val = expression_rule(p, 1);
 
-        expr_ty *binop;
-        binop = (expr_ty *) genBinop_expr((expr_ty *)lhs, _oper::Add, (expr_ty *) rhs);
-        lhs = binop;
+        if(!consume_token(p, _TOKEN_BRACLOSE))
+            std::cout << "Expected `)` after expression\n";
 
+        return val;
     }
 
-    p.counter++;
+    void *a = const_rule(p); // lhs
+
+    void *lhs = new Const((MeowObject *)a, EXPR_TYPES::ConstExpr);
+
+    while(1)
+    {
+        if(getPrecedence(p.tokens[p.counter]._TOKEN_TYPE) < prec) break;
+
+        OP_TYPES op;
+
+        switch (p.tokens[p.counter]._TOKEN_TYPE)
+        {
+            case _TOKEN_PLUS: op = OP_TYPES::Add; break;
+            case _TOKEN_MUL: op = OP_TYPES::Mul; break;
+            case _TOKEN_DIV: op = OP_TYPES::Div; break;
+            case _TOKEN_MINUS: op = OP_TYPES::Sub; break;
+            case _TOKEN_MOD: op = OP_TYPES::Mod; break;
+            default: std::cout << "Unsuported operator encoutered\n"; break;
+        }
+
+        int nextPrec = getPrecedence(p.tokens[p.counter]._TOKEN_TYPE);
+        ++p.counter;
+        void *rhs = expression_rule(p, nextPrec);
+        //std::cout << ((Expr *)rhs)->getKind() << "\n";
+        lhs = new BinOpExpr((Expr *)lhs, op, (Expr *)rhs, EXPR_TYPES::BinopExpr);
+    }
+
     return lhs;
 }
 
-void *assign_stmt(Parser &p)
+void *assign_stmt_rule(Parser &p)
 {
-    // get name
-    // consume '='
-    // parser expression
-    void *var_name;
-    void *value;
-    //printf("%d\n", p.counter);
-    assert(p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_VAR);
+    void *var_name = nullptr;
+    void *value = nullptr;
     if(
-       (var_name = genMeowConstObj(p, empty_token, empty_token, p.tokens[p.counter], _const_kind::Char)) // store variable name
+        (var_name = parse_varname(p))
         &&
-        consume_token(p, _TOKEN_EQU) // `=`
+        (consume_token(p, _TOKEN_EQU)) // consume `=`
         &&
-        (value = expression_rule(p))
+        (value = expression_rule(p, 1))
     )
     {
-        expr_ty *varname_expr = (expr_ty *) genName_expr( (meowConstObj *) var_name);
-        expr_ty *variable = (expr_ty *) genNameexpr_expr(varname_expr, (expr_ty *) value);
-        printf("DEBUG::Parsed a variable with name {%s} and kind : {%d}\n", variable->v.NameExpr.target->v.Name.id->data.Char.val, variable->v.NameExpr.value->kind);
-        return variable;
+        Const *var_name_const_node = new Const((MeowObject *)var_name, EXPR_TYPES::ConstExpr);
+        NameExpr *name_expr_node = new NameExpr((Expr *)var_name_const_node, (Expr *)value, EXPR_TYPES::NameExprssion);
+        return name_expr_node;
     }
     else
     {
-        std::cout << "genNameAST() || cosume_token() || expression_rule() returned NULL\n";
         return NULL;
     }
 }
 
-void *simple_stmt(Parser &p)
+void *statment_rule(Parser &p)
 {
-    void *a;
-    if(a = assign_stmt(p))
+    void *a = nullptr;
+
+    if(a = assign_stmt_rule(p))
     {
-        stmt_ty *assign_stmt = (stmt_ty *) genAssign_stmt((expr_ty *) a);
-        printf("DEBUG::Parsed assign_stmt of kind -> %d\n", assign_stmt->v.Assign.body->kind);
-        return assign_stmt;
+        AssignmnetStmt *assignstmt = new AssignmnetStmt((Expr *)a, STMT_TYPES::AssignStmt);
+        return assignstmt;
     }
     else
     {
-        std::cout << "assign_stmt() returned NULL\n";
         return NULL;
     }
 }
 
-void *file_rule(Parser &p)
+void *parse(const std::vector<Token> &tok_list, _rule rule)
 {
-    void *a;
-    mod_ty *result = (mod_ty *) genModule_mod();
+    Parser p = gen_parser(tok_list, 0, 0);
 
-again:
-    if(a = simple_stmt(p))
+    Module *mod = new Module();
+    void *a = nullptr;
+
+    if(a = statment_rule(p))
     {
-        result->v.Module.body = insert(result->v.Module.body, (stmt_ty *) a);
-        printf("DEBUG::Parsed simple stmt\n");
-        p.level++;  // no use tbh
-        printf("DEBUG::Module inserted at level %d\n", p.level);
-        //p.counter++;
+        mod->addStmt((Stmts *) a);
     }
-    else
+    else 
     {
-        std::cout << "simple_stmt returned NULL\n";
         return NULL;
     }
 
-    //return result;
-
-    if(p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_EOT) return result;
-
-    goto again;
-}
-
-void *parse(const std::vector<Token> &token_list, _rule rule)
-{
-    struct Parser p = gen_parser(token_list, 0, 0);
-    
-    void *result;
-
-    if(rule == File_Rule)
-    {
-        result = file_rule(p);
-        printf("DEBUG::Parsing done Rule used - file_rule()\n");
-    }
-    else
-    {
-        std::cout << "FileRule returned NULL\n";
-        result = NULL;
-    }
-
-    return result;
+    return mod;
 }
