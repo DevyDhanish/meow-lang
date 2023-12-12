@@ -79,9 +79,14 @@ std::vector<std::string> disassembleLine(meow_line line){
             curr_pos += 1;
         }
 
-        else if(lookAhead == commentChar)
+        else if(lookAhead == commentChar) // ignore comments when lexing but it does not work : (
         {
-            while(curr_line[curr_pos] != '\n') curr_pos += 1;
+            while(1)
+            {
+                if(curr_pos > curr_line.size()) break;
+                
+                curr_pos += 1;
+            }
         }
 
         else if(isdigitC(lookAhead) || lookAhead == '-' || lookAhead == '+')

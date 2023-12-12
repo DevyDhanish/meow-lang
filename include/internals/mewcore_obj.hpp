@@ -9,9 +9,11 @@ class MeowObject
 public:
     virtual void printInfo() = 0;
     virtual int getKind() = 0;
+    virtual void onShow() = 0;
     virtual ~MeowObject() = default;
 };
 
+// These are the data types of Meow lang represented as classes in C++
 class Integer : public MeowObject
 {
 public:
@@ -28,6 +30,12 @@ public:
     int getKind() override
     {
         return kind;
+    }
+
+
+    void onShow() override
+    {
+        std::cout << value;
     }
 };
 
@@ -47,6 +55,11 @@ public:
     {
         return kind;
     }
+
+    void onShow() override
+    {
+        std::cout << value;
+    }
 };
 
 class Float : public MeowObject
@@ -64,5 +77,10 @@ public:
     int getKind() override
     {
         return kind;
+    }
+
+    void onShow() override
+    {
+        std::cout << value;
     }
 };

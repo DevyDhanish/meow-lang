@@ -58,7 +58,6 @@ void *parse_varname(Parser &p)
     }
     else
     {
-        std::cout << "expected Token_var but got" << p.tokens[p.counter]._TOKEN_TYPE << "\n";
         return NULL;
     }
 }
@@ -89,6 +88,11 @@ void *const_rule(Parser &p)
             const_obj = mewfloat;
             break;
         }
+        case _TOKEN_VAR:
+        {
+            return parse_varname(p);
+            break;
+        }
         default:
             std::cout << "Unknow token encountered\n";
             return NULL;
@@ -113,7 +117,7 @@ void *expression_rule(Parser &p, int prec)
 
     void *a = const_rule(p); // lhs
 
-    void *lhs = new Const((MeowObject *)a, EXPR_TYPES::ConstExpr);
+    void *lhs = new Const((MeowObject *)a, EXPR_TYPES::expr_const);
 
     while(1)
     {
@@ -135,7 +139,7 @@ void *expression_rule(Parser &p, int prec)
         ++p.counter;
         void *rhs = expression_rule(p, nextPrec);
         //std::cout << ((Expr *)rhs)->getKind() << "\n";
-        lhs = new BinOpExpr((Expr *)lhs, op, (Expr *)rhs, EXPR_TYPES::BinopExpr);
+        lhs = new BinOpExpr((Expr *)lhs, op, (Expr *)rhs, EXPR_TYPES::expr_binary);
     }
 
     return lhs;
@@ -153,9 +157,32 @@ void *assign_stmt_rule(Parser &p)
         (value = expression_rule(p, 1))
     )
     {
-        Const *var_name_const_node = new Const((MeowObject *)var_name, EXPR_TYPES::ConstExpr);
-        NameExpr *name_expr_node = new NameExpr((Expr *)var_name_const_node, (Expr *)value, EXPR_TYPES::NameExprssion);
+        Const *var_name_const_node = new Const((MeowObject *)var_name, EXPR_TYPES::expr_const);
+        NameExpr *name_expr_node = new NameExpr((Expr *)var_name_const_node, (Expr *)value, EXPR_TYPES::expr_nameexpr);
         return name_expr_node;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+void *show_stmt_rule(Parser &p)
+{
+    void *a = nullptr;
+
+    if(
+        consume_token(p, _TOKEN_SHOW)
+        &&
+        (
+            a = expression_rule(p, 1)
+        )
+    )
+    {
+        // since expression_rule will return Binop expr, const expr or other expr
+        // i gonna just return that and compiler will handle the type and all
+        std::cout << "Done\n";
+        return a;
     }
     else
     {
@@ -169,8 +196,13 @@ void *statment_rule(Parser &p)
 
     if(a = assign_stmt_rule(p))
     {
-        AssignmnetStmt *assignstmt = new AssignmnetStmt((Expr *)a, STMT_TYPES::AssignStmt);
+        AssignmnetStmt *assignstmt = new AssignmnetStmt((Expr *)a, STMT_TYPES::stmt_assign);
         return assignstmt;
+    }
+    if(a = show_stmt_rule(p))
+    {
+        ShowStmt *showStmt = new ShowStmt((Expr *)a, STMT_TYPES::stmt_show);
+        return showStmt;
     }
     else
     {
@@ -180,6 +212,8 @@ void *statment_rule(Parser &p)
 
 void *parse(const std::vector<Token> &tok_list, _rule rule)
 {
+    if(tok_list.size() == 1 && tok_list.back()._TOKEN_TYPE == _TOKEN_EOT) return NULL;
+
     Parser p = gen_parser(tok_list, 0, 0);
 
     Module *mod = new Module();

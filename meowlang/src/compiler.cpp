@@ -42,11 +42,11 @@ void compileBinopExpr(BinOpExpr *expr)
 {
     switch (expr->left->getKind())
     {
-    case EXPR_TYPES::ConstExpr:
+    case EXPR_TYPES::expr_const:
         compileConstExpr((Const *) expr->left);
         break;
 
-    case EXPR_TYPES::BinopExpr:
+    case EXPR_TYPES::expr_binary:
         compileBinopExpr((BinOpExpr *) expr->left); break;
     
     default:
@@ -55,11 +55,11 @@ void compileBinopExpr(BinOpExpr *expr)
 
     switch (expr->right->getKind())
     {
-    case EXPR_TYPES::ConstExpr:
+    case EXPR_TYPES::expr_const:
         compileConstExpr((Const *) expr->right);
         break;
     
-    case EXPR_TYPES::BinopExpr:
+    case EXPR_TYPES::expr_binary:
         compileBinopExpr((BinOpExpr *)expr->right); break;
 
     default:
@@ -85,10 +85,10 @@ void compileNameExpr(NameExpr *nameExpr)
 {
     switch (nameExpr->value->getKind())
     {
-    case EXPR_TYPES::ConstExpr :
+    case EXPR_TYPES::expr_const:
         compileConstExpr((Const *)nameExpr->value);
         break;
-    case EXPR_TYPES::BinopExpr:
+    case EXPR_TYPES::expr_binary:
         compileBinopExpr((BinOpExpr *) nameExpr->value);
         break;
     
@@ -103,13 +103,32 @@ void compileAssignStmt(AssignmnetStmt *assstmt)
 {
     switch (assstmt->value->getKind())
     {
-    case EXPR_TYPES::NameExprssion :
+    case EXPR_TYPES::expr_nameexpr:
         compileNameExpr((NameExpr *)assstmt->value);
         break;
     
     default:
         break;
     }
+}
+
+void compileShowStmt(ShowStmt *showstmt)
+{
+    switch (showstmt->value->getKind())
+    {
+    case EXPR_TYPES::expr_const :
+        compileConstExpr((Const *)showstmt->value);
+        break;
+
+    case EXPR_TYPES::expr_binary :
+        compileBinopExpr((BinOpExpr *)showstmt->value);
+        break;
+    
+    default:
+        break;
+    }
+
+    bytes.push_back(makeByteCode(OP_CODES::OUT, (int64_t)0));
 }
 
 std::vector<bytecode> compile(Module *mod)
@@ -119,10 +138,15 @@ std::vector<bytecode> compile(Module *mod)
     {
         switch (a->getKind())
         {
-        case STMT_TYPES::AssignStmt:
+
+        case STMT_TYPES::stmt_assign:
             compileAssignStmt((AssignmnetStmt *)a);
             break;
         
+        case STMT_TYPES ::stmt_show:
+            compileShowStmt((ShowStmt *)a);
+            break; 
+
         default:
             break;
         }

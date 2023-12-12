@@ -14,6 +14,7 @@ enum OP_CODES
     LOAD_CONST,
     MAKE_FUNC,
     MAKE_CLASS,
+    OUT,
 };
 struct _CODE_UINT
 {

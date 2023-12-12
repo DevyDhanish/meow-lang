@@ -1,1 +1,3 @@
-x = 2 * 3;
+# comments are now working
+
+show "Hello world!!!!"

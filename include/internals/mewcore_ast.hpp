@@ -5,9 +5,10 @@
 
 // base class for stmts, does nothing by default
 
-enum STMT_TYPES { AssignStmt };
-enum EXPR_TYPES { ConstExpr, NameExprssion, BinopExpr };
-enum OP_TYPES {Add, Sub, Mul, Div, Mod};
+enum STMT_TYPES { stmt_assign, stmt_show };
+enum EXPR_TYPES { expr_const, expr_nameexpr, expr_binary };
+enum OP_TYPES { Add, Sub, Mul, Div, Mod };
+
 class Stmts 
 {
 public:
@@ -94,6 +95,25 @@ public:
     void printInfo()
     {
         std::cout << "Kind:"<<kind<<"\n"; 
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
+};
+
+class ShowStmt : public Stmts
+{
+public:
+    STMT_TYPES kind;
+    Expr *value;
+    ShowStmt() {}
+    ShowStmt(Expr *a, STMT_TYPES k) : value(a), kind (k) {}
+
+    void printInfo()
+    {
+        std::cout << "Kind:" << kind << "\n";
     }
 
     int getKind() override

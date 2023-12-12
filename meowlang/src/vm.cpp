@@ -26,7 +26,6 @@ void startexec(const std::vector<bytecode> cooked_code)
         switch (byte.op)
         {
         case OP_CODES::LOAD_CONST :
-            std::cout << "Loaded const : " << ((Integer *) byte.arg)->value << "\n";
             current_frame.frame[current_frame.frame_pointer]->push_stack((int64_t *) byte.arg);
             break;
 
@@ -34,7 +33,6 @@ void startexec(const std::vector<bytecode> cooked_code)
         {
             Integer *a = (Integer *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
             Integer *b = (Integer *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
-            std::cout << ((int64_t)a->value + (int64_t)b->value) << "\n";
             Integer *newVal = new Integer(((int64_t)a->value + (int64_t)b->value), MEOWOBJECTKIND::IntObj);
             current_frame.frame[current_frame.frame_pointer]->push_stack((int64_t *) newVal);
             break;
@@ -76,9 +74,16 @@ void startexec(const std::vector<bytecode> cooked_code)
             MeowObject *var = (MeowObject *)byte.arg;
             MeowObject *val = (MeowObject *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
             current_frame.frame[current_frame.frame_pointer]->store_const(var, val);
-            //std::cout << "Stored variable - identifier : " << ((String *)var)->value << "\t" << "value : " << ((Integer *)val)->value << "\n";
             break;
         }
+        
+        case OP_CODES::OUT :
+        {
+            MeowObject *top = (MeowObject *) current_frame.frame[current_frame.frame_pointer]->pop_stack();
+            top->onShow();
+            break;
+        }
+
         default:
             break;
         }
