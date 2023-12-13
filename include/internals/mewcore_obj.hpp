@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <iostream>
 
-enum MEOWOBJECTKIND { IntObj, StringObj, FloatObj };
+enum MEOWOBJECTKIND { IntObj, StringObj, FloatObj, VarObj};
 
 class MeowObject
 {
@@ -74,6 +74,7 @@ public:
     {
         std::cout << "type <Float>\n";
     }
+
     int getKind() override
     {
         return kind;
@@ -82,5 +83,29 @@ public:
     void onShow() override
     {
         std::cout << value;
+    }
+};
+
+class Var : public MeowObject
+{
+public:
+    MEOWOBJECTKIND kind;
+    std::string value;
+    Var() {}
+    Var (std::string v, MEOWOBJECTKIND k) : value(v), kind(k) {}
+
+    void printInfo() override
+    {
+        std::cout << "type <Var>\n";
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
+
+    void onShow() override
+    {
+        std::cout << "Var type\n";
     }
 };

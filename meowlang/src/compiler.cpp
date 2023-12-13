@@ -17,19 +17,25 @@ void compileConstExpr(Const *constExpr)
 
     switch (((MeowObject *)constExpr->value)->getKind())
     {
+
     case MEOWOBJECTKIND::IntObj :
         std::cout << "Integer value: " << ((Integer *) constExpr->value)->value << "\n";
-        bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (int64_t)((Integer *)constExpr->value)));
+        bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)((Integer *)constExpr->value)));
         break;
 
     case MEOWOBJECTKIND::FloatObj :
         std::cout << "Float value: " << ((Float *) constExpr->value)->value << "\n";
-        bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (int64_t)((Float *)constExpr->value)));
+        bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)((Float *)constExpr->value)));
         break;
 
     case MEOWOBJECTKIND::StringObj :
         std::cout << "String value: " << ((String *) constExpr->value)->value << "\n";
-        bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (int64_t)(String *)constExpr->value));
+        bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)((String *)constExpr->value)));
+        break;
+
+    case MEOWOBJECTKIND::VarObj :
+        std::cout << "Var : " << ((Var *)constExpr->value)->value << "\n";
+        bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_NAME, (uint64_t)((Var *)constExpr->value)));
         break;
 
     default:
@@ -96,7 +102,7 @@ void compileNameExpr(NameExpr *nameExpr)
         break;
     }
     
-    bytes.push_back(makeByteCode((uint8_t)OP_CODES::STORE, (int64_t)nameExpr->target));
+    bytes.push_back(makeByteCode((uint8_t)OP_CODES::STORE, (uint64_t)(Var *)((Const *)nameExpr->target)->value));
 }
 
 void compileAssignStmt(AssignmnetStmt *assstmt)

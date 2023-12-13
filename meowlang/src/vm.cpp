@@ -1,91 +1,101 @@
 #include "../../include/vm.hpp"
-#include "../../include/internals/mewcore_stackframe.hpp"
 #include "../../include/code.hpp"
+#include "../../include/internals/mewcore_constpool.hpp"
 
-void PROG_FRAME::push_frame(MEOW_STACKFRAME *f)
+void Interpreter::pushFrame(MEOW_STACKFRAME *f)
 {
-    ++frame_pointer;
-    frame.push_back(f);
-}
-
-void PROG_FRAME::pop_frame()
-{
-    --frame_pointer;
-    delete(frame[frame_pointer]);
-    frame.pop_back();
-}
-
-void startexec(const std::vector<bytecode> cooked_code)
-{
-    PROG_FRAME current_frame;
-    MEOW_STACKFRAME m_stackframe;
-    current_frame.push_frame(&m_stackframe);
-
-    for(bytecode byte : cooked_code)
+    if(!f)
     {
-        switch (byte.op)
-        {
-        case OP_CODES::LOAD_CONST :
-            current_frame.frame[current_frame.frame_pointer]->push_stack((int64_t *) byte.arg);
-            break;
+        return;
+    }
 
-        case OP_CODES::ADD :
+    frame.push_back(f);
+    fp++;
+    current_frame = frame.back();
+}
+
+MEOW_STACKFRAME *Interpreter::popFrame()
+{
+    if(frame.size() == 0)
+    {
+        return NULL;
+    }
+
+    fp--;
+    MEOW_STACKFRAME *topop = frame.back();
+    current_frame = frame[fp];
+    frame.pop_back();
+
+    return topop;
+}
+
+void handleMaths(Interpreter *interpreter, bytecode byte)
+{
+    MeowObject *a = (MeowObject *)interpreter->current_frame->popFromStack();
+    MeowObject *b = (MeowObject *)interpreter->current_frame->popFromStack();
+}
+
+void handleByte(Interpreter *interpreter, bytecode byte)
+{
+    switch(byte.op)
+    {
+        case OP_CODES::LOAD_CONST:
         {
-            Integer *a = (Integer *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
-            Integer *b = (Integer *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
-            Integer *newVal = new Integer(((int64_t)a->value + (int64_t)b->value), MEOWOBJECTKIND::IntObj);
-            current_frame.frame[current_frame.frame_pointer]->push_stack((int64_t *) newVal);
+            std::cout << "LODED CONST TO STACK OF TYPE " << ((MeowObject *)byte.arg)->getKind() << "\n";
+            interpreter->current_frame->pushToStack(byte.arg);
             break;
         }
-        case OP_CODES::SUB :
-        {
-            Integer *a = (Integer *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
-            Integer *b = (Integer *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
-            Integer *newVal = new Integer(((int64_t)a->value - (int64_t)b->value), MEOWOBJECTKIND::IntObj);
-            current_frame.frame[current_frame.frame_pointer]->push_stack((int64_t *) newVal);
-            break;
-        }
-        case OP_CODES::MUL :
-        {
-            Integer *a = (Integer *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
-            Integer *b = (Integer *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
-            Integer *newVal = new Integer(((int64_t)a->value * (int64_t)b->value), MEOWOBJECTKIND::IntObj);
-            current_frame.frame[current_frame.frame_pointer]->push_stack((int64_t *) newVal);
-            break;
-        }
-        case OP_CODES::DIV :
-        {  
-            Integer *a = (Integer *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
-            Integer *b = (Integer *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
-            Integer *newVal = new Integer(((int64_t)a->value / (int64_t)b->value), MEOWOBJECTKIND::IntObj);
-            current_frame.frame[current_frame.frame_pointer]->push_stack((int64_t *) newVal);
-            break;
-        }
-        case OP_CODES::MOD :
-        {
-            Integer *a = (Integer *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
-            Integer *b = (Integer *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
-            Integer *newVal = new Integer(((int64_t)a->value % (int64_t)b->value), MEOWOBJECTKIND::IntObj);
-            current_frame.frame[current_frame.frame_pointer]->push_stack((int64_t *) newVal);
-            break;
-        }
+
         case OP_CODES::STORE :
         {
-            MeowObject *var = (MeowObject *)byte.arg;
-            MeowObject *val = (MeowObject *)current_frame.frame[current_frame.frame_pointer]->pop_stack();
-            current_frame.frame[current_frame.frame_pointer]->store_const(var, val);
+            put_const(interpreter->current_frame->pool, (MeowObject *)byte.arg, (MeowObject *)interpreter->current_frame->popFromStack());
+            std::cout << "STORED VAL TO CONST POOL ID : " << ((Var *) byte.arg)->value << "\n";
             break;
         }
-        
-        case OP_CODES::OUT :
+
+        case OP_CODES::LOAD_NAME :
         {
-            MeowObject *top = (MeowObject *) current_frame.frame[current_frame.frame_pointer]->pop_stack();
-            top->onShow();
+            MeowObject *valFromvar = get_const(interpreter->current_frame->pool, (MeowObject *)byte.arg);
+            interpreter->current_frame->pushToStack((uint64_t)valFromvar);
+            std::cout << "LOADED VALUE FROM CONST POOL TO STACK : ";
+            valFromvar->onShow();
+            std::cout << "\n";
             break;
+        }
+
+        case OP_CODES::ADD:
+        case OP_CODES::SUB:
+        case OP_CODES::DIV:
+        case OP_CODES::MOD:
+        {
+            handleMaths(interpreter, byte);
+            break;
+        }
+
+        case OP_CODES::OUT:
+        {
+            MeowObject *valAtTop = (MeowObject *)interpreter->current_frame->getValFromStack(interpreter->current_frame->stack_pointer - 1);
+            valAtTop->printInfo();
         }
 
         default:
             break;
-        }
+    }
+}
+
+void startexec(const std::vector<bytecode> &cooked_code)
+{
+    Interpreter *interpreter = new Interpreter();
+    MEOW_STACKFRAME *main = new MEOW_STACKFRAME(); 
+
+    // put the main frame into interpreter frame stack
+    interpreter->pushFrame(main);
+
+    std::cout << "Everything is working up to here\n";
+
+
+    for(bytecode byte : cooked_code)
+    {
+        handleByte(interpreter, byte);
     }
 }

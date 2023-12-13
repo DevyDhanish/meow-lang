@@ -1,51 +1,37 @@
 #include "../../../include/internals/mewcore_stackframe.hpp"
-#include "../../../include/internals/mewcore_ast.hpp"
 
-#include <vector>
 
-std::vector<int64_t *> stack;
-std::vector<CONST_POOL *> const_pool;
-
-int stack_pointer = 0;
-
-void MEOW_STACKFRAME::push_stack(int64_t* val)
+void MEOW_STACKFRAME::pushToStack(uint64_t val)
 {
-    stack.push_back(val); 
-    ++stack_pointer;
+    if(!val)
+    {
+        return;
+    }
+
+    stack_pointer++;
+
+    stack.push_back(val);
 }
 
-int64_t *MEOW_STACKFRAME::pop_stack()
+uint64_t MEOW_STACKFRAME::popFromStack()
 {
-    --stack_pointer;
-    int64_t *val = stack.back();
+    if(stack.size() == 0)
+    {
+        return 0;
+    }
+
+    int64_t toPop = stack.back();
+    stack_pointer--;
     stack.pop_back();
-    return val;
+    return toPop;
 }
 
-void MEOW_STACKFRAME::store_const(MeowObject *k, MeowObject *v)
+void MEOW_STACKFRAME::replaceValInStack(uint16_t idx, uint64_t val)
 {
-    MeowObject *varname = ((Const *)k)->value;
-
-    std::cout << "Stored variable id : " << ((String *)varname)->value << "\t" << "value : " << ((Integer *)v)->value << "\n";
-
-    CONST_POOL *cp = new CONST_POOL(k,v);
-    const_pool.push_back(cp);
+    stack[idx] = val;
 }
 
-MeowObject *MEOW_STACKFRAME::get_const(MeowObject *k)
+uint64_t MEOW_STACKFRAME::getValFromStack(uint16_t idx)
 {
-    if(const_pool.size() == 0)
-    {
-        std::cout << "Invalid operation done on const pool\n";
-    }
-
-    for(CONST_POOL *p : const_pool)
-    {
-        if(((String *)p->key)->value == ((String *)k)->value)
-        {
-            return p->value;
-        }
-    }
-
-    return nullptr;
+    return stack[idx];
 }

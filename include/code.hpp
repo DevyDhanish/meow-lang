@@ -5,21 +5,22 @@ typedef struct _CODE_UINT bytecode;
 
 enum OP_CODES
 {
-    ADD,
-    SUB,
-    MUL,
-    DIV,
-    MOD,
-    STORE,
-    LOAD_CONST,
-    MAKE_FUNC,
-    MAKE_CLASS,
-    OUT,
+    ADD,    //0
+    SUB,    //1
+    MUL,    //2
+    DIV,    //3
+    MOD,    //4
+    STORE,  //5
+    LOAD_NAME,  //6
+    LOAD_CONST, //7
+    MAKE_FUNC,  //8
+    MAKE_CLASS, //9
+    OUT,    //10
 };
 struct _CODE_UINT
 {
     uint8_t op;
-    int64_t arg;
+    uint64_t arg;
 };
 
 bytecode makeByteCode(uint8_t op, int64_t oparg);

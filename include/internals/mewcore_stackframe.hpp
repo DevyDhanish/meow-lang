@@ -4,23 +4,26 @@
 #include <vector>
 #include "mewcore_constpool.hpp"
 
+/*
+stack
+const_pool
+*/
+
 class MEOW_STACKFRAME
 {
+private:
+    std::vector<uint64_t> stack;
+
 public:
-    //uint32_t stack_pointer;
+    uint16_t stack_pointer;
+    std::vector<const_pair *> pool;
+    void pushToStack(uint64_t val);
+    uint64_t popFromStack();
+    void replaceValInStack(uint16_t idx, uint64_t val);
+    uint64_t getValFromStack(uint16_t idx);
 
-    //std::vector<CONST_POOL *> const_pool;
-    //int64_t **stack;
-
-    void push_stack(int64_t* val);
-    int64_t *pop_stack();
-
-    void store_const(MeowObject *k, MeowObject *v);
-    MeowObject *get_const(MeowObject *k);
-
-MEOW_STACKFRAME() {
-    //stack_pointer = 0;
-    //stack = (int64_t **)malloc(256 * sizeof(int64_t *)); // Allocate memory for an array of pointers
-    // Check if allocation succeeded or consider using 'new' for C++ allocation
-}
+    MEOW_STACKFRAME()
+    {
+        stack_pointer = 0;
+    }
 };

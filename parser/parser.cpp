@@ -47,12 +47,12 @@ int getPrecedence(TOKEN_T optype)
     }
 }
 
-void *parse_varname(Parser &p)
+void *var_rule(Parser &p)
 {
     if(expect_token(p, _TOKEN_VAR))
     {
-        String *varname = nullptr;
-        varname = new String(p.tokens[p.counter]._TOKEN_VALUE, MEOWOBJECTKIND::StringObj); // get the var name
+        Var *varname = nullptr;
+        varname = new Var(p.tokens[p.counter]._TOKEN_VALUE, MEOWOBJECTKIND::VarObj); // get the var name
         ++p.counter;
         return varname;
     }
@@ -90,7 +90,7 @@ void *const_rule(Parser &p)
         }
         case _TOKEN_VAR:
         {
-            return parse_varname(p);
+            return var_rule(p);
             break;
         }
         default:
@@ -150,7 +150,7 @@ void *assign_stmt_rule(Parser &p)
     void *var_name = nullptr;
     void *value = nullptr;
     if(
-        (var_name = parse_varname(p))
+        (var_name = var_rule(p))
         &&
         (consume_token(p, _TOKEN_EQU)) // consume `=`
         &&
@@ -181,7 +181,6 @@ void *show_stmt_rule(Parser &p)
     {
         // since expression_rule will return Binop expr, const expr or other expr
         // i gonna just return that and compiler will handle the type and all
-        std::cout << "Done\n";
         return a;
     }
     else
@@ -199,7 +198,7 @@ void *statment_rule(Parser &p)
         AssignmnetStmt *assignstmt = new AssignmnetStmt((Expr *)a, STMT_TYPES::stmt_assign);
         return assignstmt;
     }
-    if(a = show_stmt_rule(p))
+    else if(a = show_stmt_rule(p))
     {
         ShowStmt *showStmt = new ShowStmt((Expr *)a, STMT_TYPES::stmt_show);
         return showStmt;
@@ -219,14 +218,17 @@ void *parse(const std::vector<Token> &tok_list, _rule rule)
     Module *mod = new Module();
     void *a = nullptr;
 
+again:
     if(a = statment_rule(p))
     {
         mod->addStmt((Stmts *) a);
     }
     else 
     {
-        return NULL;
+        mod = NULL;
     }
+
+    if(!expect_token(p, _TOKEN_EOT)) goto again;
 
     return mod;
 }

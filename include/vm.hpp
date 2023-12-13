@@ -1,25 +1,28 @@
 #pragma once
 
 #include <vector>
-
 #include "internals/mewcore_stackframe.hpp"
 #include "code.hpp"
 
-class PROG_FRAME
+/*
+frame
+*/
+
+class Interpreter
 {
-    public: 
+private:
     std::vector<MEOW_STACKFRAME *> frame;
-    uint32_t frame_pointer;
+public:
+    uint16_t fp;
+    MEOW_STACKFRAME *current_frame;
 
-    // push frame
-    void push_frame(MEOW_STACKFRAME *f);
-    // pop frame
-    void pop_frame();
+    void pushFrame(MEOW_STACKFRAME *f);
+    MEOW_STACKFRAME *popFrame();
 
-    PROG_FRAME()
+    Interpreter()
     {
-        frame_pointer = 0;
+        fp = 0;
     }
 };
 
-void startexec(const std::vector<bytecode> cooked_code);
+void startexec(const std::vector<bytecode> &cooked_code);
