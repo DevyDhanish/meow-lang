@@ -7,6 +7,14 @@
 
 std::vector<bytecode> bytes;
 
+void compileUnaryNegate(UnaryExpr *uExpr);
+void compileConstExpr(Const *constExpr);
+void compileBinopExpr(BinOpExpr *expr);
+void compileNameExpr(NameExpr *nameExpr);
+void compileAssignStmt(AssignmnetStmt *assstmt);
+void compileShowStmt(ShowStmt *showstmt);
+std::vector<bytecode> compile(Module *mod);
+
 void compileConstExpr(Const *constExpr)
 {
     // Check if the constExpr is null
@@ -46,6 +54,7 @@ void compileConstExpr(Const *constExpr)
 
 void compileBinopExpr(BinOpExpr *expr)
 {
+    if(!expr->left) std::cout << "Left side is empty\n";
     switch (expr->left->getKind())
     {
     case EXPR_TYPES::expr_const:
@@ -53,12 +62,18 @@ void compileBinopExpr(BinOpExpr *expr)
         break;
 
     case EXPR_TYPES::expr_binary:
-        compileBinopExpr((BinOpExpr *) expr->left); break;
+        compileBinopExpr((BinOpExpr *) expr->left);
+        break;
+
+    case EXPR_TYPES::expr_unary:
+        compileUnaryNegate((UnaryExpr *) expr->left);
+        break;
     
     default:
         break;
     }
 
+    if(!expr->right) std::cout << "Right side is empty\n";
     switch (expr->right->getKind())
     {
     case EXPR_TYPES::expr_const:
@@ -66,7 +81,12 @@ void compileBinopExpr(BinOpExpr *expr)
         break;
     
     case EXPR_TYPES::expr_binary:
-        compileBinopExpr((BinOpExpr *)expr->right); break;
+        compileBinopExpr((BinOpExpr *)expr->right);
+        break;
+
+    case EXPR_TYPES::expr_unary:
+        compileUnaryNegate((UnaryExpr *)expr->right);
+        break;
 
     default:
         break;
@@ -94,6 +114,41 @@ void compileBinopExpr(BinOpExpr *expr)
     bytes.push_back(makeByteCode((uint8_t)op, (int64_t)0));
 }
 
+void compileUnaryNegate(UnaryExpr *uExpr)
+{
+    switch (uExpr->value->getKind())
+    {
+    case EXPR_TYPES::expr_const :
+        compileConstExpr((Const *) uExpr->value);
+        break;
+
+    case EXPR_TYPES::expr_binary :
+        compileBinopExpr((BinOpExpr *)uExpr->value);
+        break;
+
+    case EXPR_TYPES::expr_unary:
+        compileUnaryNegate((UnaryExpr *)uExpr->value);
+        break;
+    
+    default:
+        break;
+    }
+
+    OP_CODES op;
+
+    switch (uExpr->op)
+    {
+    case OP_TYPES::negate :
+        op = OP_CODES::NEGATE;
+        break;
+    
+    default:
+        break;
+    }
+
+    bytes.push_back(makeByteCode((uint8_t)op, (int64_t)0));
+}
+
 void compileNameExpr(NameExpr *nameExpr)
 {
     switch (nameExpr->value->getKind())
@@ -103,6 +158,10 @@ void compileNameExpr(NameExpr *nameExpr)
         break;
     case EXPR_TYPES::expr_binary:
         compileBinopExpr((BinOpExpr *) nameExpr->value);
+        break;
+
+    case EXPR_TYPES::expr_unary:
+        compileUnaryNegate((UnaryExpr *)nameExpr->value);
         break;
     
     default:
@@ -135,6 +194,10 @@ void compileShowStmt(ShowStmt *showstmt)
 
     case EXPR_TYPES::expr_binary :
         compileBinopExpr((BinOpExpr *)showstmt->value);
+        break;
+
+    case EXPR_TYPES::expr_unary:
+        compileUnaryNegate((UnaryExpr *)showstmt->value);
         break;
     
     default:

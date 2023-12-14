@@ -358,6 +358,12 @@ void *Integer::onCmpGE(MeowObject *b)
     }
 }
 
+void *Integer::onNegate()
+{
+    Integer *newVal = new Integer( -value, MEOWOBJECTKIND::IntObj);
+    return newVal;
+}
+
 /*
 **************************************************************************************
 *                                                                                    *   
@@ -698,6 +704,12 @@ void *String::onCmpNE(MeowObject *b)
             break;
         }
     }
+}
+
+void *String::onNegate()
+{
+    std::cout << "Cannot perform negate on type<string>\n";
+    return nullptr;
 }
 
 /*
@@ -1053,4 +1065,8 @@ void *Float::onCmpGE(MeowObject *b)
     }
 }
 
-
+void *Float::onNegate()
+{
+    Float *newVal = new Float( -value, MEOWOBJECTKIND::FloatObj);
+    return newVal;
+}

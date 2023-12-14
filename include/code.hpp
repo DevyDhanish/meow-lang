@@ -22,6 +22,7 @@ enum OP_CODES
     CMP_LESSEQU, //14
     CMP_GREAT,  //15
     CMP_GREATEQU, //16
+    NEGATE,         // 17
 };
 struct _CODE_UINT
 {

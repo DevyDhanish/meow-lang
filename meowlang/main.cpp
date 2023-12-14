@@ -59,15 +59,16 @@ int main(int argc, char **argv){
     #endif
     #undef DEBUG
 
+    //return 0;
     //std::vector<Token> extoks = { makeToken(_TOKEN_VAR, "x", "none", 0, 0),  makeToken(_TOKEN_EQU, "=", "none", 0, 0),  makeToken(_TOKEN_FLOAT, "1.232", "none", 0, 0),  makeToken(_TOKEN_SEMI_COL, ";", "none", 0, 0)};
     //return 0;
-    
-    Module *module = (Module *) parse(tokenized_vector, File_Rule);
-    std::vector<bytecode> bytecodevect;
 
+    Module *module = (Module *) parse(tokenized_vector, File_Rule);
+    std::cout << "Parsed sucessfully\n";
+    std::vector<bytecode> bytecodevect;
+    //return 0;
     if(module)
     {
-        std::cout << "Parsed sucessfully\n";
         bytecodevect  = compile(module);
 
         for(bytecode &bc : bytecodevect)

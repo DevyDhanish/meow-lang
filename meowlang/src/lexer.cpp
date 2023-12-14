@@ -116,9 +116,14 @@ std::vector<std::string> disassembleLine(meow_line line){
                 output.push_back(operator_pair[lookAhead]);
                 curr_pos += 1;
             }
-            else
+            else if(curr_line[curr_pos] == ' ')
+            {
                 output.push_back(std::string(1, lookAhead));
-
+            }
+            else
+            {
+                output.push_back("<->");    // negate symbol
+            }
             //curr_pos += 1;
         }
 
@@ -235,7 +240,8 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
     for(std::string curr_word : processed_words){
         
         // current word is keyword or is present in the tokens map
-        if(knowTokens.find(curr_word) != knowTokens.end()){
+        if(knowTokens.find(curr_word) != knowTokens.end())
+        {
             _prog_token_list.push_back(makeToken(
                 knowTokens[curr_word],
                 curr_word,

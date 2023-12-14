@@ -6,8 +6,8 @@
 // base class for stmts, does nothing by default
 
 enum STMT_TYPES { stmt_assign, stmt_show, stmt_if };
-enum EXPR_TYPES { expr_const, expr_nameexpr, expr_binary };
-enum OP_TYPES { Add, Sub, Mul, Div, Mod, Cmp_equ, Cmp_less, Cmp_lessequ, Cmp_great, Cmp_greatequ, Cmp_notequ };
+enum EXPR_TYPES { expr_const, expr_nameexpr, expr_binary, expr_unary };
+enum OP_TYPES { Add, Sub, Mul, Div, Mod, Cmp_equ, Cmp_less, Cmp_lessequ, Cmp_great, Cmp_greatequ, Cmp_notequ, negate };
 
 class Stmts 
 {
@@ -23,6 +23,26 @@ public:
     virtual int getKind() = 0;
     virtual void printInfo() = 0;
     virtual ~Expr() = default;
+};
+
+class UnaryExpr: public Expr
+{
+public:
+    EXPR_TYPES kind;
+    OP_TYPES op;
+    Expr *value;
+    UnaryExpr() {}
+    UnaryExpr(Expr *a, OP_TYPES o, EXPR_TYPES k) : value(a), op(o), kind(k) {};
+
+    void printInfo() override
+    {
+        std::cout << "Kind:"<<kind<<"\n";
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
 };
 
 class Const : public Expr

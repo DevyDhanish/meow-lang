@@ -22,6 +22,8 @@ public:
     virtual void *onCmpLE(MeowObject *b) = 0;
     virtual void *onCmpG(MeowObject *b) = 0;
     virtual void *onCmpGE(MeowObject *b) = 0;
+
+    virtual void *onNegate() = 0;
     virtual ~MeowObject() = default;
 };
 
@@ -62,6 +64,8 @@ public:
     void *onCmpLE(MeowObject *b) override;
     void *onCmpG(MeowObject *b) override;
     void *onCmpGE(MeowObject *b) override;
+
+    void *onNegate() override;
 };
 
 class String : public MeowObject
@@ -97,6 +101,8 @@ public:
     void *onCmpLE(MeowObject *b) override;
     void *onCmpG(MeowObject *b) override;
     void *onCmpGE(MeowObject *b) override;
+
+    void *onNegate() override;
 };
 
 class Float : public MeowObject
@@ -133,6 +139,8 @@ public:
     void *onCmpLE(MeowObject *b) override;
     void *onCmpG(MeowObject *b) override;
     void *onCmpGE(MeowObject *b) override;
+
+    void *onNegate() override;
 };
 
 class Var : public MeowObject
@@ -170,4 +178,6 @@ public:
     void *onCmpLE(MeowObject *b) override { return NULL; };
     void *onCmpG(MeowObject *b) override { return NULL; };
     void *onCmpGE(MeowObject *b) override { return NULL; };
+
+    void *onNegate() override { return NULL; };
 };

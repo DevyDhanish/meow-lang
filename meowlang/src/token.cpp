@@ -59,6 +59,7 @@ std::vector<std::string> token_names_for_loging
     "_TOKEN_FUNC",           // 52  
     "_TOKEN_FLOAT",         // 53
     "_TOKEN_EOT",           // 54
+    "_TOKEN_NEGATE",        // 55
 };
 
 Token makeToken(TOKEN_T _token_type, std::string _token_value, std::string _token_line, size_t _token_line_number){

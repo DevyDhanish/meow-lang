@@ -63,6 +63,12 @@ int getPrecedence(TOKEN_T optype)
             return 4; 
             break;
 
+        case _TOKEN_NEGATE:
+            return 5;
+
+        case _TOKEN_BRAOPEN:
+            return 6;
+
         default: 
         return 0; 
         break;
@@ -116,7 +122,7 @@ void *const_rule(Parser &p)
             break;
         }
         default:
-            std::cout << "Unknow token encountered\n";
+            //std::cout << "Unknow token encountered\n";
             return NULL;
             break;
     }
@@ -126,20 +132,25 @@ void *const_rule(Parser &p)
 
 void *expression_rule(Parser &p, int prec)
 {
+    void *a = nullptr;
+    void *lhs = nullptr;
+
+    a = const_rule(p);
+    if(a) lhs = new Const((MeowObject *)a, EXPR_TYPES::expr_const);
+
+    if(expect_token(p, _TOKEN_NEGATE))
+    {
+        ++p.counter;
+        a = expression_rule(p, getPrecedence(_TOKEN_NEGATE));
+        lhs = new UnaryExpr((Expr *)a, OP_TYPES::negate, EXPR_TYPES::expr_unary);
+    }
+
     if(expect_token(p, _TOKEN_BRAOPEN))
     {
         ++p.counter;
-        void *val = expression_rule(p, 1);
-
-        if(!consume_token(p, _TOKEN_BRACLOSE))
-            std::cout << "Expected `)` after expression\n";
-
-        return val;
+        lhs = expression_rule(p, 1);
+        consume_token(p, _TOKEN_BRACLOSE);
     }
-
-    void *a = const_rule(p); // lhs
-
-    void *lhs = new Const((MeowObject *)a, EXPR_TYPES::expr_const);
 
     while(1)
     {
@@ -162,12 +173,15 @@ void *expression_rule(Parser &p, int prec)
             case _TOKEN_GREATERTHAN: op = OP_TYPES::Cmp_great; break;
             case _TOKEN_GREATEREQU: op = OP_TYPES::Cmp_greatequ; break;
             case _TOKEN_NOTEQUALS: op = OP_TYPES::Cmp_notequ; break;
-            default: std::cout << "Unsuported operator encoutered\n"; break;
+            default: break;
         }
 
         int nextPrec = getPrecedence(p.tokens[p.counter]._TOKEN_TYPE);
         ++p.counter;
-        void *rhs = expression_rule(p, nextPrec);
+
+        void *rhs = nullptr;
+        rhs = expression_rule(p, nextPrec);
+        
         //std::cout << ((Expr *)rhs)->getKind() << "\n";
         lhs = new BinOpExpr((Expr *)lhs, op, (Expr *)rhs, EXPR_TYPES::expr_binary);
     }
