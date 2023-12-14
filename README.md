@@ -10,15 +10,11 @@ I might finish this idk, here are all the details if you want to contribute. And
 # BUILD v1.6.11 (First Version)
 
 # CONTRIBUTIONS
-# if you are on windows use `mingw32-make` if linux use `make`
-`fork this repo`<br />
-`git clone https://github.com/<your-user-name>/meow-lang`<br />
-`make create`<br />
-`make libs`<br />
-`make bin-debug` with debug info<br />
-`make bin-release` without debug info<br />
-`cd build`<br />
-`./meowlang main.meow`<br />
+# if you are using mingw use `mingw32-make` anything else use `make`
+the code on the master branch is actually the dev code of next version <br>
+I merged it into master : ( <br>
+so if you wanna build it just run `make` or `mingw32-make` <br>
+you will see a lot of output ignore all that, that's for debuing purpose <br>
 
 # Prerequisites
 1 - `make/mingw32-make` <br />
