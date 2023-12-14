@@ -81,10 +81,17 @@ void compileBinopExpr(BinOpExpr *expr)
     case OP_TYPES::Mul : op = OP_CODES::MUL; break;
     case OP_TYPES::Div : op = OP_CODES::DIV; break;
     case OP_TYPES::Mod : op = OP_CODES::MOD; break;
+
+    case OP_TYPES::Cmp_equ: op = OP_CODES::CMP_EQU; break;
+    case OP_TYPES::Cmp_notequ: op = OP_CODES::CMP_NOTEQU; break;
+    case OP_TYPES::Cmp_less: op = OP_CODES::CMP_LESS; break;
+    case OP_TYPES::Cmp_lessequ: op = OP_CODES::CMP_LESSEQU; break;
+    case OP_TYPES::Cmp_great: op = OP_CODES::CMP_GREAT; break;
+    case OP_TYPES::Cmp_greatequ: op = OP_CODES::CMP_GREATEQU; break;
     default : std::cout << "Bad opcode\n";   break;
     }
 
-    bytes.push_back(makeByteCode((uint8_t)expr->op, (int64_t)0));
+    bytes.push_back(makeByteCode((uint8_t)op, (int64_t)0));
 }
 
 void compileNameExpr(NameExpr *nameExpr)

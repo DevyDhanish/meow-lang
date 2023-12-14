@@ -41,7 +41,10 @@ int main(int argc, char **argv){
 
     for(meow_line line : program_lines){
 
-        for(const Token &toks : lex.tokenize(line)) tokenized_vector.push_back(toks);
+        for(const Token &toks : lex.tokenize(line))
+        {
+            tokenized_vector.push_back(toks);
+        }
         //AST = parser.parse(tokenized_vector);
         //compiler.compile(generated_bytecode, AST.get_child(0));
     }
@@ -57,7 +60,8 @@ int main(int argc, char **argv){
     #undef DEBUG
 
     //std::vector<Token> extoks = { makeToken(_TOKEN_VAR, "x", "none", 0, 0),  makeToken(_TOKEN_EQU, "=", "none", 0, 0),  makeToken(_TOKEN_FLOAT, "1.232", "none", 0, 0),  makeToken(_TOKEN_SEMI_COL, ";", "none", 0, 0)};
-
+    //return 0;
+    
     Module *module = (Module *) parse(tokenized_vector, File_Rule);
     std::vector<bytecode> bytecodevect;
 

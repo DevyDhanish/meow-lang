@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <iostream>
 #include <sstream>
+#include <cstdint>
 
 bool isdigitC(char w)
 {
@@ -89,7 +90,7 @@ std::vector<std::string> disassembleLine(meow_line line){
             }
         }
 
-        else if(isdigitC(lookAhead) || lookAhead == '-' || lookAhead == '+')
+        else if(isdigitC(lookAhead))
         {
             std::string word;
             word += lookAhead;
@@ -102,13 +103,7 @@ std::vector<std::string> disassembleLine(meow_line line){
                 curr_pos += 1;
             }
 
-            if(word != "-" || word != "+")
-                output.push_back(word);
-                
-            else 
-            {
-                // show error;
-            }
+            output.push_back(word);
         }
 
         else if(operator_pair.find(lookAhead) != operator_pair.end()){
@@ -175,13 +170,69 @@ std::vector<std::string> disassembleLine(meow_line line){
     return output;
 }
 
+std::vector<std::string> preprocesor(std::vector<std::string> &words)
+{
+    std::vector<std::string> result;
+
+    uint32_t counter = 0;
+    std::string curword;
+
+    while(counter < words.size())
+    {
+        curword = words[counter];
+        if(curword == "+=")
+        {
+            std::string prevWord = words[counter - 1];
+            result.push_back("=");
+            result.push_back(prevWord);
+            result.push_back("+");
+        }
+        else if(curword == "-=")
+        {
+            std::string prevWord = words[counter - 1];
+            result.push_back("=");
+            result.push_back(prevWord);
+            result.push_back("-");
+        }
+        else if(curword == "*=")
+        {
+            std::string prevWord = words[counter - 1];
+            result.push_back("=");
+            result.push_back(prevWord);
+            result.push_back("*");
+        }
+        else if(curword == "/=")
+        {
+            std::string prevWord = words[counter - 1];
+            result.push_back("=");
+            result.push_back(prevWord);
+            result.push_back("/");
+        }
+        else if(curword == "%=")
+        {
+            std::string prevWord = words[counter - 1];
+            result.push_back("=");
+            result.push_back(prevWord);
+            result.push_back("%");
+        }
+        else
+        {
+            result.push_back(words[counter]);
+        }
+
+        counter++;
+    }
+
+    return result;
+}
+
 // @brief the given vector of "meow_line" to a vector of respective tokens
 std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
 
     std::vector<Token> _prog_token_list;
     std::vector<std::string> words = disassembleLine(_prog_lines);
-
-    for(std::string curr_word : words){
+    std::vector<std::string> processed_words = preprocesor(words);
+    for(std::string curr_word : processed_words){
         
         // current word is keyword or is present in the tokens map
         if(knowTokens.find(curr_word) != knowTokens.end()){
@@ -194,9 +245,16 @@ std::vector<Token> Lexer::tokenize(meow_line _prog_lines){
         }
 
         else if(isStringS(curr_word)){
+            std::string word = "";
+
+            for(int i = 1; i <= curr_word.size() - 2; i++)
+            {
+                word += curr_word[i];
+            }
+
             _prog_token_list.push_back(makeToken(
                 _TOKEN_STRING,
-                curr_word,
+                word,
                 _prog_lines.line,
                 _prog_lines.line_number
             ));

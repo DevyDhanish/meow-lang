@@ -16,6 +16,12 @@ enum OP_CODES
     MAKE_FUNC,  //8
     MAKE_CLASS, //9
     OUT,    //10
+    CMP_EQU, // 11
+    CMP_NOTEQU, // 12
+    CMP_LESS, //13
+    CMP_LESSEQU, //14
+    CMP_GREAT,  //15
+    CMP_GREATEQU, //16
 };
 struct _CODE_UINT
 {

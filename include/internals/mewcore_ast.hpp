@@ -5,9 +5,9 @@
 
 // base class for stmts, does nothing by default
 
-enum STMT_TYPES { stmt_assign, stmt_show };
+enum STMT_TYPES { stmt_assign, stmt_show, stmt_if };
 enum EXPR_TYPES { expr_const, expr_nameexpr, expr_binary };
-enum OP_TYPES { Add, Sub, Mul, Div, Mod };
+enum OP_TYPES { Add, Sub, Mul, Div, Mod, Cmp_equ, Cmp_less, Cmp_lessequ, Cmp_great, Cmp_greatequ, Cmp_notequ };
 
 class Stmts 
 {
@@ -16,6 +16,7 @@ public:
     virtual void printInfo() = 0;
     virtual ~Stmts() = default;
 };
+
 class Expr 
 {
 public:
@@ -52,7 +53,7 @@ public:
     NameExpr(){}
     NameExpr(Expr *a, Expr *b, EXPR_TYPES k) : target(a), value(b), kind(k) {};
 
-    void printInfo()
+    void printInfo() override
     {
         std::cout << "Kind:"<<kind<<"\n"; 
     }
@@ -73,7 +74,7 @@ class BinOpExpr : public Expr
     BinOpExpr(){}
     BinOpExpr(Expr *a, OP_TYPES o, Expr *b, EXPR_TYPES k) : left(a), op(o), right(b), kind(k) {}
 
-    void printInfo()
+    void printInfo() override
     {
         std::cout << "Kind:" << kind << "\n";
     }
@@ -92,7 +93,7 @@ public:
     AssignmnetStmt() {}
     AssignmnetStmt(Expr *a, STMT_TYPES k) : value(a), kind(k) {}
 
-    void printInfo()
+    void printInfo() override
     {
         std::cout << "Kind:"<<kind<<"\n"; 
     }
@@ -111,7 +112,26 @@ public:
     ShowStmt() {}
     ShowStmt(Expr *a, STMT_TYPES k) : value(a), kind (k) {}
 
-    void printInfo()
+    void printInfo() override
+    {
+        std::cout << "Kind:" << kind << "\n";
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
+};
+
+class IfStmt : public Stmts
+{
+public:
+    STMT_TYPES kind;
+    Expr *condition;
+    std::vector<Stmts *> tbody;
+    std::vector<Stmts *> fbody;
+
+    void printInfo() override
     {
         std::cout << "Kind:" << kind << "\n";
     }

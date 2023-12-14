@@ -41,9 +41,31 @@ int getPrecedence(TOKEN_T optype)
 {
     switch(optype)
     {
-        case _TOKEN_PLUS: case _TOKEN_MINUS: return 1; break;
-        case _TOKEN_MUL: case _TOKEN_DIV: case _TOKEN_MOD: return 2; break;
-        default: return 0; break;
+        case _TOKEN_EQUALSTO: 
+        case _TOKEN_NOTEQUALS: 
+            return 1; 
+            break;
+
+        case _TOKEN_LESSTHAN: 
+        case _TOKEN_LESSEQU: 
+        case _TOKEN_GREATERTHAN:
+        case _TOKEN_GREATEREQU:
+            return 2;
+
+        case _TOKEN_PLUS: 
+        case _TOKEN_MINUS: 
+            return 3; 
+            break;
+
+        case _TOKEN_MUL: 
+        case _TOKEN_DIV: 
+        case _TOKEN_MOD: 
+            return 4; 
+            break;
+
+        default: 
+        return 0; 
+        break;
     }
 }
 
@@ -127,11 +149,19 @@ void *expression_rule(Parser &p, int prec)
 
         switch (p.tokens[p.counter]._TOKEN_TYPE)
         {
+            // arthimetic
             case _TOKEN_PLUS: op = OP_TYPES::Add; break;
             case _TOKEN_MUL: op = OP_TYPES::Mul; break;
             case _TOKEN_DIV: op = OP_TYPES::Div; break;
             case _TOKEN_MINUS: op = OP_TYPES::Sub; break;
             case _TOKEN_MOD: op = OP_TYPES::Mod; break;
+            // comparission
+            case _TOKEN_EQUALSTO: op = OP_TYPES::Cmp_equ; break;
+            case _TOKEN_LESSTHAN: op = OP_TYPES::Cmp_less; break;
+            case _TOKEN_LESSEQU: op = OP_TYPES::Cmp_lessequ; break;
+            case _TOKEN_GREATERTHAN: op = OP_TYPES::Cmp_great; break;
+            case _TOKEN_GREATEREQU: op = OP_TYPES::Cmp_greatequ; break;
+            case _TOKEN_NOTEQUALS: op = OP_TYPES::Cmp_notequ; break;
             default: std::cout << "Unsuported operator encoutered\n"; break;
         }
 
@@ -187,6 +217,13 @@ void *show_stmt_rule(Parser &p)
     {
         return NULL;
     }
+}
+
+void *if_stmt_rule(Parser &p)
+{
+    void *a = nullptr;  // hold condition
+    void *b = nullptr;  // hold true block
+    void *c = nullptr;  // hold false block if provided
 }
 
 void *statment_rule(Parser &p)

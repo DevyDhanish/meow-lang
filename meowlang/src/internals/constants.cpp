@@ -16,6 +16,19 @@ void put_const(std::vector<const_pair *> &pool, MeowObject *k, MeowObject *v)
         return;
     }
 
+    MeowObject *ifexist = get_const(pool, k);
+
+    if(ifexist)
+    {
+        for(struct CONST_PAIR *p : pool)
+        {   
+            if(((Var *)p->key)->value == ((Var *)k)->value)
+            {
+                p->value = v;   
+            }
+        }
+    }
+
     pool.push_back(makeConstPair(k, v));
 }
 

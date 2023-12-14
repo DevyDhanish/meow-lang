@@ -9,7 +9,7 @@
 std::unordered_map<std::string, TOKEN_T> knowTokens = {
         {"show", _TOKEN_SHOW},
         {"return", _TOKEN_RETURN},
-        {"null", _TOKEN_NULL},
+        {"none", _TOKEN_NULL},
         {"=", _TOKEN_EQU},
         {"==", _TOKEN_EQUALSTO},
         {"!=", _TOKEN_NOTEQUALS},
@@ -47,6 +47,7 @@ std::unordered_map<std::string, TOKEN_T> knowTokens = {
         {"take", _TOKEN_TAKE},
         {"end", _TOKEN_ENDWHILE},
         {"nl", _TOKEN_NEW_LINE},
+        {"func", _TOKEN_FUNC},
 };
 
 std::unordered_map<char, std::string> operator_pair = {

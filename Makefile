@@ -7,6 +7,7 @@ all:
 	g++ -g -c meowlang/src/compiler.cpp -o lib/compiler.o
 	g++ -g -c meowlang/src/internals/stackframe.cpp -o lib/stackframe.o
 	g++ -g -c meowlang/src/vm.cpp -o lib/vm.o
+	g++ -g -c meowlang/src/internals/meow_objects.cpp -o lib/meowobj.o
 	g++ -g -c meowlang/src/internals/constants.cpp -o lib/constants.o
 	ar rcs lib/libmeow.a lib/*.o
 

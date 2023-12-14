@@ -29,12 +29,6 @@ MEOW_STACKFRAME *Interpreter::popFrame()
     return topop;
 }
 
-void handleMaths(Interpreter *interpreter, bytecode byte)
-{
-    MeowObject *a = (MeowObject *)interpreter->current_frame->popFromStack();
-    MeowObject *b = (MeowObject *)interpreter->current_frame->popFromStack();
-}
-
 void handleByte(Interpreter *interpreter, bytecode byte)
 {
     switch(byte.op)
@@ -64,18 +58,142 @@ void handleByte(Interpreter *interpreter, bytecode byte)
         }
 
         case OP_CODES::ADD:
+        {
+                MeowObject *a = (MeowObject *)interpreter->current_frame->popFromStack();
+                MeowObject *b = (MeowObject *)interpreter->current_frame->popFromStack();
+                MeowObject *result = (MeowObject *) a->onAdd(b);
+                if(result)
+                {
+                    interpreter->current_frame->pushToStack((uint64_t) result);
+                }
+                break;
+        }
+
         case OP_CODES::SUB:
+        {
+            MeowObject *a = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *b = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *result = (MeowObject *) a->onSub(b);
+            if(result)
+            {
+                interpreter->current_frame->pushToStack((uint64_t) result);
+            }   
+            break;
+        }
+
+        case OP_CODES::MUL:
+        {
+            MeowObject *a = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *b = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *result = (MeowObject *)a->onMul(b);
+            if(result)
+            {
+                interpreter->current_frame->pushToStack((uint64_t) result);
+            }
+            break;
+        }
+
         case OP_CODES::DIV:
+        {
+            MeowObject *a = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *b = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *result = (MeowObject *) a->onDiv(b);
+            if(result)
+            {
+                interpreter->current_frame->pushToStack((uint64_t) result);
+            }
+            break;
+        }
+
         case OP_CODES::MOD:
         {
-            handleMaths(interpreter, byte);
+            MeowObject *a = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *b = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *result = (MeowObject *) a->onMod(b);
+            if(result)
+            {
+                interpreter->current_frame->pushToStack((uint64_t) result);
+            }
+            break;
+        }
+
+        case OP_CODES::CMP_EQU:
+        {
+            MeowObject *a = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *b = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *result = (MeowObject *) a->onCmpE(b);
+            if(result)
+            {
+                interpreter->current_frame->pushToStack((uint64_t) result);
+            }
+            break;
+        }
+
+        case OP_CODES::CMP_NOTEQU:
+        {
+            MeowObject *a = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *b = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *result = (MeowObject *) a->onCmpNE(b);
+            if(result)
+            {
+                interpreter->current_frame->pushToStack((uint64_t) result);
+            }
+            break;
+        }
+
+        case OP_CODES::CMP_LESS:
+        {
+            MeowObject *a = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *b = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *result = (MeowObject *) a->onCmpL(b);
+            if(result)
+            {
+                interpreter->current_frame->pushToStack((uint64_t) result);
+            }
+            break;
+        }
+
+        case OP_CODES::CMP_LESSEQU:
+        {
+            MeowObject *a = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *b = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *result = (MeowObject *) a->onCmpLE(b);
+            if(result)
+            {
+                interpreter->current_frame->pushToStack((uint64_t) result);
+            }
+            break;
+        }
+
+        case OP_CODES::CMP_GREAT:
+        {
+            MeowObject *a = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *b = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *result = (MeowObject *) a->onCmpG(b);
+            if(result)
+            {
+                interpreter->current_frame->pushToStack((uint64_t) result);
+            }
+            break;
+        }
+
+        case OP_CODES::CMP_GREATEQU:
+        {
+            MeowObject *a = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *b = (MeowObject *)interpreter->current_frame->popFromStack();
+            MeowObject *result = (MeowObject *) a->onCmpGE(b);
+            if(result)
+            {
+                interpreter->current_frame->pushToStack((uint64_t) result);
+            }
             break;
         }
 
         case OP_CODES::OUT:
         {
             MeowObject *valAtTop = (MeowObject *)interpreter->current_frame->getValFromStack(interpreter->current_frame->stack_pointer - 1);
-            valAtTop->printInfo();
+            valAtTop->onShow();
+            break;
         }
 
         default:

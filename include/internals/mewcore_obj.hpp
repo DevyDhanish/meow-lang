@@ -10,6 +10,18 @@ public:
     virtual void printInfo() = 0;
     virtual int getKind() = 0;
     virtual void onShow() = 0;
+    virtual void *onAdd(MeowObject *b) = 0;
+    virtual void *onSub(MeowObject *b) = 0;
+    virtual void *onMul(MeowObject *b) = 0;
+    virtual void *onDiv(MeowObject *b) = 0;
+    virtual void *onMod(MeowObject *b) = 0;
+
+    virtual void *onCmpE(MeowObject *b) = 0;
+    virtual void *onCmpNE(MeowObject *b) = 0;
+    virtual void *onCmpL(MeowObject *b) = 0;
+    virtual void *onCmpLE(MeowObject *b) = 0;
+    virtual void *onCmpG(MeowObject *b) = 0;
+    virtual void *onCmpGE(MeowObject *b) = 0;
     virtual ~MeowObject() = default;
 };
 
@@ -37,6 +49,19 @@ public:
     {
         std::cout << value;
     }
+
+    void *onAdd(MeowObject *b) override;
+    void *onSub(MeowObject *b) override;
+    void *onMod(MeowObject *b) override;
+    void *onMul(MeowObject *b) override;
+    void *onDiv(MeowObject *b) override;
+
+    void *onCmpE(MeowObject *b) override;
+    void *onCmpNE(MeowObject *b) override;
+    void *onCmpL(MeowObject *b) override;
+    void *onCmpLE(MeowObject *b) override;
+    void *onCmpG(MeowObject *b) override;
+    void *onCmpGE(MeowObject *b) override;
 };
 
 class String : public MeowObject
@@ -60,6 +85,18 @@ public:
     {
         std::cout << value;
     }
+    void *onAdd(MeowObject *b) override;
+    void *onSub(MeowObject *b) override;
+    void *onMod(MeowObject *b) override;
+    void *onMul(MeowObject *b) override;
+    void *onDiv(MeowObject *b) override;
+
+    void *onCmpE(MeowObject *b) override;
+    void *onCmpNE(MeowObject *b) override;
+    void *onCmpL(MeowObject *b) override;
+    void *onCmpLE(MeowObject *b) override;
+    void *onCmpG(MeowObject *b) override;
+    void *onCmpGE(MeowObject *b) override;
 };
 
 class Float : public MeowObject
@@ -84,6 +121,18 @@ public:
     {
         std::cout << value;
     }
+    void *onAdd(MeowObject *b) override;
+    void *onSub(MeowObject *b) override;
+    void *onMod(MeowObject *b) override;
+    void *onMul(MeowObject *b) override;
+    void *onDiv(MeowObject *b) override;
+
+    void *onCmpE(MeowObject *b) override;
+    void *onCmpNE(MeowObject *b) override;
+    void *onCmpL(MeowObject *b) override;
+    void *onCmpLE(MeowObject *b) override;
+    void *onCmpG(MeowObject *b) override;
+    void *onCmpGE(MeowObject *b) override;
 };
 
 class Var : public MeowObject
@@ -108,4 +157,17 @@ public:
     {
         std::cout << "Var type\n";
     }
+
+    void *onAdd(MeowObject *b) override { return NULL; }
+    void *onSub(MeowObject *b) override { return NULL; }
+    void *onMod(MeowObject *b) override { return NULL; }
+    void *onDiv(MeowObject *b) override { return NULL; }
+    void *onMul(MeowObject *b) override { return NULL; }
+
+    void *onCmpE(MeowObject *b) override { return NULL; };
+    void *onCmpNE(MeowObject *b) override { return NULL; };
+    void *onCmpL(MeowObject *b) override { return NULL; };
+    void *onCmpLE(MeowObject *b) override { return NULL; };
+    void *onCmpG(MeowObject *b) override { return NULL; };
+    void *onCmpGE(MeowObject *b) override { return NULL; };
 };
