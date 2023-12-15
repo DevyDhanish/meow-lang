@@ -122,7 +122,10 @@ std::vector<std::string> disassembleLine(meow_line line){
             }
             else
             {
-                output.push_back("<->");    // negate symbol
+                if(lookAhead == '-')
+                    output.push_back("<->");    // negate symbol
+                else if(lookAhead == '!');
+                    output.push_back("<!>");
             }
             //curr_pos += 1;
         }

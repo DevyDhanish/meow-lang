@@ -143,6 +143,9 @@ void compileUnaryNegate(UnaryExpr *uExpr)
     case OP_TYPES::negate :
         op = OP_CODES::NEGATE;
         break;
+    case OP_TYPES::logical_not:
+        op = OP_CODES::NOT;
+        break;
     
     default:
         break;

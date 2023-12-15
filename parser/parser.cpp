@@ -68,6 +68,7 @@ int getPrecedence(TOKEN_T optype)
             break;
 
         case _TOKEN_NEGATE:
+        case _TOKEN_NOT:
             return 6;
 
         case _TOKEN_BRAOPEN:
@@ -147,6 +148,13 @@ void *expression_rule(Parser &p, int prec)
         ++p.counter;
         a = expression_rule(p, getPrecedence(_TOKEN_NEGATE));
         lhs = new UnaryExpr((Expr *)a, OP_TYPES::negate, EXPR_TYPES::expr_unary);
+    }
+
+    if(expect_token(p, _TOKEN_NOT))
+    {
+        ++p.counter;
+        a = expression_rule(p, getPrecedence(_TOKEN_NOT));
+        lhs = new UnaryExpr((Expr *)a, OP_TYPES::logical_not, EXPR_TYPES::expr_unary);
     }
 
     if(expect_token(p, _TOKEN_BRAOPEN))

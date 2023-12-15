@@ -13,7 +13,7 @@ std::unordered_map<std::string, TOKEN_T> knowTokens = {
         {"=", _TOKEN_EQU},
         {"==", _TOKEN_EQUALSTO},
         {"!=", _TOKEN_NOTEQUALS},
-        {"!", _TOKEN_NOT},
+        {"<!>", _TOKEN_NOT},
         {"<", _TOKEN_LESSTHAN},
         {"<=", _TOKEN_LESSEQU},
         {">=", _TOKEN_GREATEREQU},

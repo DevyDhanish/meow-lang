@@ -25,6 +25,7 @@ enum OP_CODES
     NEGATE,         // 17
     AND,
     OR,
+    NOT,
 };
 struct _CODE_UINT
 {

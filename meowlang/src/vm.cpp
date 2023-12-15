@@ -226,6 +226,19 @@ void handleByte(Interpreter *interpreter, bytecode byte)
             break;
         }
 
+        case OP_CODES::NOT:
+        {
+            MeowObject *a = (MeowObject *) interpreter->current_frame->popFromStack();
+            MeowObject *result = (MeowObject *) a->onNot();
+
+            if(result)
+            {
+                interpreter->current_frame->pushToStack((uint64_t) result);
+            }
+
+            break;
+        }
+
         case OP_CODES::OUT:
         {
             MeowObject *valAtTop = (MeowObject *)interpreter->current_frame->getValFromStack(interpreter->current_frame->stack_pointer - 1);

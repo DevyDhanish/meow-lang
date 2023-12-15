@@ -374,6 +374,11 @@ void *Integer::onOr(MeowObject *b)
     return new Integer( ((Integer *)b)->value || value , MEOWOBJECTKIND::IntObj);
 }
 
+void *Integer::onNot()
+{
+    return new Integer( !value, MEOWOBJECTKIND::IntObj);
+}
+
 /*
 **************************************************************************************
 *                                                                                    *   
@@ -731,6 +736,12 @@ void *String::onOr(MeowObject *b)
 {
     std::cout << "Cannot `or` with type<string>\n";
 }
+
+void *String::onNot()
+{
+    std::cout << "Cannot perform not on type<string>\n";
+}
+
 /*
 **************************************************************************************
 *                                                                                    *   
@@ -1098,4 +1109,9 @@ void *Float::onAnd(MeowObject *b)
 void *Float::onOr(MeowObject *b)
 {
     return new Integer( ((Integer *)b)->value || value , MEOWOBJECTKIND::IntObj);
+}
+
+void *Float::onNot()
+{
+    return new Integer( !value, MEOWOBJECTKIND::IntObj);
 }

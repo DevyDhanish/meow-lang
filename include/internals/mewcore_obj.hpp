@@ -24,6 +24,7 @@ public:
     virtual void *onCmpGE(MeowObject *b) = 0;
 
     virtual void *onNegate() = 0;
+    virtual void *onNot() = 0;
 
     virtual void *onAnd(MeowObject *b) = 0;
     virtual void *onOr(MeowObject *b) = 0;
@@ -70,6 +71,7 @@ public:
     void *onCmpGE(MeowObject *b) override;
 
     void *onNegate() override;
+    void *onNot() override;
 
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
@@ -110,6 +112,7 @@ public:
     void *onCmpGE(MeowObject *b) override;
 
     void *onNegate() override;
+    void *onNot() override;
 
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
@@ -151,6 +154,7 @@ public:
     void *onCmpGE(MeowObject *b) override;
 
     void *onNegate() override;
+    void *onNot() override;
 
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
@@ -193,6 +197,7 @@ public:
     void *onCmpGE(MeowObject *b) override { return NULL; };
 
     void *onNegate() override { return NULL; };
+    void *onNot() override { return NULL; };
 
     void *onAnd(MeowObject *b) override { return NULL; };
     void *onOr(MeowObject *b) override { return NULL; };
