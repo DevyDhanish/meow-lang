@@ -724,22 +724,25 @@ void *String::onCmpNE(MeowObject *b)
 void *String::onNegate()
 {
     std::cout << "Cannot perform negate on type<string>\n";
-    return nullptr;
+    return NULL;
 }
 
 void *String::onAnd(MeowObject *b)
 {
     std::cout << "Cannot `and` with type<string>\n";
+    return NULL;
 }
 
 void *String::onOr(MeowObject *b)
 {
     std::cout << "Cannot `or` with type<string>\n";
+    return NULL;
 }
 
 void *String::onNot()
 {
     std::cout << "Cannot perform not on type<string>\n";
+    return NULL;
 }
 
 /*

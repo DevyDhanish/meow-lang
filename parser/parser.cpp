@@ -2,6 +2,9 @@
 #include "../include/internals/mewcore_ast.hpp"
 #include "../include/internals/mewcore_obj.hpp"
 
+
+void *statment_rule(Parser &p);
+
 struct Parser gen_parser(const std::vector<Token> &toks, size_t c, size_t l)
 {
     struct Parser p;
@@ -252,6 +255,33 @@ void *if_stmt_rule(Parser &p)
     void *a = nullptr;  // hold condition
     void *b = nullptr;  // hold true block
     void *c = nullptr;  // hold false block if provided
+    consume_token(p, _TOKEN_IF);
+
+    a = expression_rule(p, 1);  // parse condition
+
+    IfStmt *ifstmt = new IfStmt((Expr *)a, STMT_TYPES::stmt_if);
+
+    consume_token(p, _TOKEN_CURLOPEN);
+
+true_condition:
+    b = statment_rule(p);
+    ifstmt->addTbody((Stmts *)b);
+    if(!consume_token(p, _TOKEN_CURLCLOSE)) goto true_condition;
+
+    if(!consume_token(p, _TOKEN_ELSE))
+    {
+        return ifstmt;
+    }
+
+    consume_token(p, _TOKEN_CURLOPEN);
+
+false_condition:
+    c = statment_rule(p);
+    ifstmt->addFbody((Stmts *)c);   
+    if(!consume_token(p, _TOKEN_CURLCLOSE)) goto false_condition;
+
+
+    return ifstmt;
 }
 
 void *statment_rule(Parser &p)
@@ -267,6 +297,10 @@ void *statment_rule(Parser &p)
     {
         ShowStmt *showStmt = new ShowStmt((Expr *)a, STMT_TYPES::stmt_show);
         return showStmt;
+    }
+    else if(a = if_stmt_rule(p))
+    {
+        return a;
     }
     else
     {

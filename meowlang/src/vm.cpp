@@ -29,6 +29,33 @@ MEOW_STACKFRAME *Interpreter::popFrame()
     return topop;
 }
 
+void Interpreter::jumpIpForward(uint32_t offset)
+{
+    ip = ip + offset;
+    if(ip > cooked_code.size()) isFinished = true;
+}
+
+void Interpreter::jumpIpBackward(uint32_t offset)
+{
+    ip = ip - offset;
+    if(ip < 0)
+    {
+        std::cout << "Ip was offseted to negative\n";
+        exit(0);
+    }
+}
+
+void Interpreter::moveForward()
+{
+    ip = ip + 1;
+    if(ip >= cooked_code.size()) isFinished = true;
+}
+
+bytecode Interpreter::getByteAtIp()
+{
+    return cooked_code[ip];
+}
+
 void handleByte(Interpreter *interpreter, bytecode byte)
 {
     switch(byte.op)
@@ -239,6 +266,22 @@ void handleByte(Interpreter *interpreter, bytecode byte)
             break;
         }
 
+        case OP_CODES::JUMP:
+        {
+            interpreter->jumpIpForward((uint32_t) byte.arg);
+            break;
+        }
+
+        case OP_CODES::JUMP_IF_FALSE:
+        {
+            MeowObject *a = (MeowObject *) interpreter->current_frame->popFromStack();
+            if(!((Integer *)a)->value)
+            {
+                interpreter->jumpIpForward((uint32_t) byte.arg - 1);
+            }
+            break;
+        }
+
         case OP_CODES::OUT:
         {
             MeowObject *valAtTop = (MeowObject *)interpreter->current_frame->getValFromStack(interpreter->current_frame->stack_pointer - 1);
@@ -253,7 +296,7 @@ void handleByte(Interpreter *interpreter, bytecode byte)
 
 void startexec(const std::vector<bytecode> &cooked_code)
 {
-    Interpreter *interpreter = new Interpreter();
+    Interpreter *interpreter = new Interpreter(cooked_code);
     MEOW_STACKFRAME *main = new MEOW_STACKFRAME(); 
 
     // put the main frame into interpreter frame stack
@@ -261,9 +304,10 @@ void startexec(const std::vector<bytecode> &cooked_code)
 
     std::cout << "Everything is working up to here\n";
 
-
-    for(bytecode byte : cooked_code)
+    while(!interpreter->isFinished)
     {
-        handleByte(interpreter, byte);
+        handleByte(interpreter, interpreter->getByteAtIp());
+        interpreter->moveForward();
     }
+
 }

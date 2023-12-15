@@ -151,6 +151,18 @@ public:
     std::vector<Stmts *> tbody;
     std::vector<Stmts *> fbody;
 
+    IfStmt(Expr *c, STMT_TYPES k) : condition(c), kind(k) {}
+
+    void addTbody(Stmts *a)
+    {
+        tbody.push_back(a);
+    }
+
+    void addFbody(Stmts *b)
+    {
+        fbody.push_back(b);
+    }
+
     void printInfo() override
     {
         std::cout << "Kind:" << kind << "\n";

@@ -1,6 +1,6 @@
 #include "../../include/code.hpp"
 
-bytecode makeByteCode(uint8_t op, int64_t oparg)
+bytecode makeByteCode(uint8_t op, uint64_t oparg)
 {
     bytecode bc;
     bc.op = op;

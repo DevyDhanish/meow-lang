@@ -23,9 +23,12 @@ enum OP_CODES
     CMP_GREAT,      //15
     CMP_GREATEQU,   //16
     NEGATE,         // 17
-    AND,
-    OR,
-    NOT,
+    AND,            // 18
+    OR,             // 19
+    NOT,            // 20
+    JUMP,           // 21
+    JUMP_IF_TRUE,   // 22
+    JUMP_IF_FALSE,  // 23
 };
 struct _CODE_UINT
 {
@@ -33,4 +36,4 @@ struct _CODE_UINT
     uint64_t arg;
 };
 
-bytecode makeByteCode(uint8_t op, int64_t oparg);
+bytecode makeByteCode(uint8_t op, uint64_t oparg);

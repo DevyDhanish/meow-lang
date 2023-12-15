@@ -7,13 +7,26 @@
 
 std::vector<bytecode> bytes;
 
-void compileUnaryNegate(UnaryExpr *uExpr);
+void compileUnary(UnaryExpr *uExpr);
 void compileConstExpr(Const *constExpr);
 void compileBinopExpr(BinOpExpr *expr);
 void compileNameExpr(NameExpr *nameExpr);
 void compileAssignStmt(AssignmnetStmt *assstmt);
 void compileShowStmt(ShowStmt *showstmt);
+void compileIfStmt(IfStmt *ifstmt);
+void compileStmts(std::vector<Stmts *> stmts);
 std::vector<bytecode> compile(Module *mod);
+
+void replaceOparg(OP_CODES type, uint64_t newVal)
+{
+    for(bytecode &bcode : bytes)
+    {
+        if(bcode.op == type)
+        {
+            bcode.arg = newVal;
+        }
+    }
+}
 
 void compileConstExpr(Const *constExpr)
 {
@@ -66,7 +79,7 @@ void compileBinopExpr(BinOpExpr *expr)
         break;
 
     case EXPR_TYPES::expr_unary:
-        compileUnaryNegate((UnaryExpr *) expr->left);
+        compileUnary((UnaryExpr *) expr->left);
         break;
     
     default:
@@ -85,7 +98,7 @@ void compileBinopExpr(BinOpExpr *expr)
         break;
 
     case EXPR_TYPES::expr_unary:
-        compileUnaryNegate((UnaryExpr *)expr->right);
+        compileUnary((UnaryExpr *)expr->right);
         break;
 
     default:
@@ -113,10 +126,10 @@ void compileBinopExpr(BinOpExpr *expr)
     default : std::cout << "Bad opcode\n";   break;
     }
 
-    bytes.push_back(makeByteCode((uint8_t)op, (int64_t)0));
+    bytes.push_back(makeByteCode((uint8_t)op, (uint64_t)0));
 }
 
-void compileUnaryNegate(UnaryExpr *uExpr)
+void compileUnary(UnaryExpr *uExpr)
 {
     switch (uExpr->value->getKind())
     {
@@ -129,7 +142,7 @@ void compileUnaryNegate(UnaryExpr *uExpr)
         break;
 
     case EXPR_TYPES::expr_unary:
-        compileUnaryNegate((UnaryExpr *)uExpr->value);
+        compileUnary((UnaryExpr *)uExpr->value);
         break;
     
     default:
@@ -151,7 +164,7 @@ void compileUnaryNegate(UnaryExpr *uExpr)
         break;
     }
 
-    bytes.push_back(makeByteCode((uint8_t)op, (int64_t)0));
+    bytes.push_back(makeByteCode((uint8_t)op, (uint64_t)0));
 }
 
 void compileNameExpr(NameExpr *nameExpr)
@@ -166,7 +179,7 @@ void compileNameExpr(NameExpr *nameExpr)
         break;
 
     case EXPR_TYPES::expr_unary:
-        compileUnaryNegate((UnaryExpr *)nameExpr->value);
+        compileUnary((UnaryExpr *)nameExpr->value);
         break;
     
     default:
@@ -202,20 +215,57 @@ void compileShowStmt(ShowStmt *showstmt)
         break;
 
     case EXPR_TYPES::expr_unary:
-        compileUnaryNegate((UnaryExpr *)showstmt->value);
+        compileUnary((UnaryExpr *)showstmt->value);
         break;
     
     default:
         break;
     }
 
-    bytes.push_back(makeByteCode(OP_CODES::OUT, (int64_t)0));
+    bytes.push_back(makeByteCode(OP_CODES::OUT, (uint64_t)0));
 }
 
-std::vector<bytecode> compile(Module *mod)
+void compileIfStmt(IfStmt *ifstmt)
 {
+    if(!ifstmt->condition) std::cout << "Condition is empty\n";
+    switch(ifstmt->condition->getKind())
+    {
+        case EXPR_TYPES::expr_binary:
+            compileBinopExpr((BinOpExpr *)ifstmt->condition);
+            break;
+        case EXPR_TYPES::expr_const:
+            compileConstExpr((Const *)ifstmt->condition);
+            break;
+        case EXPR_TYPES::expr_nameexpr:
+            compileNameExpr((NameExpr *)ifstmt->condition);
+            break;
+        case EXPR_TYPES::expr_unary:
+            compileUnary((UnaryExpr *)ifstmt->condition);
+            break;
+        default:
+            break;
+    }
 
-    for(Stmts *a : mod->body)
+    bytes.push_back(makeByteCode((uint8_t)OP_CODES::JUMP_IF_FALSE, (uint64_t)0));
+    
+    uint32_t jump_if_offset = bytes.size() - 1;
+    if(!ifstmt->tbody.size()) std::cout << "If statment does not have a true body\n";
+    compileStmts(ifstmt->tbody);
+    bytes.push_back(makeByteCode((uint8_t)OP_CODES::JUMP, (uint64_t)0));
+    jump_if_offset = (uint32_t) bytes.size() - jump_if_offset; // the at the last there will be a jump byte
+
+    uint32_t jump_offset = bytes.size() - 1;
+    if(!ifstmt->fbody.size()) std::cout << "If statment does not have a false body\n";
+    compileStmts(ifstmt->fbody);
+    jump_offset = (uint32_t) bytes.size() - jump_offset;
+
+    replaceOparg(OP_CODES::JUMP_IF_FALSE, (uint64_t) jump_if_offset);
+    replaceOparg(OP_CODES::JUMP, (uint64_t)jump_offset);
+}
+
+void compileStmts(std::vector<Stmts *> stmts)
+{
+    for(Stmts *a : stmts)
     {
         switch (a->getKind())
         {
@@ -228,10 +278,20 @@ std::vector<bytecode> compile(Module *mod)
             compileShowStmt((ShowStmt *)a);
             break; 
 
+        case STMT_TYPES::stmt_if:
+            compileIfStmt((IfStmt *)a);
+            break;
+
         default:
             break;
         }
     }
+}
+
+std::vector<bytecode> compile(Module *mod)
+{
+
+    compileStmts(mod->body);
 
     return bytes;
 }
