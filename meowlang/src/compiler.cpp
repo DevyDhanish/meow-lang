@@ -108,6 +108,8 @@ void compileBinopExpr(BinOpExpr *expr)
     case OP_TYPES::Cmp_lessequ: op = OP_CODES::CMP_LESSEQU; break;
     case OP_TYPES::Cmp_great: op = OP_CODES::CMP_GREAT; break;
     case OP_TYPES::Cmp_greatequ: op = OP_CODES::CMP_GREATEQU; break;
+    case OP_TYPES::logical_and: op = OP_CODES::AND; break;
+    case OP_TYPES::logical_or: op = OP_CODES::OR; break;
     default : std::cout << "Bad opcode\n";   break;
     }
 

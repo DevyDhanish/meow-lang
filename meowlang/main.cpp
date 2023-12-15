@@ -59,7 +59,6 @@ int main(int argc, char **argv){
     #endif
     #undef DEBUG
 
-    //return 0;
     //std::vector<Token> extoks = { makeToken(_TOKEN_VAR, "x", "none", 0, 0),  makeToken(_TOKEN_EQU, "=", "none", 0, 0),  makeToken(_TOKEN_FLOAT, "1.232", "none", 0, 0),  makeToken(_TOKEN_SEMI_COL, ";", "none", 0, 0)};
     //return 0;
 

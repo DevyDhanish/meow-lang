@@ -7,7 +7,7 @@
 
 enum STMT_TYPES { stmt_assign, stmt_show, stmt_if };
 enum EXPR_TYPES { expr_const, expr_nameexpr, expr_binary, expr_unary };
-enum OP_TYPES { Add, Sub, Mul, Div, Mod, Cmp_equ, Cmp_less, Cmp_lessequ, Cmp_great, Cmp_greatequ, Cmp_notequ, negate };
+enum OP_TYPES { Add, Sub, Mul, Div, Mod, Cmp_equ, Cmp_less, Cmp_lessequ, Cmp_great, Cmp_greatequ, Cmp_notequ, negate, logical_and, logical_or };
 
 class Stmts 
 {

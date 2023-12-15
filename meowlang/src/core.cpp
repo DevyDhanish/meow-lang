@@ -49,6 +49,8 @@ std::unordered_map<std::string, TOKEN_T> knowTokens = {
         {"nl", _TOKEN_NEW_LINE},
         {"func", _TOKEN_FUNC},
         {"<->", _TOKEN_NEGATE},
+        {"and", _TOKEN_AND},
+        {"or", _TOKEN_OR},
 };
 
 std::unordered_map<char, std::string> operator_pair = {

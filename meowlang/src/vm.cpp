@@ -200,6 +200,32 @@ void handleByte(Interpreter *interpreter, bytecode byte)
             break;
         }
 
+        case OP_CODES::AND:
+        {
+            MeowObject *a = (MeowObject *) interpreter->current_frame->popFromStack();
+            MeowObject *b = (MeowObject *) interpreter->current_frame->popFromStack();
+            MeowObject *result = (MeowObject *) a->onAnd(b);
+            if(result)
+            {
+                interpreter->current_frame->pushToStack((uint64_t) result);
+            }
+            break;
+        }
+
+        case OP_CODES::OR:
+        {
+            MeowObject *a = (MeowObject *) interpreter->current_frame->popFromStack();
+            MeowObject *b = (MeowObject *) interpreter->current_frame->popFromStack();
+            MeowObject *result = (MeowObject *) a->onOr(b);
+
+            if(result)
+            {
+                interpreter->current_frame->pushToStack((uint64_t) result);
+            }
+
+            break;
+        }
+
         case OP_CODES::OUT:
         {
             MeowObject *valAtTop = (MeowObject *)interpreter->current_frame->getValFromStack(interpreter->current_frame->stack_pointer - 1);

@@ -1,3 +1,6 @@
-x = -2 - 1
+x = 1 == 1 and 2 == 2
 
-print(x)
+if x:
+    print("1")
+else:
+    print("0")

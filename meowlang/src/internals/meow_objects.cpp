@@ -109,7 +109,7 @@ void *Integer::onDiv(MeowObject *b)
     {
         case MEOWOBJECTKIND::IntObj:
         {
-            Integer *newVal = new Integer((((Integer *)b)->value / value), MEOWOBJECTKIND::IntObj);
+            Float *newVal = new Float((((Integer *)b)->value / value), MEOWOBJECTKIND::FloatObj);
             return newVal;
             break;
         }
@@ -362,6 +362,16 @@ void *Integer::onNegate()
 {
     Integer *newVal = new Integer( -value, MEOWOBJECTKIND::IntObj);
     return newVal;
+}
+
+void *Integer::onAnd(MeowObject *b)
+{
+    return new Integer( ((Integer *)b)->value && value , MEOWOBJECTKIND::IntObj);
+}
+
+void *Integer::onOr(MeowObject *b)
+{
+    return new Integer( ((Integer *)b)->value || value , MEOWOBJECTKIND::IntObj);
 }
 
 /*
@@ -712,6 +722,15 @@ void *String::onNegate()
     return nullptr;
 }
 
+void *String::onAnd(MeowObject *b)
+{
+    std::cout << "Cannot `and` with type<string>\n";
+}
+
+void *String::onOr(MeowObject *b)
+{
+    std::cout << "Cannot `or` with type<string>\n";
+}
 /*
 **************************************************************************************
 *                                                                                    *   
@@ -1069,4 +1088,14 @@ void *Float::onNegate()
 {
     Float *newVal = new Float( -value, MEOWOBJECTKIND::FloatObj);
     return newVal;
+}
+
+void *Float::onAnd(MeowObject *b)
+{
+    return new Integer( ((Integer *)b)->value && value , MEOWOBJECTKIND::IntObj);
+}
+
+void *Float::onOr(MeowObject *b)
+{
+    return new Integer( ((Integer *)b)->value || value , MEOWOBJECTKIND::IntObj);
 }

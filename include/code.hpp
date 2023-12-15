@@ -17,12 +17,14 @@ enum OP_CODES
     MAKE_CLASS, //9
     OUT,    //10
     CMP_EQU, // 11
-    CMP_NOTEQU, // 12
-    CMP_LESS, //13
-    CMP_LESSEQU, //14
-    CMP_GREAT,  //15
-    CMP_GREATEQU, //16
+    CMP_NOTEQU,        // 12
+    CMP_LESS,        //13
+    CMP_LESSEQU,    //14
+    CMP_GREAT,      //15
+    CMP_GREATEQU,   //16
     NEGATE,         // 17
+    AND,
+    OR,
 };
 struct _CODE_UINT
 {

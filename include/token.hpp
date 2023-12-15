@@ -64,6 +64,8 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_FLOAT,           // 53
     _TOKEN_EOT,             // 54 -> end of token
     _TOKEN_NEGATE,          // 55
+    _TOKEN_AND,             // 56
+    _TOKEN_OR,              // 57
     
 }TOKEN_T;
 

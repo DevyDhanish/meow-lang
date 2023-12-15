@@ -41,33 +41,37 @@ int getPrecedence(TOKEN_T optype)
 {
     switch(optype)
     {
+        case _TOKEN_AND:
+        case _TOKEN_OR:
+            return 1;
+
         case _TOKEN_EQUALSTO: 
         case _TOKEN_NOTEQUALS: 
-            return 1; 
+            return 2;
             break;
 
         case _TOKEN_LESSTHAN: 
         case _TOKEN_LESSEQU: 
         case _TOKEN_GREATERTHAN:
         case _TOKEN_GREATEREQU:
-            return 2;
+            return 3;
 
         case _TOKEN_PLUS: 
         case _TOKEN_MINUS: 
-            return 3; 
+            return 4; 
             break;
 
         case _TOKEN_MUL: 
         case _TOKEN_DIV: 
         case _TOKEN_MOD: 
-            return 4; 
+            return 5; 
             break;
 
         case _TOKEN_NEGATE:
-            return 5;
+            return 6;
 
         case _TOKEN_BRAOPEN:
-            return 6;
+            return 7;
 
         default: 
         return 0; 
@@ -173,6 +177,8 @@ void *expression_rule(Parser &p, int prec)
             case _TOKEN_GREATERTHAN: op = OP_TYPES::Cmp_great; break;
             case _TOKEN_GREATEREQU: op = OP_TYPES::Cmp_greatequ; break;
             case _TOKEN_NOTEQUALS: op = OP_TYPES::Cmp_notequ; break;
+            case _TOKEN_AND: op = OP_TYPES::logical_and; break;
+            case _TOKEN_OR: op = OP_TYPES::logical_or; break;
             default: break;
         }
 
