@@ -5,7 +5,7 @@
 
 // base class for stmts, does nothing by default
 
-enum STMT_TYPES { stmt_assign, stmt_show, stmt_if };
+enum STMT_TYPES { stmt_assign, stmt_show, stmt_if, stmt_while };
 enum EXPR_TYPES { expr_const, expr_nameexpr, expr_binary, expr_unary };
 enum OP_TYPES { Add, Sub, Mul, Div, Mod, Cmp_equ, Cmp_less, Cmp_lessequ, Cmp_great, Cmp_greatequ, Cmp_notequ, negate, logical_and, logical_or, logical_not };
 
@@ -161,6 +161,32 @@ public:
     void addFbody(Stmts *b)
     {
         fbody.push_back(b);
+    }
+
+    void printInfo() override
+    {
+        std::cout << "Kind:" << kind << "\n";
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
+};
+
+class WhileStmt : public Stmts
+{
+public:
+    STMT_TYPES kind;
+    Expr *condition;
+
+    std::vector<Stmts *> body;
+
+    WhileStmt (Expr *a, STMT_TYPES k) : condition(a), kind(k) {}
+
+    void addBody(Stmts *a)
+    {
+        body.push_back(a);
     }
 
     void printInfo() override

@@ -255,6 +255,7 @@ void *if_stmt_rule(Parser &p)
     void *a = nullptr;  // hold condition
     void *b = nullptr;  // hold true block
     void *c = nullptr;  // hold false block if provided
+    if(expect_token(p, _TOKEN_WHILE)) return NULL;
     consume_token(p, _TOKEN_IF);
 
     a = expression_rule(p, 1);  // parse condition
@@ -268,6 +269,12 @@ true_condition:
     ifstmt->addTbody((Stmts *)b);
     if(!consume_token(p, _TOKEN_CURLCLOSE)) goto true_condition;
 
+    if(consume_token(p, _TOKEN_ELIF))
+    {
+        ifstmt->addFbody((Stmts *) if_stmt_rule(p));
+        return ifstmt;
+    }
+
     if(!consume_token(p, _TOKEN_ELSE))
     {
         return ifstmt;
@@ -280,8 +287,27 @@ false_condition:
     ifstmt->addFbody((Stmts *)c);   
     if(!consume_token(p, _TOKEN_CURLCLOSE)) goto false_condition;
 
-
     return ifstmt;
+}
+
+void *while_stmt_rule(Parser &p)
+{
+    void *a = nullptr;
+    void *b = nullptr;
+    consume_token(p, _TOKEN_WHILE);
+
+    a = expression_rule(p, 1);
+
+    WhileStmt *whilestmt = new WhileStmt((Expr *)a, STMT_TYPES::stmt_while);
+
+    consume_token(p, _TOKEN_CURLOPEN);
+
+body:
+    b = statment_rule(p);
+    whilestmt->addBody((Stmts *)b);
+    if(!consume_token(p, _TOKEN_CURLCLOSE)) goto body;
+
+    return whilestmt;
 }
 
 void *statment_rule(Parser &p)
@@ -299,6 +325,10 @@ void *statment_rule(Parser &p)
         return showStmt;
     }
     else if(a = if_stmt_rule(p))
+    {
+        return a;
+    }
+    else if(a = while_stmt_rule(p))
     {
         return a;
     }

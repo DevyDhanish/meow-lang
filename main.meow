@@ -1,11 +1,35 @@
+shouldExec = 1
 
-result = 100
+marks = 10
 
-if result == 5 and result <= 10
+if shouldExec
 {
-    show "true"
+    if marks > 90 and marks < 100
+    {
+        show "A+"
+    }
+    elif marks > 80 and marks < 90
+    {
+        show "A"
+    }
+    elif marks > 70 and marks < 80
+    {
+        show "B"
+    }
+    else
+    {
+        show "fail"
+    }
 }
 else
 {
-    show "False"
+    show "Machine not working"
+}
+
+x = 0
+
+while x < 10
+{
+    show "bruh"
+    x += 1
 }

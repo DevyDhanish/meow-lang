@@ -272,6 +272,12 @@ void handleByte(Interpreter *interpreter, bytecode byte)
             break;
         }
 
+        case OP_CODES::JUMP_BACK:
+        {
+            interpreter->jumpIpBackward((uint32_t) byte.arg);
+            break;
+        }
+
         case OP_CODES::JUMP_IF_FALSE:
         {
             MeowObject *a = (MeowObject *) interpreter->current_frame->popFromStack();

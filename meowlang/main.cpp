@@ -72,7 +72,7 @@ int main(int argc, char **argv){
 
         for(bytecode &bc : bytecodevect)
         {
-            std::cout << "Op : " << (int)bc.op << "\t" << "Arg : " << bc.arg << "\n";
+            std::cout << "Op : " << opcodes_string[(int)bc.op] << "\t" << "Arg : " << bc.arg << "\n";
         }
 
         startexec(bytecodevect);

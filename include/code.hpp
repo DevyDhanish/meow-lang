@@ -1,5 +1,7 @@
 #pragma once
 #include <stdint.h>
+#include <vector>
+#include <string>
 
 typedef struct _CODE_UINT bytecode; 
 
@@ -27,9 +29,12 @@ enum OP_CODES
     OR,             // 19
     NOT,            // 20
     JUMP,           // 21
-    JUMP_IF_TRUE,   // 22
+    JUMP_BACK,      // 22
     JUMP_IF_FALSE,  // 23
 };
+
+extern std::vector<std::string> opcodes_string;
+
 struct _CODE_UINT
 {
     uint8_t op;
