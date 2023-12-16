@@ -1,6 +1,3 @@
-x = 1
+x = ( 8 - 1 + 3 ) * 6
 
-if x:
-    print("1")
-else:
-    print("0")
+print(x)

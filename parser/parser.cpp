@@ -91,6 +91,26 @@ int getPrecedence(TOKEN_T optype)
     }
 }
 
+int getAssociativity(TOKEN_T type)
+{
+    // 1 -> left associtive
+    // 0 -> right associtive
+
+    switch (type)
+    {
+    case _TOKEN_PLUS:
+    case _TOKEN_MINUS:
+    case _TOKEN_MUL:
+    case _TOKEN_DIV:
+    case _TOKEN_MOD:
+        return 1;
+        break;
+    default:
+        return 0;
+        break;
+    }
+}
+
 void *var_rule(Parser &p)
 {
     if(expect_token(p, _TOKEN_VAR))
@@ -224,6 +244,12 @@ void *expression_rule(Parser &p, int prec)
         }
 
         int nextPrec = getPrecedence(p.tokens[p.counter]._TOKEN_TYPE);
+
+        if(getAssociativity(p.tokens[p.counter]._TOKEN_TYPE))
+        {
+            nextPrec++;
+        }
+
         ++p.counter;
 
         void *rhs = nullptr;
