@@ -20,6 +20,7 @@ using std::string;
 
 #define DEBUG
 
+
 int main(int argc, char **argv){
 
     // if .meow file is not passed
@@ -57,23 +58,24 @@ int main(int argc, char **argv){
     }
     std::cout << "========================================================\n";
     #endif
-    #undef DEBUG
 
     //std::vector<Token> extoks = { makeToken(_TOKEN_VAR, "x", "none", 0, 0),  makeToken(_TOKEN_EQU, "=", "none", 0, 0),  makeToken(_TOKEN_FLOAT, "1.232", "none", 0, 0),  makeToken(_TOKEN_SEMI_COL, ";", "none", 0, 0)};
-    //return 0;
 
     Module *module = (Module *) parse(tokenized_vector, File_Rule);
     std::cout << "Parsed sucessfully\n";
+    //return 0;
     std::vector<bytecode> bytecodevect;
     //return 0;
     if(module)
     {
         bytecodevect  = compile(module);
 
+        #ifdef DEBUG
         for(bytecode &bc : bytecodevect)
         {
             std::cout << "Op : " << opcodes_string[(int)bc.op] << "\t" << "Arg : " << bc.arg << "\n";
         }
+        #endif
 
         startexec(bytecodevect);
     }
@@ -81,5 +83,6 @@ int main(int argc, char **argv){
 
     // TODO:: free all the head allocated class that you made in parse method
 
+    #undef DEBUG
     return 0;
 }

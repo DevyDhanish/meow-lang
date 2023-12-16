@@ -66,6 +66,8 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_NEGATE,          // 55
     _TOKEN_AND,             // 56
     _TOKEN_OR,              // 57
+    _TOKEN_COMMA,           // 58
+    _TOKEN_DOT,             // 59
     
 }TOKEN_T;
 

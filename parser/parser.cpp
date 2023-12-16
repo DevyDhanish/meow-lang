@@ -44,38 +44,46 @@ int getPrecedence(TOKEN_T optype)
 {
     switch(optype)
     {
+        case _TOKEN_COMMA:
+            return 1;
+            break;
+
+        case _TOKEN_EQU:
+            return 2;
+            break;
+
         case _TOKEN_AND:
         case _TOKEN_OR:
-            return 1;
+            return 3;
 
         case _TOKEN_EQUALSTO: 
         case _TOKEN_NOTEQUALS: 
-            return 2;
+            return 4;
             break;
 
         case _TOKEN_LESSTHAN: 
         case _TOKEN_LESSEQU: 
         case _TOKEN_GREATERTHAN:
         case _TOKEN_GREATEREQU:
-            return 3;
+            return 5;
 
         case _TOKEN_PLUS: 
         case _TOKEN_MINUS: 
-            return 4; 
+            return 6; 
             break;
 
         case _TOKEN_MUL: 
         case _TOKEN_DIV: 
         case _TOKEN_MOD: 
-            return 5; 
+            return 7; 
             break;
 
         case _TOKEN_NEGATE:
         case _TOKEN_NOT:
-            return 6;
+            return 8;
 
         case _TOKEN_BRAOPEN:
-            return 7;
+            return 9;
 
         default: 
         return 0; 
@@ -129,6 +137,12 @@ void *const_rule(Parser &p)
             return var_rule(p);
             break;
         }
+        case _TOKEN_NULL:
+        {
+            Integer *nullint = new Integer (0, MEOWOBJECTKIND::IntObj);
+            const_obj = nullint;
+            break;
+        }
         default:
             //std::cout << "Unknow token encountered\n";
             return NULL;
@@ -162,9 +176,25 @@ void *expression_rule(Parser &p, int prec)
 
     if(expect_token(p, _TOKEN_BRAOPEN))
     {
-        ++p.counter;
-        lhs = expression_rule(p, 1);
-        consume_token(p, _TOKEN_BRACLOSE);
+        if(p.tokens[p.counter - 1]._TOKEN_TYPE == _TOKEN_VAR)
+        {
+            ++p.counter;
+            FuncCallExpr *funcallexpr = new FuncCallExpr((Expr *) a, EXPR_TYPES::expr_call);
+            args:
+                funcallexpr->addArgs((Expr *) expression_rule(p, 1));
+                consume_token(p, _TOKEN_COMMA);
+                if(!consume_token(p, _TOKEN_BRACLOSE)) goto args;
+            
+            //std::cout << "Func args -> " << funcallexpr->args.size() << "\n";
+
+            lhs = funcallexpr;
+
+        }
+        else{
+            ++p.counter;
+            lhs = expression_rule(p, 1);
+            consume_token(p, _TOKEN_BRACLOSE);
+        }
     }
 
     while(1)
@@ -255,8 +285,19 @@ void *if_stmt_rule(Parser &p)
     void *a = nullptr;  // hold condition
     void *b = nullptr;  // hold true block
     void *c = nullptr;  // hold false block if provided
-    if(expect_token(p, _TOKEN_WHILE)) return NULL;
-    consume_token(p, _TOKEN_IF);
+
+    if
+    ( 
+        !
+        (
+        (consume_token(p, _TOKEN_IF)) 
+        || 
+        (consume_token(p, _TOKEN_ELIF)) 
+        )
+    )
+    {
+        return NULL;
+    }
 
     a = expression_rule(p, 1);  // parse condition
 
@@ -294,7 +335,11 @@ void *while_stmt_rule(Parser &p)
 {
     void *a = nullptr;
     void *b = nullptr;
-    consume_token(p, _TOKEN_WHILE);
+    
+    if(!consume_token(p, _TOKEN_WHILE))
+    {
+        return NULL;
+    }
 
     a = expression_rule(p, 1);
 
@@ -308,6 +353,50 @@ body:
     if(!consume_token(p, _TOKEN_CURLCLOSE)) goto body;
 
     return whilestmt;
+}
+
+void *func_stmt_rule(Parser &p)
+{
+    void *a = nullptr;
+    void *b = nullptr;
+    void *c = nullptr;
+
+    if(!consume_token(p, _TOKEN_FUNC))
+    {
+        return NULL;
+    }
+
+    a = const_rule(p); // parse the function name
+    FuncStmt *funcstmt = new FuncStmt((Expr *)a, STMT_TYPES::stmt_func);
+    
+    consume_token(p, _TOKEN_BRAOPEN);
+
+params:
+    b = expression_rule(p, 1);
+    //std::cout << "adflajldf" << "\n";
+    consume_token(p, _TOKEN_COMMA);
+    funcstmt->addPrams((Expr *)b);
+    if(!consume_token(p, _TOKEN_BRACLOSE)) goto params;
+    
+
+    consume_token(p, _TOKEN_CURLOPEN);
+body:
+    c = statment_rule(p);
+    funcstmt->addBody((Stmts *)c);
+    if(!consume_token(p, _TOKEN_CURLCLOSE)) goto body;
+
+    return funcstmt;
+}
+
+void *funcall_stmt_rule(Parser &p)
+{
+    void *a = nullptr;
+
+    a = expression_rule(p, 1);
+
+    FuncCallStmt *funcCstmt = new FuncCallStmt((Expr *) a, STMT_TYPES::stmt_funcall);
+
+    return funcCstmt;
 }
 
 void *statment_rule(Parser &p)
@@ -329,6 +418,14 @@ void *statment_rule(Parser &p)
         return a;
     }
     else if(a = while_stmt_rule(p))
+    {
+        return a;
+    }
+    else if(a = func_stmt_rule(p))
+    {
+        return a;
+    }
+    else if(a = funcall_stmt_rule(p))
     {
         return a;
     }

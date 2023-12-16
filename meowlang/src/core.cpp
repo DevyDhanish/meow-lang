@@ -51,6 +51,8 @@ std::unordered_map<std::string, TOKEN_T> knowTokens = {
         {"<->", _TOKEN_NEGATE},
         {"and", _TOKEN_AND},
         {"or", _TOKEN_OR},
+        {",", _TOKEN_COMMA},
+        {".", _TOKEN_DOT},
 };
 
 std::unordered_map<char, std::string> operator_pair = {
@@ -65,6 +67,8 @@ std::unordered_map<char, std::string> operator_pair = {
     {'%', "%="},
     {':', ":"},
     {';', ";"},
+    {',', ","},
+    {'.', "."},
 };
 
 std::set<char> brackets = {

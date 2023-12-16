@@ -5,8 +5,8 @@
 
 // base class for stmts, does nothing by default
 
-enum STMT_TYPES { stmt_assign, stmt_show, stmt_if, stmt_while };
-enum EXPR_TYPES { expr_const, expr_nameexpr, expr_binary, expr_unary };
+enum STMT_TYPES { stmt_assign, stmt_show, stmt_if, stmt_while, stmt_func, stmt_funcall };
+enum EXPR_TYPES { expr_const, expr_nameexpr, expr_binary, expr_unary, expr_call };
 enum OP_TYPES { Add, Sub, Mul, Div, Mod, Cmp_equ, Cmp_less, Cmp_lessequ, Cmp_great, Cmp_greatequ, Cmp_notequ, negate, logical_and, logical_or, logical_not };
 
 class Stmts 
@@ -105,6 +105,31 @@ class BinOpExpr : public Expr
     }
 };
 
+class FuncCallExpr : public Expr
+{
+public:
+    EXPR_TYPES kind;
+    Expr *name;
+    std::vector<Expr *> args;
+
+    FuncCallExpr(Expr *a, EXPR_TYPES k) : name(a), kind(k) {}
+
+    void addArgs(Expr *a)
+    {
+        args.push_back(a);
+    }
+
+    void printInfo() override
+    {
+        std::cout << "Kind:" << kind << "\n";
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
+};
+
 class AssignmnetStmt : public Stmts
 {
 public:
@@ -188,6 +213,56 @@ public:
     {
         body.push_back(a);
     }
+
+    void printInfo() override
+    {
+        std::cout << "Kind:" << kind << "\n";
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
+};
+
+class FuncStmt : public Stmts
+{
+public:
+    STMT_TYPES kind;
+    Expr *name;
+    std::vector<Expr *> parameters;
+    std::vector<Stmts *> body;
+
+    FuncStmt(Expr *a, STMT_TYPES k) : name(a), kind(k) {}
+
+    void addPrams(Expr *a)
+    {
+        parameters.push_back(a);
+    }
+
+    void addBody(Stmts *a)
+    {
+        body.push_back(a);
+    }
+
+    void printInfo() override
+    {
+        std::cout << "Kind:" << kind << "\n";
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
+};
+
+class FuncCallStmt : public Stmts
+{
+public:
+    STMT_TYPES kind;
+    Expr *value;
+
+    FuncCallStmt(Expr *a, STMT_TYPES k) : value(a), kind(k) {}
 
     void printInfo() override
     {

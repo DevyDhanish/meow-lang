@@ -11,4 +11,4 @@ all:
 	g++ -g -c meowlang/src/internals/constants.cpp -o lib/constants.o
 	ar rcs lib/libmeow.a lib/*.o
 
-	g++ -g meowlang/main.cpp -Iinclude/ -Llib/ -lmeow
+	g++ -g meowlang/main.cpp -Iinclude/ -Llib/ -lmeow -o meowlang.exe

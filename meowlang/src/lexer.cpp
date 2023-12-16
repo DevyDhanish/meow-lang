@@ -131,7 +131,7 @@ std::vector<std::string> disassembleLine(meow_line line){
                         output.push_back("<!>");
                         break;
                     default:
-                        std::cout << "Unknow char \n";
+                        output.push_back(std::string(1, lookAhead));
                         break;
                 }
             }
@@ -151,6 +151,7 @@ std::vector<std::string> disassembleLine(meow_line line){
             curr_pos += 1;
             while(1){
                 if(curr_line[curr_pos] == 34) break;
+                if(curr_pos > curr_line.size()) break;
 
                 word += curr_line[curr_pos];
 
@@ -167,7 +168,7 @@ std::vector<std::string> disassembleLine(meow_line line){
 
         else if (isalphaC(lookAhead)){
             std::string word;
-            while(curr_pos < curr_line.size() && isalpha(curr_line[curr_pos])){
+            while(curr_pos < curr_line.size() && isalphaC(curr_line[curr_pos])){
                 word += curr_line[curr_pos];
                 curr_pos += 1;
             }
@@ -178,7 +179,7 @@ std::vector<std::string> disassembleLine(meow_line line){
         }
 
         else{
-            //displayError(_E_UNKNOW_TOKEN_ERROR, line.line, line.line_number);
+            output.push_back(std::string(1, lookAhead));
         }
 
     }

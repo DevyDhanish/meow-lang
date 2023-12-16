@@ -318,4 +318,5 @@ void startexec(const std::vector<bytecode> &cooked_code)
         interpreter->moveForward();
     }
 
+    interpreter->popFrame();
 }
