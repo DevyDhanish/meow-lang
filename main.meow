@@ -1,24 +1,25 @@
 shouldExec = 1
 
 marks = 10
+result = "could not calculate"
 
 if shouldExec
 {
     if marks > 90 and marks < 100
     {
-        show "A+"
+        result = "A+"
     }
     elif marks > 80 and marks < 90
     {
-        show "A"
+        result =  "A"
     }
     elif marks > 70 and marks < 80
     {
-        show "B"
+        result = "B"
     }
     else
     {
-        show "fail"
+        result = "Fail"
     }
 }
 else
@@ -26,10 +27,16 @@ else
     show "Machine not working"
 }
 
-x = 0
+show result
 
-while x < 10
+
+tableOf = 5
+x = 1
+while x <= 10
 {
-    show "bruh"
+    show x * tableOf
     x += 1
-}
+} 
+
+
+show "DONE"

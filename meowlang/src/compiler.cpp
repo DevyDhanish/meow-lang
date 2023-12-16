@@ -4,10 +4,10 @@
 #include "../../include/internals/mewcore_obj.hpp"
 #include "../../include/code.hpp"
 #include <iostream>
+#include <unordered_map>
 
 std::vector<bytecode> bytes;
-std::vector<uint32_t> jump_if_false_offset_table;
-std::vector<uint32_t> jump_offset_table;
+std::unordered_map<uint32_t, uint32_t> offset_table;
 
 void compileUnary(UnaryExpr *uExpr);
 void compileConstExpr(Const *constExpr);
@@ -20,17 +20,18 @@ void compileStmts(std::vector<Stmts *> stmts);
 void compileWhileStmt(WhileStmt *wstmt);
 std::vector<bytecode> compile(Module *mod);
 
-void replaceJumpOpsWithOffset(std::vector<bytecode> &bcode, std::vector<uint32_t> offset_table, OP_CODES type)
+void replaceJumpOpsWithOffset(std::vector<bytecode> &bcode)
 {
-    uint32_t counter = offset_table.size() - 1;
+    uint32_t c = 0;
 
-    for(bytecode &bc : bcode)
+    while(c < bcode.size())
     {
-        if(bc.op == type)
+        if(offset_table.find(c) != offset_table.end())
         {
-            bc.arg = offset_table[counter];
-            counter--;                          // from back because the offset table is calculated using recursion so the first value is at last
+            bcode[c].arg = offset_table[c];
         }
+
+        c++;
     }
 }
 
@@ -253,22 +254,25 @@ void compileIfStmt(IfStmt *ifstmt)
     }
 
     bytes.push_back(makeByteCode((uint8_t)OP_CODES::JUMP_IF_FALSE, (uint64_t)0));
-    
     uint32_t jump_if_offset = bytes.size() - 1;
+    uint32_t pos = bytes.size() - 1;
+
     if(!ifstmt->tbody.size()) std::cout << "If statment does not have a true body\n";
     compileStmts(ifstmt->tbody);
     bytes.push_back(makeByteCode((uint8_t)OP_CODES::JUMP, (uint64_t)0));
-    jump_if_offset = (uint32_t) bytes.size() - jump_if_offset; // the at the last there will be a jump byte
 
-    std::cout << "JUMP OFFSET OVERTIME -> " << jump_if_offset << "\n";
+    jump_if_offset = (uint32_t) bytes.size() - jump_if_offset; // the at the last there will be a jump byte
+    offset_table[pos] = jump_if_offset;
+
+    //std::cout << "JUMP OFFSET OVERTIME -> " << jump_if_offset << "\n";
 
     uint32_t jump_offset = bytes.size() - 1;
+    uint32_t pos2 = bytes.size() - 1;
     if(!ifstmt->fbody.size()) std::cout << "If statment does not have a false body\n";
     compileStmts(ifstmt->fbody);
-    jump_offset = (uint32_t) bytes.size() - jump_offset;
 
-    jump_if_false_offset_table.push_back(jump_if_offset);
-    jump_offset_table.push_back(jump_offset);
+    jump_offset = (uint32_t) bytes.size() - jump_offset;
+    offset_table[pos2] = jump_offset;
 }
 
 void compileWhileStmt(WhileStmt *wstmt)
@@ -293,14 +297,14 @@ void compileWhileStmt(WhileStmt *wstmt)
             break;
     }
     bytes.push_back(makeByteCode((uint8_t)OP_CODES::JUMP_IF_FALSE, (uint64_t)0));
-
+    uint32_t pos = bytes.size() - 1;
     uint32_t jump_if_offset = bytes.size() - 1;
     if(!wstmt->body.size()){ std::cout << "While does not have a body\n"; }
     compileStmts(wstmt->body);
     bytes.push_back(makeByteCode((uint8_t)OP_CODES::JUMP_BACK, (bytes.size() - (uint64_t)whilestart)));
     jump_if_offset = (uint32_t) bytes.size() - jump_if_offset;
 
-    jump_if_false_offset_table.push_back(jump_if_offset);
+    offset_table[pos] = jump_if_offset;
 }
 
 void compileStmts(std::vector<Stmts *> stmts)
@@ -337,8 +341,7 @@ std::vector<bytecode> compile(Module *mod)
 
     compileStmts(mod->body);
 
-    replaceJumpOpsWithOffset(bytes, jump_if_false_offset_table, OP_CODES::JUMP_IF_FALSE);   // replace all the jump_if_false op codes with correct offset
-    replaceJumpOpsWithOffset(bytes, jump_offset_table, OP_CODES::JUMP);                     // replace all the jump op codes with correct offset
+    replaceJumpOpsWithOffset(bytes);
 
     return bytes;
 }

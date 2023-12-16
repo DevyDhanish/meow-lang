@@ -38,6 +38,7 @@ void Interpreter::jumpIpForward(uint32_t offset)
 void Interpreter::jumpIpBackward(uint32_t offset)
 {
     ip = ip - offset;
+    //std::cout << "IP pointing to " << opcodes_string[cooked_code[ip].op];
     if(ip < 0)
     {
         std::cout << "Ip was offseted to negative\n";
@@ -62,7 +63,7 @@ void handleByte(Interpreter *interpreter, bytecode byte)
     {
         case OP_CODES::LOAD_CONST:
         {
-            std::cout << "LODED CONST TO STACK OF TYPE " << ((MeowObject *)byte.arg)->getKind() << "\n";
+            //std::cout << "LODED CONST TO STACK OF TYPE " << ((MeowObject *)byte.arg)->getKind() << "\n";
             interpreter->current_frame->pushToStack(byte.arg);
             break;
         }
@@ -70,7 +71,7 @@ void handleByte(Interpreter *interpreter, bytecode byte)
         case OP_CODES::STORE :
         {
             put_const(interpreter->current_frame->pool, (MeowObject *)byte.arg, (MeowObject *)interpreter->current_frame->popFromStack());
-            std::cout << "STORED VAL TO CONST POOL ID : " << ((Var *) byte.arg)->value << "\n";
+            //std::cout << "STORED VAL TO CONST POOL ID : " << ((Var *) byte.arg)->value << "\n";
             break;
         }
 
@@ -78,9 +79,9 @@ void handleByte(Interpreter *interpreter, bytecode byte)
         {
             MeowObject *valFromvar = get_const(interpreter->current_frame->pool, (MeowObject *)byte.arg);
             interpreter->current_frame->pushToStack((uint64_t)valFromvar);
-            std::cout << "LOADED VALUE FROM CONST POOL TO STACK : ";
-            valFromvar->onShow();
-            std::cout << "\n";
+            //std::cout << "LOADED VALUE FROM CONST POOL TO STACK : ";
+            //valFromvar->onShow();
+            //std::cout << "\n";
             break;
         }
 
@@ -268,7 +269,7 @@ void handleByte(Interpreter *interpreter, bytecode byte)
 
         case OP_CODES::JUMP:
         {
-            interpreter->jumpIpForward((uint32_t) byte.arg);
+            interpreter->jumpIpForward((uint32_t) byte.arg - 1);
             break;
         }
 
@@ -292,6 +293,7 @@ void handleByte(Interpreter *interpreter, bytecode byte)
         {
             MeowObject *valAtTop = (MeowObject *)interpreter->current_frame->getValFromStack(interpreter->current_frame->stack_pointer - 1);
             valAtTop->onShow();
+            std::cout << "\n";
             break;
         }
 
@@ -302,13 +304,13 @@ void handleByte(Interpreter *interpreter, bytecode byte)
 
 void startexec(const std::vector<bytecode> &cooked_code)
 {
-    Interpreter *interpreter = new Interpreter(cooked_code);
+    static Interpreter *interpreter = new Interpreter(cooked_code);
     MEOW_STACKFRAME *main = new MEOW_STACKFRAME(); 
 
     // put the main frame into interpreter frame stack
     interpreter->pushFrame(main);
 
-    std::cout << "Everything is working up to here\n";
+    //std::cout << "Everything is working up to here\n";
 
     while(!interpreter->isFinished)
     {
