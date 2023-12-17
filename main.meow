@@ -1,0 +1,20 @@
+# functions in meowlang
+
+func isEven(num)
+{
+    func print(msg)
+    {
+        show msg
+    }
+
+    if num % 2 == 0
+    {
+        print("Even")
+    }
+    else
+    {
+        print("Odd")
+    }
+}
+
+isEven(9)

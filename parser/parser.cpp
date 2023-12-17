@@ -448,13 +448,15 @@ void *func_stmt_rule(Parser &p)
     
     consume_token(p, _TOKEN_BRAOPEN);
 
-params:
-    b = expression_rule(p, 1);
-    //std::cout << ((Var *)((Const *)b)->value)->value << "\n";
-    consume_token(p, _TOKEN_COMMA);
-    funcstmt->addPrams((Expr *)b);
-    if(!consume_token(p, _TOKEN_BRACLOSE)) goto params;
-    
+    if(!consume_token(p, _TOKEN_BRACLOSE))
+    {
+        params:
+            b = expression_rule(p, 1);
+            //std::cout << ((Var *)((Const *)b)->value)->value << "\n";
+            consume_token(p, _TOKEN_COMMA);
+            funcstmt->addPrams((Expr *)b);
+            if(!consume_token(p, _TOKEN_BRACLOSE)) goto params;
+    }
 
     consume_token(p, _TOKEN_CURLOPEN);
     

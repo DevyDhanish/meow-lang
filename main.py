@@ -1,3 +1,10 @@
-x = ( 8 - 1 + 3 ) * 6
+def show(msg):
+    print(msg)
 
-print(x)
+def isEven(num):
+    if num % 2 == 0:
+        show("Even")
+    else:
+        show("Odd")
+
+isEven(10)
