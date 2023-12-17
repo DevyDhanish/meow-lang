@@ -10,29 +10,23 @@ void Interpreter::pushFrame(MEOW_STACKFRAME *f)
     }
 
     frame.push_back(f);
-    fp++;
     current_frame = frame.back();
 }
 
-MEOW_STACKFRAME *Interpreter::popFrame()
+void Interpreter::popFrame()
 {
     if(frame.size() == 0)
     {
-        return NULL;
+        return;
     }
 
-    fp--;
-    MEOW_STACKFRAME *topop = frame.back();
-    current_frame = frame[fp];
     frame.pop_back();
-
-    return topop;
+    current_frame = frame.back();
 }
 
 void Interpreter::jumpIpForward(uint32_t offset)
 {
     ip = ip + offset;
-    if(ip > cooked_code.size()) isFinished = true;
 }
 
 void Interpreter::jumpIpBackward(uint32_t offset)
@@ -44,17 +38,6 @@ void Interpreter::jumpIpBackward(uint32_t offset)
         std::cout << "Ip was offseted to negative\n";
         exit(0);
     }
-}
-
-void Interpreter::moveForward()
-{
-    ip = ip + 1;
-    if(ip >= cooked_code.size()) isFinished = true;
-}
-
-bytecode Interpreter::getByteAtIp()
-{
-    return cooked_code[ip];
 }
 
 void handleByte(Interpreter *interpreter, bytecode byte)
@@ -70,6 +53,7 @@ void handleByte(Interpreter *interpreter, bytecode byte)
 
         case OP_CODES::STORE :
         {
+            //((Var *)((MeowObject *)byte.arg))->value;
             put_const(interpreter->current_frame->pool, (MeowObject *)byte.arg, (MeowObject *)interpreter->current_frame->popFromStack());
             //std::cout << "STORED VAL TO CONST POOL ID : " << ((Var *) byte.arg)->value << "\n";
             break;
@@ -77,11 +61,16 @@ void handleByte(Interpreter *interpreter, bytecode byte)
 
         case OP_CODES::LOAD_NAME :
         {
+            //std::cout << "Trying to load name -> " << ((Var *)((MeowObject *)byte.arg))->value << "\n";
             MeowObject *valFromvar = get_const(interpreter->current_frame->pool, (MeowObject *)byte.arg);
+            if(!valFromvar)
+            {
+                std::cout << "Got null\n";
+            }
             interpreter->current_frame->pushToStack((uint64_t)valFromvar);
-            //std::cout << "LOADED VALUE FROM CONST POOL TO STACK : ";
-            //valFromvar->onShow();
-            //std::cout << "\n";
+            // std::cout << "LOADED VALUE FROM CONST POOL TO STACK : ";
+            // valFromvar->onShow();
+            // std::cout << "\n";
             break;
         }
 
@@ -289,9 +278,30 @@ void handleByte(Interpreter *interpreter, bytecode byte)
             break;
         }
 
+        case OP_CODES::CALL:
+        {
+            MEOW_STACKFRAME *nframe = new MEOW_STACKFRAME();
+            uint32_t arg_cout = byte.arg;
+            uint32_t ip_state = interpreter->ip;
+            Block *currExecBlock_state = interpreter->currExecBlock;
+            
+            while(arg_cout)
+            {
+                nframe->pushToStack(interpreter->current_frame->popFromStack());
+                arg_cout--;
+            }
+
+            MeowObject *fname = (MeowObject *) interpreter->current_frame->popFromStack();
+            interpreter->Execute( ("$" + ((Var *)fname)->value), nframe);
+            interpreter->popFrame();
+            interpreter->currExecBlock = currExecBlock_state;
+            interpreter->ip = ip_state;
+            break;
+        }
+
         case OP_CODES::OUT:
         {
-            MeowObject *valAtTop = (MeowObject *)interpreter->current_frame->getValFromStack(interpreter->current_frame->stack_pointer - 1);
+            MeowObject *valAtTop = (MeowObject *)interpreter->current_frame->popFromStack();
             valAtTop->onShow();
             std::cout << "\n";
             break;
@@ -302,21 +312,16 @@ void handleByte(Interpreter *interpreter, bytecode byte)
     }
 }
 
-void startexec(const std::vector<bytecode> &cooked_code)
+void Interpreter::Execute(std::string _id, MEOW_STACKFRAME *frame)
 {
-    static Interpreter *interpreter = new Interpreter(cooked_code);
-    MEOW_STACKFRAME *main = new MEOW_STACKFRAME(); 
+    pushFrame(frame);
+    currExecBlock = cooked_code->getBlockById(_id);
+    ip = 0;
 
-    // put the main frame into interpreter frame stack
-    interpreter->pushFrame(main);
-
-    //std::cout << "Everything is working up to here\n";
-
-    while(!interpreter->isFinished)
+    while(ip < currExecBlock->bytes.size())
     {
-        handleByte(interpreter, interpreter->getByteAtIp());
-        interpreter->moveForward();
-    }
+        handleByte(this, currExecBlock->bytes[ip]);
 
-    interpreter->popFrame();
+        ip++;
+    }
 }

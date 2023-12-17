@@ -3,5 +3,6 @@
 #include <vector>
 #include "code.hpp"
 #include "internals/mewcore_ast.hpp"
+#include "byteblocks.hpp"
 
-std::vector<bytecode> compile(Module *mod);
+Block *compile(Module *mod);

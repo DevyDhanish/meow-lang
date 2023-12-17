@@ -3,24 +3,27 @@
 #include "../../include/internals/mewcore_ast.hpp"
 #include "../../include/internals/mewcore_obj.hpp"
 #include "../../include/code.hpp"
+#include "../../include/byteblocks.hpp"
 #include <iostream>
 #include <unordered_map>
 
-std::vector<bytecode> bytes;
-std::unordered_map<uint32_t, uint32_t> offset_table;
+//std::vector<bytecode> bytevect;
 
-void compileUnary(UnaryExpr *uExpr);
-void compileConstExpr(Const *constExpr);
-void compileBinopExpr(BinOpExpr *expr);
-void compileNameExpr(NameExpr *nameExpr);
-void compileAssignStmt(AssignmnetStmt *assstmt);
-void compileShowStmt(ShowStmt *showstmt);
-void compileIfStmt(IfStmt *ifstmt);
-void compileStmts(std::vector<Stmts *> stmts);
-void compileWhileStmt(WhileStmt *wstmt);
-std::vector<bytecode> compile(Module *mod);
+void compileUnary(UnaryExpr *uExpr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileConstExpr(Const *constExpr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileBinopExpr(BinOpExpr *expr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileNameExpr(NameExpr *nameExpr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileAssignStmt(AssignmnetStmt *assstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileShowStmt(ShowStmt *showstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileIfStmt(IfStmt *ifstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileStmts(std::vector<Stmts *> stmts, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileWhileStmt(WhileStmt *wstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileFuncCallStmt(FuncCallStmt *funcall, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileFuncCallExpr(FuncCallExpr *funcallexpr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileExpr(Expr *a, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+Block *compile(Module *mod);
 
-void replaceJumpOpsWithOffset(std::vector<bytecode> &bcode)
+void replaceJumpOpsWithOffset(std::vector<bytecode> &bcode, std::unordered_map<uint32_t, uint32_t> &offset_table)
 {
     uint32_t c = 0;
 
@@ -35,7 +38,24 @@ void replaceJumpOpsWithOffset(std::vector<bytecode> &bcode)
     }
 }
 
-void compileConstExpr(Const *constExpr)
+void compileVarConst(Var *var, std::vector<bytecode> &bytevect, Block *block, OP_CODES type, std::unordered_map<uint32_t, uint32_t> &offset_table)
+{
+    switch (type)
+    {
+    case OP_CODES::STORE:
+        bytevect.push_back(makeByteCode((uint8_t)OP_CODES::STORE, (uint64_t)var));
+        break;
+
+    case OP_CODES::LOAD_NAME:
+        bytevect.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_NAME, (uint64_t)var));
+        break;
+    
+    default:
+        break;
+    }
+}
+
+void compileConstExpr(Const *constExpr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
 {
     // Check if the constExpr is null
     if (constExpr == nullptr) {
@@ -48,22 +68,22 @@ void compileConstExpr(Const *constExpr)
 
     case MEOWOBJECTKIND::IntObj :
         //std::cout << "Integer value: " << ((Integer *) constExpr->value)->value << "\n";
-        bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)((Integer *)constExpr->value)));
+        bytevect.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)((Integer *)constExpr->value)));
         break;
 
     case MEOWOBJECTKIND::FloatObj :
         //std::cout << "Float value: " << ((Float *) constExpr->value)->value << "\n";
-        bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)((Float *)constExpr->value)));
+        bytevect.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)((Float *)constExpr->value)));
         break;
 
     case MEOWOBJECTKIND::StringObj :
         //std::cout << "String value: " << ((String *) constExpr->value)->value << "\n";
-        bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)((String *)constExpr->value)));
+        bytevect.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)((String *)constExpr->value)));
         break;
 
     case MEOWOBJECTKIND::VarObj :
         //std::cout << "Var : " << ((Var *)constExpr->value)->value << "\n";
-        bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_NAME, (uint64_t)((Var *)constExpr->value)));
+        bytevect.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_NAME, (uint64_t)((Var *)constExpr->value)));
         break;
 
     default:
@@ -72,45 +92,43 @@ void compileConstExpr(Const *constExpr)
     }
 }
 
-void compileBinopExpr(BinOpExpr *expr)
+void compileExpr(Expr *a, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
+{
+    switch (a->getKind())
+    {
+    case EXPR_TYPES::expr_const:
+        compileConstExpr((Const *) a, bytevect, block, offset_table);
+        break;
+
+    case EXPR_TYPES::expr_binary:
+        compileBinopExpr((BinOpExpr *) a, bytevect, block, offset_table);
+        break;
+
+    case EXPR_TYPES::expr_unary:
+        compileUnary((UnaryExpr *) a, bytevect, block, offset_table);
+        break;
+
+    case EXPR_TYPES::expr_call:
+        compileFuncCallExpr((FuncCallExpr *)a, bytevect, block, offset_table);
+        break;
+
+    case EXPR_TYPES::expr_nameexpr:
+        compileNameExpr((NameExpr *)a, bytevect, block, offset_table);
+        break;
+    
+    default:
+        break;
+    }
+}
+
+void compileBinopExpr(BinOpExpr *expr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
 {
     if(!expr->left) std::cout << "Left side is empty\n";
-    switch (expr->left->getKind())
-    {
-    case EXPR_TYPES::expr_const:
-        compileConstExpr((Const *) expr->left);
-        break;
-
-    case EXPR_TYPES::expr_binary:
-        compileBinopExpr((BinOpExpr *) expr->left);
-        break;
-
-    case EXPR_TYPES::expr_unary:
-        compileUnary((UnaryExpr *) expr->left);
-        break;
-    
-    default:
-        break;
-    }
+    compileExpr((Expr *)expr->left, bytevect, block, offset_table);
 
     if(!expr->right) std::cout << "Right side is empty\n";
-    switch (expr->right->getKind())
-    {
-    case EXPR_TYPES::expr_const:
-        compileConstExpr((Const *) expr->right);
-        break;
-    
-    case EXPR_TYPES::expr_binary:
-        compileBinopExpr((BinOpExpr *)expr->right);
-        break;
 
-    case EXPR_TYPES::expr_unary:
-        compileUnary((UnaryExpr *)expr->right);
-        break;
-
-    default:
-        break;
-    }
+    compileExpr(expr->right, bytevect, block, offset_table);
 
     OP_CODES op;
 
@@ -133,28 +151,12 @@ void compileBinopExpr(BinOpExpr *expr)
     default : std::cout << "Bad opcode\n";   break;
     }
 
-    bytes.push_back(makeByteCode((uint8_t)op, (uint64_t)0));
+    bytevect.push_back(makeByteCode((uint8_t)op, (uint64_t)0));
 }
 
-void compileUnary(UnaryExpr *uExpr)
+void compileUnary(UnaryExpr *uExpr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
 {
-    switch (uExpr->value->getKind())
-    {
-    case EXPR_TYPES::expr_const :
-        compileConstExpr((Const *) uExpr->value);
-        break;
-
-    case EXPR_TYPES::expr_binary :
-        compileBinopExpr((BinOpExpr *)uExpr->value);
-        break;
-
-    case EXPR_TYPES::expr_unary:
-        compileUnary((UnaryExpr *)uExpr->value);
-        break;
-    
-    default:
-        break;
-    }
+    compileExpr(uExpr->value, bytevect, block, offset_table);
 
     OP_CODES op;
 
@@ -171,37 +173,22 @@ void compileUnary(UnaryExpr *uExpr)
         break;
     }
 
-    bytes.push_back(makeByteCode((uint8_t)op, (uint64_t)0));
+    bytevect.push_back(makeByteCode((uint8_t)op, (uint64_t)0));
 }
 
-void compileNameExpr(NameExpr *nameExpr)
+void compileNameExpr(NameExpr *nameExpr, std::vector<bytecode> &bytevect,  Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
 {
-    switch (nameExpr->value->getKind())
-    {
-    case EXPR_TYPES::expr_const:
-        compileConstExpr((Const *)nameExpr->value);
-        break;
-    case EXPR_TYPES::expr_binary:
-        compileBinopExpr((BinOpExpr *) nameExpr->value);
-        break;
-
-    case EXPR_TYPES::expr_unary:
-        compileUnary((UnaryExpr *)nameExpr->value);
-        break;
+    compileExpr(nameExpr->value, bytevect, block, offset_table);
     
-    default:
-        break;
-    }
-    
-    bytes.push_back(makeByteCode((uint8_t)OP_CODES::STORE, (uint64_t)(Var *)((Const *)nameExpr->target)->value));
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::STORE, (uint64_t)(Var *)((Const *)nameExpr->target)->value));
 }
 
-void compileAssignStmt(AssignmnetStmt *assstmt)
+void compileAssignStmt(AssignmnetStmt *assstmt, std::vector<bytecode> &bytevect,  Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
 {
     switch (assstmt->value->getKind())
     {
     case EXPR_TYPES::expr_nameexpr:
-        compileNameExpr((NameExpr *)assstmt->value);
+        compileNameExpr((NameExpr *)assstmt->value, bytevect, block, offset_table);
         break;
     
     default:
@@ -209,105 +196,101 @@ void compileAssignStmt(AssignmnetStmt *assstmt)
     }
 }
 
-void compileShowStmt(ShowStmt *showstmt)
+void compileShowStmt(ShowStmt *showstmt, std::vector<bytecode> &bytevect,  Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
 {
-    switch (showstmt->value->getKind())
-    {
-    case EXPR_TYPES::expr_const :
-        compileConstExpr((Const *)showstmt->value);
-        break;
+    compileExpr(showstmt->value, bytevect, block, offset_table);
 
-    case EXPR_TYPES::expr_binary :
-        compileBinopExpr((BinOpExpr *)showstmt->value);
-        break;
-
-    case EXPR_TYPES::expr_unary:
-        compileUnary((UnaryExpr *)showstmt->value);
-        break;
-    
-    default:
-        break;
-    }
-
-    bytes.push_back(makeByteCode(OP_CODES::OUT, (uint64_t)0));
+    bytevect.push_back(makeByteCode(OP_CODES::OUT, (uint64_t)0));
 }
 
-void compileIfStmt(IfStmt *ifstmt)
+void compileIfStmt(IfStmt *ifstmt, std::vector<bytecode> &bytevect,  Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
 {
     if(!ifstmt->condition) std::cout << "Condition is empty\n";
-    switch(ifstmt->condition->getKind())
-    {
-        case EXPR_TYPES::expr_binary:
-            compileBinopExpr((BinOpExpr *)ifstmt->condition);
-            break;
-        case EXPR_TYPES::expr_const:
-            compileConstExpr((Const *)ifstmt->condition);
-            break;
-        case EXPR_TYPES::expr_nameexpr:
-            compileNameExpr((NameExpr *)ifstmt->condition);
-            break;
-        case EXPR_TYPES::expr_unary:
-            compileUnary((UnaryExpr *)ifstmt->condition);
-            break;
-        default:
-            break;
-    }
+    compileExpr(ifstmt->condition, bytevect, block, offset_table);
 
-    bytes.push_back(makeByteCode((uint8_t)OP_CODES::JUMP_IF_FALSE, (uint64_t)0));
-    uint32_t jump_if_offset = bytes.size() - 1;
-    uint32_t pos = bytes.size() - 1;
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::JUMP_IF_FALSE, (uint64_t)0));
+    uint32_t jump_if_offset = bytevect.size() - 1;
+    uint32_t pos = bytevect.size() - 1;
 
     if(!ifstmt->tbody.size()) std::cout << "If statment does not have a true body\n";
-    compileStmts(ifstmt->tbody);
-    bytes.push_back(makeByteCode((uint8_t)OP_CODES::JUMP, (uint64_t)0));
+    compileStmts(ifstmt->tbody, bytevect, block, offset_table);
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::JUMP, (uint64_t)0));
 
-    jump_if_offset = (uint32_t) bytes.size() - jump_if_offset; // the at the last there will be a jump byte
+    jump_if_offset = (uint32_t) bytevect.size() - jump_if_offset; // the at the last there will be a jump byte
     offset_table[pos] = jump_if_offset;
 
     //std::cout << "JUMP OFFSET OVERTIME -> " << jump_if_offset << "\n";
 
-    uint32_t jump_offset = bytes.size() - 1;
-    uint32_t pos2 = bytes.size() - 1;
+    uint32_t jump_offset = bytevect.size() - 1;
+    uint32_t pos2 = bytevect.size() - 1;
     if(!ifstmt->fbody.size()) std::cout << "If statment does not have a false body\n";
-    compileStmts(ifstmt->fbody);
+    compileStmts(ifstmt->fbody, bytevect, block, offset_table);
 
-    jump_offset = (uint32_t) bytes.size() - jump_offset;
+    jump_offset = (uint32_t) bytevect.size() - jump_offset;
     offset_table[pos2] = jump_offset;
 }
 
-void compileWhileStmt(WhileStmt *wstmt)
+void compileWhileStmt(WhileStmt *wstmt, std::vector<bytecode> &bytevect,  Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
 {
-    uint32_t whilestart = bytes.size() - 1;
+    uint32_t whilestart = bytevect.size() - 1;
     if(!wstmt->condition) std::cout << "While does not have a condition\n";
-    switch(wstmt->condition->getKind())
-    {
-        case EXPR_TYPES::expr_binary:
-            compileBinopExpr((BinOpExpr *)wstmt->condition);
-            break;
-        case EXPR_TYPES::expr_const:
-            compileConstExpr((Const *)wstmt->condition);
-            break;
-        case EXPR_TYPES::expr_nameexpr:
-            compileNameExpr((NameExpr *)wstmt->condition);
-            break;
-        case EXPR_TYPES::expr_unary:
-            compileUnary((UnaryExpr *)wstmt->condition);
-            break;
-        default:
-            break;
-    }
-    bytes.push_back(makeByteCode((uint8_t)OP_CODES::JUMP_IF_FALSE, (uint64_t)0));
-    uint32_t pos = bytes.size() - 1;
-    uint32_t jump_if_offset = bytes.size() - 1;
+    compileExpr(wstmt->condition, bytevect, block, offset_table);
+
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::JUMP_IF_FALSE, (uint64_t)0));
+    uint32_t pos = bytevect.size() - 1;
+    uint32_t jump_if_offset = bytevect.size() - 1;
     if(!wstmt->body.size()){ std::cout << "While does not have a body\n"; }
-    compileStmts(wstmt->body);
-    bytes.push_back(makeByteCode((uint8_t)OP_CODES::JUMP_BACK, (bytes.size() - (uint64_t)whilestart)));
-    jump_if_offset = (uint32_t) bytes.size() - jump_if_offset;
+    compileStmts(wstmt->body, bytevect, block, offset_table);
+
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::JUMP_BACK, (bytevect.size() - (uint64_t)whilestart)));
+    jump_if_offset = (uint32_t) bytevect.size() - jump_if_offset;
 
     offset_table[pos] = jump_if_offset;
 }
 
-void compileStmts(std::vector<Stmts *> stmts)
+void compileFuncStmt(FuncStmt *fstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
+{
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)(((Var *)(Const *)fstmt->name))));
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::STORE, (uint64_t)(((Var *)(Const *)fstmt->name))));
+
+    std::string funcname = "$" + ((Var *)((Const *)fstmt->name))->value;
+    Block *fblock = new Block(funcname);
+
+    std::unordered_map<uint32_t, uint32_t> offset_table_nblock;
+
+    for(Expr *p : fstmt->parameters)
+    {
+        //std::cout << ((Var *)((Const *)p))->value << "\n";
+        compileVarConst( ((Var *)((Const *)p)->value), fblock->bytes, fblock, OP_CODES::STORE, offset_table_nblock);
+    }
+
+    compileStmts(fstmt->body, fblock->bytes, fblock, offset_table_nblock);
+
+    replaceJumpOpsWithOffset(fblock->bytes, offset_table_nblock);
+
+    block->block.push_back(fblock);
+}
+
+void compileFuncCallExpr(FuncCallExpr *funcall, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
+{
+    if(!funcall->name) std::cout << "Func has no name\n";
+    compileExpr(funcall->name, bytevect, block, offset_table);
+
+    for(Expr *a : funcall->args)
+    {
+        compileExpr(a, bytevect, block, offset_table);
+    }
+
+    bytevect.push_back(makeByteCode((uint8_t )OP_CODES::CALL, (uint64_t)funcall->args.size()));
+    
+}
+
+void compileFuncCallStmt(FuncCallStmt *funcall, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
+{
+    compileFuncCallExpr((FuncCallExpr *) funcall->value, bytevect, block, offset_table);
+}
+
+void compileStmts(std::vector<Stmts *> stmts, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
 {
     for(Stmts *a : stmts)
     {
@@ -315,19 +298,27 @@ void compileStmts(std::vector<Stmts *> stmts)
         {
 
         case STMT_TYPES::stmt_assign:
-            compileAssignStmt((AssignmnetStmt *)a);
+            compileAssignStmt((AssignmnetStmt *)a, bytevect, block, offset_table);
             break;
         
         case STMT_TYPES ::stmt_show:
-            compileShowStmt((ShowStmt *)a);
+            compileShowStmt((ShowStmt *)a, bytevect, block, offset_table);
             break; 
 
         case STMT_TYPES::stmt_if:
-            compileIfStmt((IfStmt *)a);
+            compileIfStmt((IfStmt *)a, bytevect, block, offset_table);
             break;
 
         case STMT_TYPES::stmt_while:
-            compileWhileStmt((WhileStmt *)a);
+            compileWhileStmt((WhileStmt *)a, bytevect, block, offset_table);
+            break;
+
+        case STMT_TYPES::stmt_func:
+            compileFuncStmt((FuncStmt *)a, bytevect, block, offset_table);
+            break;
+
+        case STMT_TYPES::stmt_funcall:
+            compileFuncCallStmt((FuncCallStmt *)a, bytevect, block, offset_table);
             break;
 
         default:
@@ -336,12 +327,15 @@ void compileStmts(std::vector<Stmts *> stmts)
     }
 }
 
-std::vector<bytecode> compile(Module *mod)
+Block *compile(Module *mod)
 {
 
-    compileStmts(mod->body);
+    Block *main = new Block("$main");
+    std::unordered_map<uint32_t, uint32_t> offset_table_main;
 
-    replaceJumpOpsWithOffset(bytes);
+    compileStmts(mod->body, main->bytes, main, offset_table_main);
 
-    return bytes;
+    replaceJumpOpsWithOffset(main->bytes, offset_table_main);
+
+    return main;
 }

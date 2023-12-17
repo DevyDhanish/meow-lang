@@ -3,6 +3,7 @@
 #include <vector>
 #include "internals/mewcore_stackframe.hpp"
 #include "code.hpp"
+#include "byteblocks.hpp"
 
 /*
 frame
@@ -12,27 +13,22 @@ class Interpreter
 {
 private:
     std::vector<MEOW_STACKFRAME *> frame;
-    int64_t ip;
-    const std::vector<bytecode> &cooked_code;
+    Block *cooked_code;
 public:
-    bool isFinished;
-    uint16_t fp;
+    int64_t ip;
     MEOW_STACKFRAME *current_frame;
+    Block *currExecBlock;
 
     void pushFrame(MEOW_STACKFRAME *f);
-    MEOW_STACKFRAME *popFrame();
+    void popFrame();
 
     void jumpIpForward(uint32_t offset);
     void jumpIpBackward(uint32_t offset);
-    void moveForward();
-    bytecode getByteAtIp();
 
-    Interpreter(const std::vector<bytecode> &cc) : cooked_code(cc)
+    Interpreter(Block *cc) : cooked_code(cc)
     {
-        fp = 0;
         ip = 0;
-        isFinished = false;
     }
-};
 
-void startexec(const std::vector<bytecode> &cooked_code);
+    void Execute(std::string _id, MEOW_STACKFRAME *frame);
+};

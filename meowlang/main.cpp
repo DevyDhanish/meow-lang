@@ -13,12 +13,28 @@
 #include "../parser/parser.hpp"
 #include "../include/vm.hpp"
 #include "../include/error.hpp"
+#include "../include/byteblocks.hpp"
 
 using std::vector;
 using std::cout;
 using std::string;
 
 #define DEBUG
+
+void printBlock(Block *block)
+{
+    std::cout << "BLOCK ID -> " << block->id << "\n";
+
+    for(bytecode &bc : block->bytes)
+    {
+        std::cout << "Op : " << opcodes_string[(int)bc.op] << "\t" << "Arg : " << bc.arg << "\n";
+    }
+
+    for(Block *b : block->block)
+    {
+        printBlock(b);
+    }
+}
 
 
 int main(int argc, char **argv){
@@ -64,20 +80,23 @@ int main(int argc, char **argv){
     Module *module = (Module *) parse(tokenized_vector, File_Rule);
     std::cout << "Parsed sucessfully\n";
     //return 0;
-    std::vector<bytecode> bytecodevect;
+    
+    Block *byteblock;
     //return 0;
     if(module)
     {
-        bytecodevect  = compile(module);
+        byteblock = compile(module);
+
 
         #ifdef DEBUG
-        for(bytecode &bc : bytecodevect)
-        {
-            std::cout << "Op : " << opcodes_string[(int)bc.op] << "\t" << "Arg : " << bc.arg << "\n";
-        }
+        printBlock(byteblock);
         #endif
 
-        startexec(bytecodevect);
+        Interpreter *interpreter = new Interpreter(byteblock);
+        MEOW_STACKFRAME *mainFrame = new MEOW_STACKFRAME();
+
+        interpreter->Execute("$main", mainFrame);
+        
     }
 
 

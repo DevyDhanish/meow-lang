@@ -37,4 +37,5 @@ std::vector<std::string> opcodes_string
     "JUMP",
     "JUMP_BACK",
     "JUMP_IF_FALSE",
+    "CALL",
 };

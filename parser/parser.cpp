@@ -45,7 +45,7 @@ int getPrecedence(TOKEN_T optype)
     switch(optype)
     {
         case _TOKEN_COMMA:
-            return 1;
+            return 0;
             break;
 
         case _TOKEN_EQU:
@@ -115,6 +115,7 @@ void *var_rule(Parser &p)
 {
     if(expect_token(p, _TOKEN_VAR))
     {
+        //std::cout << "Variable\n";
         Var *varname = nullptr;
         varname = new Var(p.tokens[p.counter]._TOKEN_VALUE, MEOWOBJECTKIND::VarObj); // get the var name
         ++p.counter;
@@ -178,7 +179,11 @@ void *expression_rule(Parser &p, int prec)
     void *lhs = nullptr;
 
     a = const_rule(p);
-    if(a) lhs = new Const((MeowObject *)a, EXPR_TYPES::expr_const);
+    //std::cout << "a -> " << ((MeowObject *)a)->getKind() << "\n";
+    if(a != NULL)
+    {
+        lhs = new Const((MeowObject *)a, EXPR_TYPES::expr_const);
+    }
 
     if(expect_token(p, _TOKEN_NEGATE))
     {
@@ -199,15 +204,24 @@ void *expression_rule(Parser &p, int prec)
         if(p.tokens[p.counter - 1]._TOKEN_TYPE == _TOKEN_VAR)
         {
             ++p.counter;
-            FuncCallExpr *funcallexpr = new FuncCallExpr((Expr *) a, EXPR_TYPES::expr_call);
-            args:
-                funcallexpr->addArgs((Expr *) expression_rule(p, 1));
-                consume_token(p, _TOKEN_COMMA);
-                if(!consume_token(p, _TOKEN_BRACLOSE)) goto args;
-            
-            //std::cout << "Func args -> " << funcallexpr->args.size() << "\n";
+            //std::cout << "LHS -> " << ((Const *)lhs)->getKind() << "\n";
+            FuncCallExpr *funcallexpr = new FuncCallExpr((Expr *) lhs, EXPR_TYPES::expr_call);
 
-            lhs = funcallexpr;
+            if(!consume_token(p, _TOKEN_BRACLOSE))
+            {
+                args:
+                    funcallexpr->addArgs((Expr *) expression_rule(p, 1));
+                    consume_token(p, _TOKEN_COMMA);
+                    if(!consume_token(p, _TOKEN_BRACLOSE)) goto args;
+
+                    //std::cout << "Func args -> " << funcallexpr->args.size() << "\n";
+
+                    lhs = funcallexpr;
+            }
+            else
+            {
+                lhs = funcallexpr;
+            }
 
         }
         else{
@@ -266,61 +280,51 @@ void *assign_stmt_rule(Parser &p)
 {
     void *var_name = nullptr;
     void *value = nullptr;
+
     if(
-        (var_name = var_rule(p))
+        !
+        (
+        p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_VAR
         &&
-        (consume_token(p, _TOKEN_EQU)) // consume `=`
-        &&
-        (value = expression_rule(p, 1))
+        p.tokens[p.counter + 1]._TOKEN_TYPE == _TOKEN_EQU
+        )
     )
-    {
-        Const *var_name_const_node = new Const((MeowObject *)var_name, EXPR_TYPES::expr_const);
-        NameExpr *name_expr_node = new NameExpr((Expr *)var_name_const_node, (Expr *)value, EXPR_TYPES::expr_nameexpr);
-        return name_expr_node;
-    }
-    else
     {
         return NULL;
     }
+
+    var_name = var_rule(p);
+    consume_token(p, _TOKEN_EQU);
+
+    value = expression_rule(p, 1);
+    
+    Const *var_name_const_node = new Const((MeowObject *)var_name, EXPR_TYPES::expr_const);
+    NameExpr *name_expr_node = new NameExpr((Expr *)var_name_const_node, (Expr *)value, EXPR_TYPES::expr_nameexpr);
+    return name_expr_node;
 }
 
 void *show_stmt_rule(Parser &p)
 {
     void *a = nullptr;
 
-    if(
-        consume_token(p, _TOKEN_SHOW)
-        &&
-        (
-            a = expression_rule(p, 1)
-        )
-    )
-    {
-        // since expression_rule will return Binop expr, const expr or other expr
-        // i gonna just return that and compiler will handle the type and all
-        return a;
-    }
-    else
-    {
-        return NULL;
-    }
+    if(!consume_token(p, _TOKEN_SHOW)) { return NULL; }
+
+    a = expression_rule(p, 1);
+
+    return a;
 }
 
-void *if_stmt_rule(Parser &p)
+void *elif_stmt_rule(Parser &p)
 {
     void *a = nullptr;  // hold condition
     void *b = nullptr;  // hold true block
     void *c = nullptr;  // hold false block if provided
 
-    if
-    ( 
-        !
-        (
-        (consume_token(p, _TOKEN_IF)) 
-        || 
-        (consume_token(p, _TOKEN_ELIF)) 
-        )
-    )
+    if(consume_token(p, _TOKEN_ELIF))
+    {
+        //p.counter++;
+    }
+    else
     {
         return NULL;
     }
@@ -336,9 +340,56 @@ true_condition:
     ifstmt->addTbody((Stmts *)b);
     if(!consume_token(p, _TOKEN_CURLCLOSE)) goto true_condition;
 
-    if(consume_token(p, _TOKEN_ELIF))
+    if(expect_token(p, _TOKEN_ELIF))
     {
-        ifstmt->addFbody((Stmts *) if_stmt_rule(p));
+        ifstmt->addFbody((Stmts *) elif_stmt_rule(p));
+        return ifstmt;
+    }
+
+    if(!consume_token(p, _TOKEN_ELSE))
+    {
+        return ifstmt;
+    }
+
+    consume_token(p, _TOKEN_CURLOPEN);
+
+false_condition:
+    c = statment_rule(p);
+    ifstmt->addFbody((Stmts *)c);   
+    if(!consume_token(p, _TOKEN_CURLCLOSE)) goto false_condition;
+
+    return ifstmt;
+}
+
+void *if_stmt_rule(Parser &p)
+{
+    void *a = nullptr;  // hold condition
+    void *b = nullptr;  // hold true block
+    void *c = nullptr;  // hold false block if provided
+
+    if(consume_token(p, _TOKEN_IF))
+    {
+        //p.counter++;
+    }
+    else
+    {
+        return NULL;
+    }
+
+    a = expression_rule(p, 1);  // parse condition
+
+    IfStmt *ifstmt = new IfStmt((Expr *)a, STMT_TYPES::stmt_if);
+
+    consume_token(p, _TOKEN_CURLOPEN);
+
+true_condition:
+    b = statment_rule(p);
+    ifstmt->addTbody((Stmts *)b);
+    if(!consume_token(p, _TOKEN_CURLCLOSE)) goto true_condition;
+
+    if(expect_token(p, _TOKEN_ELIF))
+    {
+        ifstmt->addFbody((Stmts *) elif_stmt_rule(p));
         return ifstmt;
     }
 
@@ -399,13 +450,14 @@ void *func_stmt_rule(Parser &p)
 
 params:
     b = expression_rule(p, 1);
-    //std::cout << "adflajldf" << "\n";
+    //std::cout << ((Var *)((Const *)b)->value)->value << "\n";
     consume_token(p, _TOKEN_COMMA);
     funcstmt->addPrams((Expr *)b);
     if(!consume_token(p, _TOKEN_BRACLOSE)) goto params;
     
 
     consume_token(p, _TOKEN_CURLOPEN);
+    
 body:
     c = statment_rule(p);
     funcstmt->addBody((Stmts *)c);
@@ -418,8 +470,8 @@ void *funcall_stmt_rule(Parser &p)
 {
     void *a = nullptr;
 
+    //std::cout << "func call" << "\n";
     a = expression_rule(p, 1);
-
     FuncCallStmt *funcCstmt = new FuncCallStmt((Expr *) a, STMT_TYPES::stmt_funcall);
 
     return funcCstmt;
