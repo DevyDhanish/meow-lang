@@ -1,6 +1,0 @@
-x = take "Enter first number : ";
-y = take "Enter second number : ";
-
-answer = x + y;
-
-show "Total is " answer;

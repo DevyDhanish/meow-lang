@@ -1,5 +1,0 @@
-c = take "Enter a num : ";
-
-f = c * 9 / 5 + 32;
-
-show f;

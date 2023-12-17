@@ -1,9 +1,0 @@
-y = take "Enter a number : ";
-
-if y % 2 == 0:
-    show "Even";
-fi;
-
-else:
-    show "Odd";
-el;
