@@ -1,20 +1,30 @@
-# functions in meowlang
+# functions in meowlang this is a test file
 
-func isEven(num)
+func print(msg)
 {
-    func print(msg)
-    {
-        show msg
-    }
+    show msg
+}
 
-    if num % 2 == 0
+func isEven(a)
+{
+    if a % 2 == 0
     {
-        print("Even")
+        return "Even Baby"
     }
     else
     {
-        print("Odd")
+        return "Odd Baby"
     }
 }
 
-isEven(9)
+x = 20
+i = 0
+
+while i < x
+{
+    print(isEven(i))
+    i += 1
+}
+
+
+print("Functions test .................. OK")

@@ -40,6 +40,26 @@ void Interpreter::jumpIpBackward(uint32_t offset)
     }
 }
 
+void Interpreter::saveip()
+{
+    ip_state = ip;
+}
+
+void Interpreter::loadip()
+{
+    ip = ip_state;
+}
+
+void Interpreter::saveblock()
+{
+    block_state = currExecBlock;
+}
+
+void Interpreter::loadblock()
+{
+    currExecBlock = block_state;
+}
+
 void handleByte(Interpreter *interpreter, bytecode byte)
 {
     switch(byte.op)
@@ -65,7 +85,8 @@ void handleByte(Interpreter *interpreter, bytecode byte)
             MeowObject *valFromvar = get_const(interpreter->current_frame->pool, (MeowObject *)byte.arg);
             if(!valFromvar)
             {
-                std::cout << "Got null\n";
+                std::cout << "Undefined Variable " << ((Var *)byte.arg)->value << "\n";
+                exit(0);
             }
             interpreter->current_frame->pushToStack((uint64_t)valFromvar);
             // std::cout << "LOADED VALUE FROM CONST POOL TO STACK : ";
@@ -282,8 +303,9 @@ void handleByte(Interpreter *interpreter, bytecode byte)
         {
             MEOW_STACKFRAME *nframe = new MEOW_STACKFRAME();
             uint32_t arg_cout = byte.arg;
-            uint32_t ip_state = interpreter->ip;
-            Block *currExecBlock_state = interpreter->currExecBlock;
+
+            interpreter->saveip();
+            interpreter->saveblock();
             
             while(arg_cout)
             {
@@ -293,9 +315,16 @@ void handleByte(Interpreter *interpreter, bytecode byte)
 
             MeowObject *fname = (MeowObject *) interpreter->current_frame->popFromStack();
             interpreter->Execute( ("$" + ((Var *)fname)->value), nframe);
+            break;
+        }
+
+        case OP_CODES::RETURN:
+        {
+            MeowObject *top = (MeowObject * )interpreter->current_frame->popFromStack();
             interpreter->popFrame();
-            interpreter->currExecBlock = currExecBlock_state;
-            interpreter->ip = ip_state;
+            interpreter->current_frame->pushToStack((uint64_t) top);
+            interpreter->loadblock();
+            interpreter->loadip();
             break;
         }
 

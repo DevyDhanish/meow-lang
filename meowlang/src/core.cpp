@@ -53,6 +53,7 @@ std::unordered_map<std::string, TOKEN_T> knowTokens = {
         {"or", _TOKEN_OR},
         {",", _TOKEN_COMMA},
         {".", _TOKEN_DOT},
+        {"global", _TOKEN_GLOBAL},
 };
 
 std::unordered_map<char, std::string> operator_pair = {

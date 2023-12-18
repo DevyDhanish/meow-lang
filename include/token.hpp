@@ -68,7 +68,7 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_OR,              // 57
     _TOKEN_COMMA,           // 58
     _TOKEN_DOT,             // 59
-    
+    _TOKEN_GLOBAL,          // 60
 }TOKEN_T;
 
 /// @brief No actual use of this vector, just for seeing the names of the token type when printing the debug info in main.cpp 

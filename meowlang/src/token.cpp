@@ -64,6 +64,7 @@ std::vector<std::string> token_names_for_loging
     "_TOKEN_OR",            // 57
     "_TOKEN_COMMA",         // 58
     "_TOKEN_DOT",           // 59
+    "_TOKEN_GLOBAL",        // 60
 };
 
 Token makeToken(TOKEN_T _token_type, std::string _token_value, std::string _token_line, size_t _token_line_number){

@@ -16,14 +16,22 @@ private:
     Block *cooked_code;
 public:
     int64_t ip;
+    int64_t ip_state;
     MEOW_STACKFRAME *current_frame;
     Block *currExecBlock;
+    Block *block_state;
 
     void pushFrame(MEOW_STACKFRAME *f);
     void popFrame();
 
     void jumpIpForward(uint32_t offset);
     void jumpIpBackward(uint32_t offset);
+
+    void saveip();
+    void loadip();
+
+    void saveblock();
+    void loadblock();
 
     Interpreter(Block *cc) : cooked_code(cc)
     {

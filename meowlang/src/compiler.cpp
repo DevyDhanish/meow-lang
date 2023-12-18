@@ -20,6 +20,7 @@ void compileStmts(std::vector<Stmts *> stmts, std::vector<bytecode> &bytevect, B
 void compileWhileStmt(WhileStmt *wstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
 void compileFuncCallStmt(FuncCallStmt *funcall, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
 void compileFuncCallExpr(FuncCallExpr *funcallexpr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileReturnStmt(ReturnStmt *retstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
 void compileExpr(Expr *a, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
 Block *compile(Module *mod);
 
@@ -264,7 +265,12 @@ void compileFuncStmt(FuncStmt *fstmt, std::vector<bytecode> &bytevect, Block *bl
         compileVarConst( ((Var *)((Const *)p)->value), fblock->bytes, fblock, OP_CODES::STORE, offset_table_nblock);
     }
 
-    compileStmts(fstmt->body, fblock->bytes, fblock, offset_table_nblock);
+    if(fstmt->body.size())
+        compileStmts(fstmt->body, fblock->bytes, fblock, offset_table_nblock);
+
+    Integer *retVal = new Integer(0, MEOWOBJECTKIND::IntObj);
+    fblock->bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)retVal));
+    fblock->bytes.push_back(makeByteCode((uint8_t)OP_CODES::RETURN, (uint64_t)0));
 
     replaceJumpOpsWithOffset(fblock->bytes, offset_table_nblock);
 
@@ -282,12 +288,21 @@ void compileFuncCallExpr(FuncCallExpr *funcall, std::vector<bytecode> &bytevect,
     }
 
     bytevect.push_back(makeByteCode((uint8_t )OP_CODES::CALL, (uint64_t)funcall->args.size()));
-    
 }
 
 void compileFuncCallStmt(FuncCallStmt *funcall, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
 {
     compileFuncCallExpr((FuncCallExpr *) funcall->value, bytevect, block, offset_table);
+}
+
+void compileReturnStmt(ReturnStmt *retstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
+{
+    if(retstmt->value)
+    {
+        compileExpr((Expr *)retstmt->value, bytevect, block, offset_table);
+    }
+
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::RETURN, (uint64_t)0));
 }
 
 void compileStmts(std::vector<Stmts *> stmts, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
@@ -319,6 +334,10 @@ void compileStmts(std::vector<Stmts *> stmts, std::vector<bytecode> &bytevect, B
 
         case STMT_TYPES::stmt_funcall:
             compileFuncCallStmt((FuncCallStmt *)a, bytevect, block, offset_table);
+            break;
+
+        case STMT_TYPES::stmt_return:
+            compileReturnStmt((ReturnStmt *)a, bytevect, block, offset_table);
             break;
 
         default:

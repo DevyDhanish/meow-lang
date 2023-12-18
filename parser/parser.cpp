@@ -460,12 +460,30 @@ void *func_stmt_rule(Parser &p)
 
     consume_token(p, _TOKEN_CURLOPEN);
     
+    if(consume_token(p, _TOKEN_CURLCLOSE))
+    {
+        return funcstmt;
+    }
+
 body:
     c = statment_rule(p);
     funcstmt->addBody((Stmts *)c);
     if(!consume_token(p, _TOKEN_CURLCLOSE)) goto body;
 
     return funcstmt;
+}
+
+void *return_stmt_rule(Parser &p)
+{
+    void *a = nullptr;
+
+    if(!consume_token(p, _TOKEN_RETURN)) return NULL;
+
+    a = expression_rule(p, 1);
+
+    ReturnStmt *retstmt = new ReturnStmt((Expr *)a, STMT_TYPES::stmt_return);
+
+    return retstmt;
 }
 
 void *funcall_stmt_rule(Parser &p)
@@ -498,6 +516,10 @@ void *statment_rule(Parser &p)
         return a;
     }
     else if(a = while_stmt_rule(p))
+    {
+        return a;
+    }
+    else if(a = return_stmt_rule(p))
     {
         return a;
     }

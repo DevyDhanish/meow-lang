@@ -32,6 +32,7 @@ enum OP_CODES
     JUMP_BACK,      // 22
     JUMP_IF_FALSE,  // 23
     CALL,           // 24
+    RETURN,         // 25
 };
 
 extern std::vector<std::string> opcodes_string;

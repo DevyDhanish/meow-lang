@@ -5,7 +5,7 @@
 
 // base class for stmts, does nothing by default
 
-enum STMT_TYPES { stmt_assign, stmt_show, stmt_if, stmt_while, stmt_func, stmt_funcall };
+enum STMT_TYPES { stmt_assign, stmt_show, stmt_if, stmt_while, stmt_func, stmt_funcall, stmt_return };
 enum EXPR_TYPES { expr_const, expr_nameexpr, expr_binary, expr_unary, expr_call };
 enum OP_TYPES { Add, Sub, Mul, Div, Mod, Cmp_equ, Cmp_less, Cmp_lessequ, Cmp_great, Cmp_greatequ, Cmp_notequ, negate, logical_and, logical_or, logical_not };
 
@@ -263,6 +263,25 @@ public:
     Expr *value;
 
     FuncCallStmt(Expr *a, STMT_TYPES k) : value(a), kind(k) {}
+
+    void printInfo() override
+    {
+        std::cout << "Kind:" << kind << "\n";
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
+};
+
+class ReturnStmt : public Stmts
+{
+public:
+    STMT_TYPES kind;
+    Expr *value;
+
+    ReturnStmt(Expr *a, STMT_TYPES k) : value(a), kind(k) {}
 
     void printInfo() override
     {
