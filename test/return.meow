@@ -1,0 +1,13 @@
+func recursionTest(a)
+{
+    if a == 0
+    {
+        return 0
+    }
+
+    print("This is recursion test -> ", a)
+
+    recursionTest(a - 1)
+}
+
+recursionTest(10)

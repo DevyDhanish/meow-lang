@@ -1,0 +1,61 @@
+# functions in meowlang this is a test file
+
+func isEven(a)
+{
+    if a % 2 == 0
+    {
+        return "Even boy"
+    }
+    else
+    {
+        return "Odd boy"
+    }
+}
+
+x = 0
+y = 20
+
+while x < y
+{
+    print("x at -> ", x, " result -> ", isEven(x))
+    x += 1
+}
+
+func recursionTest(a)
+{
+    if a == 0
+    {
+        return 0
+    }
+
+    print("This is recursion test -> ", a)
+
+    return recursionTest(a - 1)
+}
+
+print(recursionTest(10))
+
+
+#build in print func test
+
+a = 10
+print("Hello world ", a, " Test passed...............OK")
+
+# recursion test
+
+func fib(n)
+{
+    if n <= 1
+    {
+        return n
+    }
+
+    return fib(n - 1) + fib(n - 2)
+}
+
+print(fib(15))
+
+
+leg_cout = 10
+
+print(leg_cout)

@@ -19,7 +19,8 @@ using std::vector;
 using std::cout;
 using std::string;
 
-#define DEBUG
+//#define DEBUG
+//#undef DEBUG
 
 void printBlock(Block *block)
 {
@@ -45,8 +46,9 @@ int main(int argc, char **argv){
         return 0;
     }
 
+    //vector<meow_line> essential_lines = file_to_vect("essential.meow");
     vector<meow_line> program_lines = file_to_vect(argv[1]);
-    
+
     // meowlang pipeline
     Lexer lex;
     //Parser parser;
@@ -55,6 +57,15 @@ int main(int argc, char **argv){
     
     std::vector<Token> tokenized_vector;
     //std::vector<bytecode> generated_bytecode;
+
+    // tokenize essentials file
+    // for(meow_line line : essential_lines)
+    // {
+    //     for(const Token &toks : lex.tokenize(line))
+    //     {
+    //         tokenized_vector.push_back(toks);
+    //     }
+    // }
 
     for(meow_line line : program_lines){
 
@@ -78,7 +89,9 @@ int main(int argc, char **argv){
     //std::vector<Token> extoks = { makeToken(_TOKEN_VAR, "x", "none", 0, 0),  makeToken(_TOKEN_EQU, "=", "none", 0, 0),  makeToken(_TOKEN_FLOAT, "1.232", "none", 0, 0),  makeToken(_TOKEN_SEMI_COL, ";", "none", 0, 0)};
 
     Module *module = (Module *) parse(tokenized_vector, File_Rule);
+    #ifdef DEBUG
     std::cout << "Parsed sucessfully\n";
+    #endif
     //return 0;
     
     Block *byteblock;
@@ -87,20 +100,17 @@ int main(int argc, char **argv){
     {
         byteblock = compile(module);
 
-
         #ifdef DEBUG
         printBlock(byteblock);
         #endif
 
         Interpreter *interpreter = new Interpreter(byteblock);
-        MEOW_STACKFRAME *mainFrame = new MEOW_STACKFRAME();
 
-        interpreter->Execute("$main", mainFrame);
+        interpreter->Execute();
         
     }
 
-
-    // TODO:: free all the head allocated class that you made in parse method
+    // TODO:: free all the heap allocated class that you made in parse method
 
     #undef DEBUG
     return 0;

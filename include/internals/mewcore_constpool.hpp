@@ -12,5 +12,5 @@ struct CONST_PAIR
 typedef struct CONST_PAIR const_pair;
 
 const_pair *makeConstPair(MeowObject *k, MeowObject *v);
-MeowObject *get_const(std::vector<const_pair *> &pool,  MeowObject *k);
-void put_const(std::vector<const_pair *> &pool, MeowObject *k, MeowObject *v);
+MeowObject *get_const(std::vector<const_pair *> *pool,  MeowObject *k);
+void put_const(std::vector<const_pair *> *pool, MeowObject *k, MeowObject *v);

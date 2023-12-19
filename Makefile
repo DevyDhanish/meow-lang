@@ -1,4 +1,13 @@
+UNAME := $(shell uname)
+
+ifeq ($(UNAME), Linux)
+TARGET := meowlang_linux 
+else
+TARGET := meowlang.exe
+endif
+
 all:
+	g++ -g -c meowlang/src/bltins/bltins.cpp -o lib/bltins.o
 	g++ -g -c meowlang/src/core.cpp -o lib/core.o
 	g++ -g -c meowlang/src/lexer.cpp -o lib/lexer.o
 	g++ -g -c meowlang/src/token.cpp -o lib/token.o
@@ -11,4 +20,4 @@ all:
 	g++ -g -c meowlang/src/internals/constants.cpp -o lib/constants.o
 	ar rcs lib/libmeow.a lib/*.o
 
-	g++ -g meowlang/main.cpp -Iinclude/ -Llib/ -lmeow -o meowlang.exe
+	g++ -g meowlang/main.cpp -Iinclude/ -Llib/ -lmeow -o $(TARGET)

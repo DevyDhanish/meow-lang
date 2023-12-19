@@ -213,7 +213,7 @@ void compileIfStmt(IfStmt *ifstmt, std::vector<bytecode> &bytevect,  Block *bloc
     uint32_t jump_if_offset = bytevect.size() - 1;
     uint32_t pos = bytevect.size() - 1;
 
-    if(!ifstmt->tbody.size()) std::cout << "If statment does not have a true body\n";
+    //if(!ifstmt->tbody.size()) std::cout << "If statment does not have a true body\n";
     compileStmts(ifstmt->tbody, bytevect, block, offset_table);
     bytevect.push_back(makeByteCode((uint8_t)OP_CODES::JUMP, (uint64_t)0));
 
@@ -224,7 +224,7 @@ void compileIfStmt(IfStmt *ifstmt, std::vector<bytecode> &bytevect,  Block *bloc
 
     uint32_t jump_offset = bytevect.size() - 1;
     uint32_t pos2 = bytevect.size() - 1;
-    if(!ifstmt->fbody.size()) std::cout << "If statment does not have a false body\n";
+    //if(!ifstmt->fbody.size()) std::cout << "If statment does not have a false body\n";
     compileStmts(ifstmt->fbody, bytevect, block, offset_table);
 
     jump_offset = (uint32_t) bytevect.size() - jump_offset;
@@ -268,9 +268,9 @@ void compileFuncStmt(FuncStmt *fstmt, std::vector<bytecode> &bytevect, Block *bl
     if(fstmt->body.size())
         compileStmts(fstmt->body, fblock->bytes, fblock, offset_table_nblock);
 
-    Integer *retVal = new Integer(0, MEOWOBJECTKIND::IntObj);
-    fblock->bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)retVal));
-    fblock->bytes.push_back(makeByteCode((uint8_t)OP_CODES::RETURN, (uint64_t)0));
+    // Integer *retVal = new Integer(0, MEOWOBJECTKIND::IntObj);
+    // fblock->bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)retVal));
+    // fblock->bytes.push_back(makeByteCode((uint8_t)OP_CODES::RETURN, (uint64_t)0));
 
     replaceJumpOpsWithOffset(fblock->bytes, offset_table_nblock);
 

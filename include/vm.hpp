@@ -4,6 +4,7 @@
 #include "internals/mewcore_stackframe.hpp"
 #include "code.hpp"
 #include "byteblocks.hpp"
+#include <stack>
 
 /*
 frame
@@ -12,31 +13,18 @@ frame
 class Interpreter
 {
 private:
-    std::vector<MEOW_STACKFRAME *> frame;
-    Block *cooked_code;
+    std::stack<MEOW_STACKFRAME *> frame;
+
 public:
-    int64_t ip;
-    int64_t ip_state;
-    MEOW_STACKFRAME *current_frame;
-    Block *currExecBlock;
-    Block *block_state;
+    uint32_t recursion_limit;
+    uint32_t recursion;
+    Block *code;
+    //Block *currExecBlock;
 
-    void pushFrame(MEOW_STACKFRAME *f);
-    void popFrame();
-
-    void jumpIpForward(uint32_t offset);
-    void jumpIpBackward(uint32_t offset);
-
-    void saveip();
-    void loadip();
-
-    void saveblock();
-    void loadblock();
-
-    Interpreter(Block *cc) : cooked_code(cc)
+    Interpreter(Block *c) : code(c)
     {
-        ip = 0;
+        recursion_limit = 3000;
     }
 
-    void Execute(std::string _id, MEOW_STACKFRAME *frame);
+    void Execute();
 };

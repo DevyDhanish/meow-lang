@@ -27,7 +27,7 @@ bool isdigitS(const std::string &word)
 
 bool isalphaC(char w)
 {
-    return (w >= 'a' && w <= 'z') || (w >= 'A' && w <= 'Z');
+    return (w >= 'a' && w <= 'z') || (w >= 'A' && w <= 'Z') || (w == '_');
 }
 
 bool isTypeOfBracket(char w)

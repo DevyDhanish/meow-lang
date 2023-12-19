@@ -1,0 +1,28 @@
+# recursion test
+
+func recursion(a)
+{
+    if a <= 0
+    {
+        return 0
+    }
+
+    print(a)
+    recursion(a - 1)
+}
+
+recursion(10)
+
+
+func recursion(a)
+{
+    if a <= 0
+    {
+        return 0
+    }
+
+    print(a)
+    recursion(a - 1)
+}
+
+recursion(10)

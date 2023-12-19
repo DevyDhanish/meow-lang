@@ -9,7 +9,7 @@ struct CONST_PAIR *makeConstPair(MeowObject *k, MeowObject *v)
     return pair;
 }
 
-void put_const(std::vector<const_pair *> &pool, MeowObject *k, MeowObject *v)
+void put_const(std::vector<const_pair *> *pool, MeowObject *k, MeowObject *v)
 {
     if(!v && !k)
     {
@@ -20,19 +20,28 @@ void put_const(std::vector<const_pair *> &pool, MeowObject *k, MeowObject *v)
 
     if(ifexist)
     {
-        for(struct CONST_PAIR *p : pool)
-        {   
-            if(((Var *)p->key)->value == ((Var *)k)->value)
+        uint32_t i = 0;
+        while(i < pool->size()){
+        //    std::cout << "Key -> " << ((Var *)k)->value << "\t";
+        //     std::cout << "Var -> " << ((Var *)p->key)->value << " Value -> ";
+        //     ((MeowObject *)p->value)->onShow();
+        //     std::cout << "\n";
+
+            if(((Var *)(*pool)[i]->key)->value == ((Var *)k)->value)
             {
-                p->value = v;   
+                //std::cout << "FOUND\n";
+                    (*pool)[i]->value = v;   
+
             }
+
+            i++;
         }
     }
 
-    pool.push_back(makeConstPair(k, v));
+    pool->push_back(makeConstPair(k, v));
 }
 
-MeowObject *get_const(std::vector<const_pair *> &pool, MeowObject *k)
+MeowObject *get_const(std::vector<const_pair *> *pool, MeowObject *k)
 {
     if(!k)
     {
@@ -40,19 +49,21 @@ MeowObject *get_const(std::vector<const_pair *> &pool, MeowObject *k)
     }
 
     //std::cout << "******CONST POOL*******\n";
-    for(struct CONST_PAIR *p : pool)
-    {
+    uint32_t i = 0;
+
+    while(i < pool->size()){
     //    std::cout << "Key -> " << ((Var *)k)->value << "\t";
     //     std::cout << "Var -> " << ((Var *)p->key)->value << " Value -> ";
     //     ((MeowObject *)p->value)->onShow();
     //     std::cout << "\n";
 
-        if(((Var *)p->key)->value == ((Var *)k)->value)
+        if(((Var *)(*pool)[i]->key)->value == ((Var *)k)->value)
         {
             //std::cout << "FOUND\n";
-            return p->value;
+            return  (*pool)[i]->value;
         }
-    }
 
+        i++;
+}     
     return NULL;
 }

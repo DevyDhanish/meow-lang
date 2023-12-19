@@ -1,0 +1,16 @@
+func lib(age)
+{
+    if age >= 18
+    {
+        print("adult")
+    }
+    elif age >= 10 and age < 18
+    {
+        print("Teen")
+    } 
+    else{
+        print("child")
+    }
+}
+
+lib(23)

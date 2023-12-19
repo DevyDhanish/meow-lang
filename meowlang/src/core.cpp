@@ -7,7 +7,7 @@
 #include <set>
 
 std::unordered_map<std::string, TOKEN_T> knowTokens = {
-        {"show", _TOKEN_SHOW},
+        {"__show__", _TOKEN_SHOW},
         {"return", _TOKEN_RETURN},
         {"none", _TOKEN_NULL},
         {"=", _TOKEN_EQU},

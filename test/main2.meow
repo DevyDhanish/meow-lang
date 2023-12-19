@@ -1,0 +1,23 @@
+func hello(a)
+{
+    print(a)
+}
+
+hello("yes")
+
+func lib(age)
+{
+    if age < 10
+    {
+        print("kid")
+    }
+    elif age >= 10 and age < 18
+    {
+        print("Teen")
+    } 
+    else{
+        print("Adult")
+    }
+}
+
+lib(23)

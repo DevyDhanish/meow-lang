@@ -1,0 +1,4 @@
+# build in print func test
+
+a = 10
+print("Hello world", a, "Test passed...............OK")

@@ -1,10 +1,9 @@
-def show(msg):
-    print(msg)
+def recur(a):
+    if a == 0:
+        return 0
+    
+    print("a -> ", a)
 
-def isEven(num):
-    if num % 2 == 0:
-        show("Even")
-    else:
-        show("Odd")
+    recur( a - 1)
 
-isEven(10)
+print(recur(10))
