@@ -25,6 +25,18 @@ bool isdigitS(const std::string &word)
     return true;
 }
 
+bool isFloatS(std::string word)
+{
+    int has_point = 0;
+    for(char w : word)
+    {
+        if( !isdigitC(w) && w != '.') return false;
+        if( w == '.' ) has_point += 1;
+    }
+
+    return true && (has_point == 1);
+}
+
 bool isalphaC(char w)
 {
     return (w >= 'a' && w <= 'z') || (w >= 'A' && w <= 'Z') || (w == '_');

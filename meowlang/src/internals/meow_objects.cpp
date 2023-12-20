@@ -379,6 +379,11 @@ void *Integer::onNot()
     return new Integer( !value, MEOWOBJECTKIND::IntObj);
 }
 
+void *Integer::getAtIndex(uint64_t idx)
+{
+    std::cout << "Cannot perform `[]` on integers\n";
+    exit(0);
+}
 /*
 **************************************************************************************
 *                                                                                    *   
@@ -743,6 +748,18 @@ void *String::onNot()
 {
     std::cout << "Cannot perform not on type<string>\n";
     return NULL;
+}
+
+void *String::getAtIndex(uint64_t idx)
+{
+    if(idx > value.size() || idx < 0)
+    {
+        std::cout << "Index out of range\n";
+        exit(0);
+    }
+    std::string v = std::string(1, value[idx]);
+    String *retVal = new String(v, MEOWOBJECTKIND::StringObj);
+    return retVal;
 }
 
 /*
@@ -1118,3 +1135,11 @@ void *Float::onNot()
 {
     return new Integer( !value, MEOWOBJECTKIND::IntObj);
 }
+
+void *Float::getAtIndex(uint64_t idx)
+{
+    std::cout << "Cannot perform `[]` on float\n";
+    exit(0);
+}
+
+

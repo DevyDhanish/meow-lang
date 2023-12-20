@@ -12,4 +12,12 @@ func printTable(tableOf, amount)
     }
 }
 
-printTable(20, 10)
+printTable(234, 5)
+
+func givetwo()
+{
+    a = 5
+    return a
+}
+
+print(givetwo() + 3, " alsdjfla ", type("lajdf"))

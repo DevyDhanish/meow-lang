@@ -3,8 +3,12 @@
 #include <unordered_map>
 #include <iostream>
 #include <stack>
+#include <string>
+#include "../../../include/lexer.hpp"
 
-void meow_print(std::stack<uint64_t> args)
+
+
+MeowObject *meow_print(std::stack<uint64_t> args)
 {
     while (!args.empty())
     {
@@ -13,12 +17,67 @@ void meow_print(std::stack<uint64_t> args)
     }
 
     std::cout << "\n";
+
+    Integer *retVal = new Integer(0, MEOWOBJECTKIND::IntObj);
+    return retVal;
+}
+
+MeowObject *meow_len(std::stack<uint64_t> args)
+{
+    std::string val = ((String *) args.top())->value;
+
+    Integer *retVal = new Integer(val.size(), MEOWOBJECTKIND::IntObj);
+    return retVal;
+}
+
+MeowObject *meow_input(std::stack<uint64_t> args)
+{
+
+    while (!args.empty())
+    {
+        ((MeowObject *)args.top())->onShow();
+        args.pop();
+    }
+
+    std::string input_val;
+
+    std::getline(std::cin, input_val);
+
+    if(isFloatS(input_val))
+    {
+        long double val = std::stold(input_val);
+        Float *mewfloat = new Float(val, MEOWOBJECTKIND::FloatObj);
+        return mewfloat;
+    }
+    else if(isdigitS(input_val))
+    {
+        long long val;
+        val = std::stoll(input_val);
+        Integer *retVal = new Integer(val, MEOWOBJECTKIND::IntObj);
+        return retVal;
+    }
+    else
+    {
+        String *retVal = new String(input_val, MEOWOBJECTKIND::StringObj);
+        return retVal;
+    }
+
+    return NULL;
+}
+
+MeowObject *meow_type(std::stack<uint64_t> args)
+{
+    String *retVal = new String(((MeowObject *)args.top())->printInfo(), MEOWOBJECTKIND::StringObj);
+
+    return retVal;
 }
 
 std::unordered_map<std::string, BLTIN_METHODS> meow_funcToBltMethodID
 {
     {"print", BUILDIN_PRINT},
     {"input", BUILDIN_INPUT},
+    {"len", BUILDIN_LEN},
+    {"type", BUILDIN_TYPE},
 };
 
 BLTIN_METHODS getBltinMethodId(std::string name)
@@ -29,15 +88,30 @@ BLTIN_METHODS getBltinMethodId(std::string name)
         return BUILDINT_NULL;
 }
 
-void execBltMethod(BLTIN_METHODS id, std::stack<uint64_t> args)
+MeowObject *execBltMethod(BLTIN_METHODS id, std::stack<uint64_t> args)
 {
     switch (id)
     {
+
     case BLTIN_METHODS::BUILDIN_PRINT :
-        meow_print(args);
+        return meow_print(args);
         break;
-    
+
+    case BLTIN_METHODS::BUILDIN_LEN:
+        return meow_len(args);
+        break;
+
+    case BLTIN_METHODS::BUILDIN_INPUT:
+        return meow_input(args);
+        break;
+
+    case BLTIN_METHODS::BUILDIN_TYPE:
+        return meow_type(args);
+        break;
+
     default:
         break;
     }
+
+    return NULL;
 }

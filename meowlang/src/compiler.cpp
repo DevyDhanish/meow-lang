@@ -13,14 +13,17 @@ void compileUnary(UnaryExpr *uExpr, std::vector<bytecode> &bytevect, Block *bloc
 void compileConstExpr(Const *constExpr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
 void compileBinopExpr(BinOpExpr *expr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
 void compileNameExpr(NameExpr *nameExpr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
-void compileAssignStmt(AssignmnetStmt *assstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
-void compileShowStmt(ShowStmt *showstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
-void compileIfStmt(IfStmt *ifstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
-void compileStmts(std::vector<Stmts *> stmts, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
-void compileWhileStmt(WhileStmt *wstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
-void compileFuncCallStmt(FuncCallStmt *funcall, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
 void compileFuncCallExpr(FuncCallExpr *funcallexpr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
 void compileReturnStmt(ReturnStmt *retstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileIndexExpr(IndexExpr *a, std::vector<bytecode> &bytevect, Block *bloc, std::unordered_map<uint32_t, uint32_t> &offset_table);
+
+void compileIfStmt(IfStmt *ifstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileShowStmt(ShowStmt *showstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileWhileStmt(WhileStmt *wstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileAssignStmt(AssignmnetStmt *assstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileFuncCallStmt(FuncCallStmt *funcall, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
+
+void compileStmts(std::vector<Stmts *> stmts, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
 void compileExpr(Expr *a, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
 Block *compile(Module *mod);
 
@@ -115,6 +118,10 @@ void compileExpr(Expr *a, std::vector<bytecode> &bytevect, Block *block, std::un
 
     case EXPR_TYPES::expr_nameexpr:
         compileNameExpr((NameExpr *)a, bytevect, block, offset_table);
+        break;
+
+    case EXPR_TYPES::expr_index:
+        compileIndexExpr((IndexExpr *)a, bytevect, block, offset_table);
         break;
     
     default:
@@ -288,6 +295,14 @@ void compileFuncCallExpr(FuncCallExpr *funcall, std::vector<bytecode> &bytevect,
     }
 
     bytevect.push_back(makeByteCode((uint8_t )OP_CODES::CALL, (uint64_t)funcall->args.size()));
+}
+
+void compileIndexExpr(IndexExpr *a, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
+{
+    compileExpr(a->target, bytevect, block, offset_table);
+    compileExpr(a->idx, bytevect, block, offset_table);
+
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::GET_VAL_AT_IDX, (uint64_t)0));
 }
 
 void compileFuncCallStmt(FuncCallStmt *funcall, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)

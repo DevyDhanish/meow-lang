@@ -212,6 +212,27 @@ void *expression_rule(Parser &p, int prec)
         lhs = new UnaryExpr((Expr *)a, OP_TYPES::logical_not, EXPR_TYPES::expr_unary);
     }
 
+    if(expect_token(p, _TOKEN_SQRBRAOPEN))
+    {
+        if(p.tokens[p.counter - 1]._TOKEN_TYPE == _TOKEN_VAR)
+        {
+            ++p.counter;
+
+            Expr *val = (Expr *)expression_rule(p, 1);
+            consume_token(p, _TOKEN_SQRBRACLOSE);
+
+            IndexExpr *indexexpr = new IndexExpr(val, (Expr *) lhs, EXPR_TYPES::expr_index);
+
+            lhs = indexexpr;
+        }
+
+        else
+        {
+            std::cout << "bad use of `[]`\n";
+            exit(0);
+        }
+    }
+
     if(expect_token(p, _TOKEN_BRAOPEN))
     {
         if(p.tokens[p.counter - 1]._TOKEN_TYPE == _TOKEN_VAR)

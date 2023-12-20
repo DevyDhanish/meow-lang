@@ -1,0 +1,118 @@
+func fullForm(word)
+{
+    i = 0
+
+    while i < len(word)
+    {
+        letter = word[i]
+
+        if letter == "A" or letter == "a"
+        {
+            print("Animal")
+        }
+        elif letter == "B" or letter == "b"
+        {
+            print("Boty")
+        }
+        elif letter == "D" or letter == "d"
+        {
+            print("Dick")
+        }
+        elif letter == "E" or letter == "e"
+        {
+            print("Elephant")
+        }
+        elif letter == "F" or letter == "f"
+        {
+            print("Fuck")
+        }
+        elif letter == "G" or letter == "g"
+        {
+            print("Gandu")
+        }
+        elif letter == "H" or letter == "h"
+        {
+            print("Helicopter")
+        }
+        elif letter == "I" or letter == "i"
+        {
+            print("intelligent")
+        }
+        elif letter == "J" or letter == "j"
+        {
+            print("Joker")
+        }
+        elif letter == "K" or letter == "k"
+        {
+            print("KK")
+        }
+        elif letter == "L" or letter == "l"
+        {
+            print("Loser")
+        }
+        elif letter == "M" or letter == "m"
+        {
+            print("Memory")
+        }
+        elif letter == "N" or letter == "n"
+        {
+            print("Nigga")
+        }
+        elif letter == "O" or letter == "o"
+        {
+            print("Oval")
+        }
+        elif letter == "P" or letter == "p"
+        {
+            print("Pussy")
+        }
+        elif letter == "Q" or letter == "q"
+        {
+            print("Quantum")
+        }
+        elif letter == "R" or letter == "r"
+        {
+            print("Randi")
+        }
+        elif letter == "S" or letter == "s"
+        {
+            print("Sex")
+        }
+        elif letter == "T" or letter == "t"
+        {
+            print("T-rex")
+        }
+        elif letter == "U" or letter == "u"
+        {
+            print("Uganda")
+        }
+        elif letter == "V" or letter == "v"
+        {
+            print("Virtual")
+        }
+        elif letter == "W" or letter == "w"
+        {
+            print("W-moters")
+        }
+        elif letter == "X" or letter == "x"
+        {
+            print("Xavier")
+        }
+        elif letter == "Y" or letter == "y"
+        {
+            print("Y you on my dick")
+        }
+        elif letter == "Z" or letter == "z"
+        {
+            print("Zebra")
+        }
+        else
+        {
+            print("I don't know")
+        }
+
+        i += 1
+    }
+}
+
+fullForm(input("Enter a name :- "))

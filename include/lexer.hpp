@@ -5,6 +5,10 @@
 
 #include <vector>
 
+bool isdigitC(char w);
+bool isdigitS(const std::string &word);
+bool isFloatS(std::string word);
+
 // Lexer used to convert each word/sentences into tokens
 class Lexer{
     private:

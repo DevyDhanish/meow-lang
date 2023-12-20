@@ -34,7 +34,10 @@ again:
 
         if(id != BUILDINT_NULL)
         {
-            execBltMethod(id, args);
+            MeowObject *r_val = execBltMethod(id, args);
+            
+            if(r_val) frame.top()->pushToStack((uint64_t) r_val);
+            
             frame_exit_code = frame.top()->resumeFrame();
             goto again;
             break;
@@ -44,11 +47,21 @@ again:
 
         MEOW_STACKFRAME *func_frame = new MEOW_STACKFRAME(code->getBlockById(name));
         put_const(func_frame->pool, func_name, func_name);
-        // unload the args
-        while (!args.empty())
+
+        // this is soo stupid
+        std::stack<uint64_t> r_args;
+
+        while(!args.empty())
         {
-            func_frame->pushToStack(args.top());
+            r_args.push(args.top());
             args.pop();
+        }
+
+        // unload the r_args
+        while (!r_args.empty())
+        {
+            func_frame->pushToStack(r_args.top());
+            r_args.pop();
         }
     
         // push & call the frame

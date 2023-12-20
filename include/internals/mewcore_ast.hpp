@@ -6,7 +6,7 @@
 // base class for stmts, does nothing by default
 
 enum STMT_TYPES { stmt_assign, stmt_show, stmt_if, stmt_while, stmt_func, stmt_funcall, stmt_return };
-enum EXPR_TYPES { expr_const, expr_nameexpr, expr_binary, expr_unary, expr_call };
+enum EXPR_TYPES { expr_const, expr_nameexpr, expr_binary, expr_unary, expr_call, expr_index };
 enum OP_TYPES { Add, Sub, Mul, Div, Mod, Cmp_equ, Cmp_less, Cmp_lessequ, Cmp_great, Cmp_greatequ, Cmp_notequ, negate, logical_and, logical_or, logical_not };
 
 class Stmts 
@@ -111,13 +111,33 @@ public:
     EXPR_TYPES kind;
     Expr *name;
     std::vector<Expr *> args;
-
+    FuncCallExpr() {}
     FuncCallExpr(Expr *a, EXPR_TYPES k) : name(a), kind(k) {}
 
     void addArgs(Expr *a)
     {
         args.push_back(a);
     }
+
+    void printInfo() override
+    {
+        std::cout << "Kind:" << kind << "\n";
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
+};
+
+class IndexExpr : public Expr
+{
+public:
+    EXPR_TYPES kind;
+    Expr *target;
+    Expr *idx;
+    IndexExpr() {}
+    IndexExpr(Expr *a, Expr *b, EXPR_TYPES k) : idx(a), target(b), kind(k) {}
 
     void printInfo() override
     {

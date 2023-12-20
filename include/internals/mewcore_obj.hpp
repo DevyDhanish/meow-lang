@@ -7,8 +7,9 @@ enum MEOWOBJECTKIND { IntObj, StringObj, FloatObj, VarObj};
 class MeowObject
 {
 public:
-    virtual void printInfo() = 0;
+    virtual std::string printInfo() = 0;
     virtual int getKind() = 0;
+
     virtual void onShow() = 0;
     virtual void *onAdd(MeowObject *b) = 0;
     virtual void *onSub(MeowObject *b) = 0;
@@ -29,6 +30,8 @@ public:
     virtual void *onAnd(MeowObject *b) = 0;
     virtual void *onOr(MeowObject *b) = 0;
 
+    virtual void *getAtIndex(uint64_t idx) = 0;
+
     virtual ~MeowObject() = default;
 };
 
@@ -41,9 +44,9 @@ public:
     Integer() {};
     Integer(int64_t a, MEOWOBJECTKIND k) : value(a), kind(k) { }
 
-    void printInfo() override
+    std::string printInfo() override
     {
-        std::cout << "type <Integer>\n";
+        return "type <Integer>";
     }
 
     int getKind() override
@@ -72,6 +75,8 @@ public:
 
     void *onNegate() override;
     void *onNot() override;
+
+    void *getAtIndex(uint64_t idx) override;
 
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
@@ -85,10 +90,11 @@ public:
     String(){}
     String(std::string val, MEOWOBJECTKIND k) : value(val), kind(k) {}
 
-    void printInfo() override
+    std::string printInfo() override
     {
-        std::cout << "type <String>\n";
+        return "type <String>";
     }
+
     int getKind() override
     {
         return kind;
@@ -98,6 +104,7 @@ public:
     {
         std::cout << value;
     }
+
     void *onAdd(MeowObject *b) override;
     void *onSub(MeowObject *b) override;
     void *onMod(MeowObject *b) override;
@@ -113,6 +120,8 @@ public:
 
     void *onNegate() override;
     void *onNot() override;
+
+    void *getAtIndex(uint64_t idx) override;
 
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
@@ -126,9 +135,9 @@ public:
     Float() {}
     Float(long double a, MEOWOBJECTKIND k) : value(a), kind(k) {}
 
-    void printInfo() override
+    std::string printInfo() override
     {
-        std::cout << "type <Float>\n";
+        return "type <Float>";
     }
 
     int getKind() override
@@ -156,6 +165,8 @@ public:
     void *onNegate() override;
     void *onNot() override;
 
+    void *getAtIndex(uint64_t idx) override;
+
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
 };
@@ -168,9 +179,9 @@ public:
     Var() {}
     Var (std::string v, MEOWOBJECTKIND k) : value(v), kind(k) {}
 
-    void printInfo() override
+    std::string printInfo() override
     {
-        std::cout << "type <Var>\n";
+        return "type <Var>";
     }
 
     int getKind() override
@@ -198,6 +209,8 @@ public:
 
     void *onNegate() override { return NULL; };
     void *onNot() override { return NULL; };
+
+    void *getAtIndex(uint64_t idx) { return NULL; }
 
     void *onAnd(MeowObject *b) override { return NULL; };
     void *onOr(MeowObject *b) override { return NULL; };
