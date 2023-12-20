@@ -1,0 +1,41 @@
+# Function to check if a number is prime
+
+func isPrime(n)
+{
+    if n <= 1
+    {
+        return false
+    }
+    if n <= 3
+    {
+        return true
+    }
+    if n % 2 == 0 or n % 3 == 0
+    {
+        return false
+    }
+    i = 5
+    while i * i <= n
+    {
+        if n % i == 0 or n % (i + 2) == 0
+        {
+            return false
+        }
+        i += 6
+    }
+    return true
+}
+
+# Test the isPrime function
+
+number_to_check = 34
+result = isPrime(number_to_check)
+
+if result
+{
+    print(number_to_check, " is a prime number")
+}
+else
+{
+    print(number_to_check, " is not a prime number")
+}

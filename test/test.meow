@@ -1,0 +1,15 @@
+# test script
+
+func printTable(tableOf, amount)
+{
+    i = 0
+
+    while i <= amount
+    {
+        print(tableOf, " x ", i, " = ", tableOf * i)
+
+        i += 1
+    }
+}
+
+printTable(20, 10)

@@ -83,6 +83,7 @@ int getPrecedence(TOKEN_T optype)
             return 8;
 
         case _TOKEN_BRAOPEN:
+        case _TOKEN_SQRBRAOPEN:
             return 9;
 
         default: 
@@ -162,6 +163,18 @@ void *const_rule(Parser &p)
         {
             Integer *nullint = new Integer (0, MEOWOBJECTKIND::IntObj);
             const_obj = nullint;
+            break;
+        }
+        case _TOKEN_TRUE:
+        {
+            Integer *trueint = new Integer(1, MEOWOBJECTKIND::IntObj);
+            const_obj = trueint;
+            break;
+        }
+        case _TOKEN_FALSE:
+        {
+            Integer *falseint = new Integer(0, MEOWOBJECTKIND::IntObj);
+            const_obj = falseint;
             break;
         }
         default:
