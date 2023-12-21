@@ -45,12 +45,13 @@ int getPrecedence(TOKEN_T optype)
     switch(optype)
     {
         case _TOKEN_COMMA:
+        case _TOKEN_SQRBRACLOSE:
             return 0;
             break;
 
-        case _TOKEN_EQU:
-            return 2;
-            break;
+        // case _TOKEN_EQU:
+        //     return 2;
+        //     break;
 
         case _TOKEN_AND:
         case _TOKEN_OR:
@@ -86,9 +87,9 @@ int getPrecedence(TOKEN_T optype)
         case _TOKEN_SQRBRAOPEN:
             return 9;
 
-        default: 
-        return 0; 
-        break;
+        default:
+            return -1;
+            break;
     }
 }
 
@@ -212,26 +213,26 @@ void *expression_rule(Parser &p, int prec)
         lhs = new UnaryExpr((Expr *)a, OP_TYPES::logical_not, EXPR_TYPES::expr_unary);
     }
 
-    if(expect_token(p, _TOKEN_SQRBRAOPEN))
-    {
-        if(p.tokens[p.counter - 1]._TOKEN_TYPE == _TOKEN_VAR)
-        {
-            ++p.counter;
+    // if(expect_token(p, _TOKEN_SQRBRAOPEN))
+    // {
+    //     if(p.tokens[p.counter - 1]._TOKEN_TYPE == _TOKEN_VAR)
+    //     {
+    //         ++p.counter;
 
-            Expr *val = (Expr *)expression_rule(p, 1);
-            consume_token(p, _TOKEN_SQRBRACLOSE);
+    //         Expr *val = (Expr *)expression_rule(p, 1);
+    //         consume_token(p, _TOKEN_SQRBRACLOSE);
 
-            IndexExpr *indexexpr = new IndexExpr(val, (Expr *) lhs, EXPR_TYPES::expr_index);
+    //         IndexExpr *indexexpr = new IndexExpr(val, (Expr *) lhs, EXPR_TYPES::expr_index);
 
-            lhs = indexexpr;
-        }
+    //         lhs = indexexpr;
+    //     }
 
-        else
-        {
-            std::cout << "bad use of `[]`\n";
-            exit(0);
-        }
-    }
+    //     else
+    //     {
+    //         std::cout << "bad use of `[]`\n";
+    //         exit(0);
+    //     }
+    // }
 
     if(expect_token(p, _TOKEN_BRAOPEN))
     {
@@ -265,8 +266,14 @@ void *expression_rule(Parser &p, int prec)
         }
     }
 
+    consume_token(p, _TOKEN_SQRBRACLOSE);
+
     while(1)
     {
+        // std::cout << p.tokens[p.counter]._TOKEN_VALUE << "\n";
+        // std::cout << "Current prec -> " << prec << "\n";
+        // std::cout << "Next prev -> " << getPrecedence(p.tokens[p.counter]._TOKEN_TYPE) << "\n"; 
+
         if(getPrecedence(p.tokens[p.counter]._TOKEN_TYPE) < prec) break;
 
         OP_TYPES op;
@@ -288,6 +295,8 @@ void *expression_rule(Parser &p, int prec)
             case _TOKEN_NOTEQUALS: op = OP_TYPES::Cmp_notequ; break;
             case _TOKEN_AND: op = OP_TYPES::logical_and; break;
             case _TOKEN_OR: op = OP_TYPES::logical_or; break;
+            // indexing
+            case _TOKEN_SQRBRAOPEN: op = OP_TYPES::indexing; break;
             default: break;
         }
 
@@ -318,14 +327,11 @@ void *name_expr_rule(Parser &p)
         void *value = nullptr;
         var_name = var_rule(p);
         consume_token(p, _TOKEN_EQU);
-
         value = expression_rule(p, 1);
-    
         Const *var_name_const_node = new Const((MeowObject *)var_name, EXPR_TYPES::expr_const);
         NameExpr *name_expr_node = new NameExpr((Expr *)var_name_const_node, (Expr *)value, EXPR_TYPES::expr_nameexpr);
         return name_expr_node;
     }
-
     else
     {
         return NULL;
@@ -375,10 +381,10 @@ void *assign_stmt_rule(Parser &p)
     {
         return a;
     }
-    if(a = idxass_expr_rule(p))
-    {
-        return a;
-    }
+    // if(a = idxass_expr_rule(p))
+    // {
+    //     return a;
+    // }
     else
     {
         return NULL;
@@ -579,6 +585,24 @@ void *funcall_stmt_rule(Parser &p)
     return funcCstmt;
 }
 
+void *simple_stmt_rule(Parser &p)
+{
+    void *a = nullptr;
+    if(a = idxass_expr_rule(p))
+    {
+        SimpleStmt *s_stmt = new SimpleStmt((Expr *)a, STMT_TYPES::stmt_simple);
+        return s_stmt;
+    }
+    else if (a = funcall_stmt_rule(p))
+    {
+        return a;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
 void *statment_rule(Parser &p)
 {
     void *a = nullptr;
@@ -609,7 +633,7 @@ void *statment_rule(Parser &p)
     {
         return a;
     }
-    else if(a = funcall_stmt_rule(p))
+    else if(a = simple_stmt_rule(p))
     {
         return a;
     }

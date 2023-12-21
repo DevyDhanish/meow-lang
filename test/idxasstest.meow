@@ -1,7 +1,15 @@
-a = "Dhanish"
+func name()
+{
+    return "Dhanish"
+}
 
-print("before ->" , a)
+print("6th letter of Dhanish is -> ", name()[5])
 
-#a[1 + 2] = "n"
+x = "SSS"
 
-print("After -> ", a)
+print("Before -> ", x)
+
+x[1] = "E"
+x[1 + 1] = "X"
+
+print("After -> ", x)

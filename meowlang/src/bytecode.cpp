@@ -39,6 +39,6 @@ std::vector<std::string> opcodes_string
     "JUMP_IF_FALSE",
     "CALL",
     "RETURN",
-    "GET_VAL_AT_IDX",
-    "SET_VAL_AT_IDX",
+    "IDX",
+    "SET_IDX",
 };

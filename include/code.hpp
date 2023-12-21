@@ -33,8 +33,8 @@ enum OP_CODES
     JUMP_IF_FALSE,  // 23
     CALL,           // 24
     RETURN,         // 25
-    GET_VAL_AT_IDX, // 26
-    SET_VAL_AT_IDX, // 27
+    IDX,            // 26
+    SET_IDX,        // 27
 };
 
 extern std::vector<std::string> opcodes_string;

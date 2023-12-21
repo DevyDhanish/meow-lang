@@ -137,6 +137,29 @@ FRAME_EXIT_CODE MEOW_STACKFRAME::executeFrame()
                 }
                 break;
             }
+            case OP_CODES::IDX:
+            {
+                MeowObject *a = (MeowObject *) popFromStack(); // idx
+                MeowObject *b = (MeowObject *) popFromStack();  // val
+
+                MeowObject *result = (MeowObject *)b->getAtIndex( ((Integer *)a)->value );
+
+                if(result)
+                {
+                    pushToStack((uint64_t) result);
+                }
+                break;
+            }
+            case OP_CODES::SET_IDX:
+            {
+                MeowObject *a = (MeowObject *) popFromStack(); // idx
+                MeowObject *b = (MeowObject *) popFromStack(); // value
+                MeowObject *c = (MeowObject *) popFromStack(); // target
+
+                c->setAtIndex((uint64_t)((Integer *)a)->value, b);
+                
+                break;
+            }
             case OP_CODES::CMP_EQU:
             {
                 MeowObject *a = (MeowObject *)popFromStack();
@@ -280,30 +303,6 @@ FRAME_EXIT_CODE MEOW_STACKFRAME::executeFrame()
             case OP_CODES::RETURN:
             {
                 return FRAME_EXIT_CODE::FRAME_RETURN; 
-            }
-            case OP_CODES::GET_VAL_AT_IDX:
-            {
-                MeowObject *a = (MeowObject *) popFromStack();
-                MeowObject *b = (MeowObject *) popFromStack();
-
-                MeowObject *result = (MeowObject *) b->getAtIndex((uint64_t)((Integer *)a)->value);
-                
-                if(result)
-                {
-                    pushToStack((uint64_t) result);
-                }
-
-                break;
-            }
-            case OP_CODES::SET_VAL_AT_IDX:
-            {
-                MeowObject *a = (MeowObject *) popFromStack(); // idx
-                MeowObject *b = (MeowObject *) popFromStack(); // value
-                MeowObject *c = (MeowObject *) popFromStack(); // target
-
-                c->setAtIndex((uint64_t)((Integer *)a)->value, b);
-
-                break;
             }
             case OP_CODES::OUT:
             {
