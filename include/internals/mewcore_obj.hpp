@@ -31,6 +31,7 @@ public:
     virtual void *onOr(MeowObject *b) = 0;
 
     virtual void *getAtIndex(uint64_t idx) = 0;
+    virtual void *setAtIndex(uint64_t idx, MeowObject *b) = 0;
 
     virtual ~MeowObject() = default;
 };
@@ -77,6 +78,7 @@ public:
     void *onNot() override;
 
     void *getAtIndex(uint64_t idx) override;
+    void *setAtIndex(uint64_t idx,  MeowObject *b) override;
 
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
@@ -122,6 +124,7 @@ public:
     void *onNot() override;
 
     void *getAtIndex(uint64_t idx) override;
+    void *setAtIndex(uint64_t idx,  MeowObject *b) override;
 
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
@@ -166,10 +169,67 @@ public:
     void *onNot() override;
 
     void *getAtIndex(uint64_t idx) override;
+    void *setAtIndex(uint64_t idx,  MeowObject *b) override;
 
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
 };
+
+// class ArrayObj : public MeowObject
+// {
+// public:
+//     MEOWOBJECTKIND kind;
+//     std::vector<MeowObject *> elements;
+//     ArrayObj() {}
+//     ArrayObj(MEOWOBJECTKIND k) : kind(k){}
+
+//     void addElements(MeowObject *a)
+//     {
+//         elements.push_back(a);
+//     }
+
+//     std::string printInfo() override
+//     {
+//         return "type <Float>";
+//     }
+
+//     int getKind() override
+//     {
+//         return kind;
+//     }
+
+//     void onShow() override
+//     {
+//         std::cout << "{";
+//         for(MeowObject *e : elements)
+//         {
+//             e->onShow();
+//             std::cout << ",";
+//         }
+//         std::cout << "}";
+//     }
+
+//     void *onAdd(MeowObject *b) override;
+//     void *onSub(MeowObject *b) override;
+//     void *onMod(MeowObject *b) override;
+//     void *onMul(MeowObject *b) override;
+//     void *onDiv(MeowObject *b) override;
+
+//     void *onCmpE(MeowObject *b) override;
+//     void *onCmpNE(MeowObject *b) override;
+//     void *onCmpL(MeowObject *b) override;
+//     void *onCmpLE(MeowObject *b) override;
+//     void *onCmpG(MeowObject *b) override;
+//     void *onCmpGE(MeowObject *b) override;
+
+//     void *onNegate() override;
+//     void *onNot() override;
+
+//     void *getAtIndex(uint64_t idx) override;
+
+//     void *onAnd(MeowObject *b) override;
+//     void *onOr(MeowObject *b) override;
+// };
 
 class Var : public MeowObject
 {
@@ -211,6 +271,7 @@ public:
     void *onNot() override { return NULL; };
 
     void *getAtIndex(uint64_t idx) { return NULL; }
+    void *setAtIndex(uint64_t idx,  MeowObject *b) { return NULL; }
 
     void *onAnd(MeowObject *b) override { return NULL; };
     void *onOr(MeowObject *b) override { return NULL; };

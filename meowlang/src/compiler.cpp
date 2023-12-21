@@ -16,6 +16,7 @@ void compileNameExpr(NameExpr *nameExpr, std::vector<bytecode> &bytevect, Block 
 void compileFuncCallExpr(FuncCallExpr *funcallexpr, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
 void compileReturnStmt(ReturnStmt *retstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
 void compileIndexExpr(IndexExpr *a, std::vector<bytecode> &bytevect, Block *bloc, std::unordered_map<uint32_t, uint32_t> &offset_table);
+void compileIndexAssExpr(IndexAssignExpr *a, std::vector<bytecode> &bytevect, Block *bloc, std::unordered_map<uint32_t, uint32_t> &offset_table);
 
 void compileIfStmt(IfStmt *ifstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
 void compileShowStmt(ShowStmt *showstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table);
@@ -123,6 +124,10 @@ void compileExpr(Expr *a, std::vector<bytecode> &bytevect, Block *block, std::un
     case EXPR_TYPES::expr_index:
         compileIndexExpr((IndexExpr *)a, bytevect, block, offset_table);
         break;
+
+    // case EXPR_TYPES::expr_indexAssign:
+    //     compileIndexAssExpr((IndexAssignExpr *)a, bytevect, block, offset_table);
+    //     break;
     
     default:
         break;
@@ -198,11 +203,16 @@ void compileAssignStmt(AssignmnetStmt *assstmt, std::vector<bytecode> &bytevect,
     case EXPR_TYPES::expr_nameexpr:
         compileNameExpr((NameExpr *)assstmt->value, bytevect, block, offset_table);
         break;
+
+    case EXPR_TYPES::expr_indexAssign:
+        compileIndexAssExpr((IndexAssignExpr *)assstmt->value, bytevect, block, offset_table);
+        break;
     
     default:
         break;
     }
 }
+
 
 void compileShowStmt(ShowStmt *showstmt, std::vector<bytecode> &bytevect,  Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
 {
@@ -275,9 +285,9 @@ void compileFuncStmt(FuncStmt *fstmt, std::vector<bytecode> &bytevect, Block *bl
     if(fstmt->body.size())
         compileStmts(fstmt->body, fblock->bytes, fblock, offset_table_nblock);
 
-    // Integer *retVal = new Integer(0, MEOWOBJECTKIND::IntObj);
-    // fblock->bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)retVal));
-    // fblock->bytes.push_back(makeByteCode((uint8_t)OP_CODES::RETURN, (uint64_t)0));
+    Integer *retVal = new Integer(0, MEOWOBJECTKIND::IntObj);
+    fblock->bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)retVal));
+    fblock->bytes.push_back(makeByteCode((uint8_t)OP_CODES::RETURN, (uint64_t)0));
 
     replaceJumpOpsWithOffset(fblock->bytes, offset_table_nblock);
 
@@ -303,6 +313,15 @@ void compileIndexExpr(IndexExpr *a, std::vector<bytecode> &bytevect, Block *bloc
     compileExpr(a->idx, bytevect, block, offset_table);
 
     bytevect.push_back(makeByteCode((uint8_t)OP_CODES::GET_VAL_AT_IDX, (uint64_t)0));
+}
+
+void compileIndexAssExpr(IndexAssignExpr *a, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
+{
+    compileExpr(a->target, bytevect, block, offset_table);
+    compileExpr(a->value, bytevect, block, offset_table);
+    compileExpr(a->idx, bytevect, block, offset_table);
+
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::SET_VAL_AT_IDX, (uint64_t)0));
 }
 
 void compileFuncCallStmt(FuncCallStmt *funcall, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)

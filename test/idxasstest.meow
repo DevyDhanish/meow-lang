@@ -1,0 +1,7 @@
+a = "Dhanish"
+
+print("before ->" , a)
+
+#a[1 + 2] = "n"
+
+print("After -> ", a)

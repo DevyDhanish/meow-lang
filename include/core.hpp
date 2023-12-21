@@ -23,3 +23,6 @@ typedef struct _STRUCT_MEOW_LINE{
 std::vector<meow_line> file_to_vect(std::string);
 
 std::string format_string(std::string _str);
+
+
+bool isMeowFile(const std::string& filename);

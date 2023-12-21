@@ -295,6 +295,16 @@ FRAME_EXIT_CODE MEOW_STACKFRAME::executeFrame()
 
                 break;
             }
+            case OP_CODES::SET_VAL_AT_IDX:
+            {
+                MeowObject *a = (MeowObject *) popFromStack(); // idx
+                MeowObject *b = (MeowObject *) popFromStack(); // value
+                MeowObject *c = (MeowObject *) popFromStack(); // target
+
+                c->setAtIndex((uint64_t)((Integer *)a)->value, b);
+
+                break;
+            }
             case OP_CODES::OUT:
             {
                 MeowObject *valAtTop = (MeowObject *) popFromStack();

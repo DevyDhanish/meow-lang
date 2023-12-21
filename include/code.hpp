@@ -34,6 +34,7 @@ enum OP_CODES
     CALL,           // 24
     RETURN,         // 25
     GET_VAL_AT_IDX, // 26
+    SET_VAL_AT_IDX, // 27
 };
 
 extern std::vector<std::string> opcodes_string;

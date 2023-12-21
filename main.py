@@ -1,9 +1,4 @@
 def recur(a):
-    if a == 0:
-        return 0
-    
-    print("a -> ", a)
+    print("this func was called")
 
-    recur( a - 1)
-
-print(recur(10))
+print("adfasdf", recur(10))

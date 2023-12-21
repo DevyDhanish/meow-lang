@@ -384,6 +384,12 @@ void *Integer::getAtIndex(uint64_t idx)
     std::cout << "Cannot perform `[]` on integers\n";
     exit(0);
 }
+
+void *Integer::setAtIndex(uint64_t idx, MeowObject *b)
+{
+    std::cout << "Cannot perform index operations in type<Integer>\n";
+    exit(0);
+}
 /*
 **************************************************************************************
 *                                                                                    *   
@@ -760,6 +766,32 @@ void *String::getAtIndex(uint64_t idx)
     std::string v = std::string(1, value[idx]);
     String *retVal = new String(v, MEOWOBJECTKIND::StringObj);
     return retVal;
+}
+
+void *String::setAtIndex(uint64_t idx,  MeowObject *b)
+{
+    if(idx > value.size() || idx < 0)
+    {
+        std::cout << "Index out of range\n";
+        exit(0);
+    }
+
+    switch (b->getKind())
+    {
+    case MEOWOBJECTKIND::IntObj :
+    case MEOWOBJECTKIND::FloatObj:
+    case MEOWOBJECTKIND::VarObj:
+        std::cout << "Cannot assign int to a type<string>\n";
+        exit(0);
+        break;
+    
+    default:
+        break;
+    }
+
+    value[idx] = *(char *)((String *)b)->value.c_str();
+
+    return NULL;
 }
 
 /*
@@ -1142,4 +1174,8 @@ void *Float::getAtIndex(uint64_t idx)
     exit(0);
 }
 
-
+void *Float::setAtIndex(uint64_t idx, MeowObject *b)
+{
+    std::cout << "Cannot perform index operations in type<Float>\n";
+    exit(0);
+}

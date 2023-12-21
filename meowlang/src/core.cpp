@@ -92,15 +92,29 @@ bool isEmpty(std::string curr_line){
     return 1;
 }
 
+
+bool isMeowFile(const std::string& filename) 
+{
+    size_t pos = filename.find_last_of('.');
+    if (pos != std::string::npos) {
+        std::string extension = filename.substr(pos);
+        return (extension == ".meow");
+    }
+    return false;
+}
+
 // @brief convert file line to meow_line
 // @returns vector of meow_line
 std::vector<meow_line> file_to_vect(std::string _prog_filename){
 
-    std::ifstream _prog_file (_prog_filename);          
+    std::ifstream _prog_file (_prog_filename);
+
     std::vector<meow_line> _prog_lines_vect;
     size_t line_number = 1;
 
     std::string _prog_line;
+
+    if(!_prog_file.is_open()) { std::cout << "Could not open file " << _prog_filename << "\n"; }
     while(_prog_file){
         getline(_prog_file, _prog_line);
 
@@ -115,5 +129,6 @@ std::vector<meow_line> file_to_vect(std::string _prog_filename){
         line_number += 1;
     }
 
+    _prog_file.close();
     return _prog_lines_vect;
 }

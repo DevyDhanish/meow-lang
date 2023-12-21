@@ -40,4 +40,5 @@ std::vector<std::string> opcodes_string
     "CALL",
     "RETURN",
     "GET_VAL_AT_IDX",
+    "SET_VAL_AT_IDX",
 };

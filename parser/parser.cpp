@@ -310,31 +310,79 @@ void *expression_rule(Parser &p, int prec)
     return lhs;
 }
 
-void *assign_stmt_rule(Parser &p)
+void *name_expr_rule(Parser &p)
 {
-    void *var_name = nullptr;
-    void *value = nullptr;
+    if(expect_token(p, _TOKEN_VAR) && p.tokens[p.counter + 1]._TOKEN_TYPE == _TOKEN_EQU)
+    {
+        void *var_name = nullptr;
+        void *value = nullptr;
+        var_name = var_rule(p);
+        consume_token(p, _TOKEN_EQU);
 
-    if(
-        !
-        (
-        p.tokens[p.counter]._TOKEN_TYPE == _TOKEN_VAR
-        &&
-        p.tokens[p.counter + 1]._TOKEN_TYPE == _TOKEN_EQU
-        )
-    )
+        value = expression_rule(p, 1);
+    
+        Const *var_name_const_node = new Const((MeowObject *)var_name, EXPR_TYPES::expr_const);
+        NameExpr *name_expr_node = new NameExpr((Expr *)var_name_const_node, (Expr *)value, EXPR_TYPES::expr_nameexpr);
+        return name_expr_node;
+    }
+
+    else
     {
         return NULL;
     }
+}
 
-    var_name = var_rule(p);
-    consume_token(p, _TOKEN_EQU);
+void *idxass_expr_rule(Parser &p)
+{
+    if(expect_token(p, _TOKEN_VAR) && p.tokens[p.counter + 1]._TOKEN_TYPE == _TOKEN_SQRBRAOPEN)
+    {
+        //std::cout << "Parsing herer\n";
+        void *var = nullptr;
+        void *idx = nullptr;
+        void *value = nullptr;
 
-    value = expression_rule(p, 1);
-    
-    Const *var_name_const_node = new Const((MeowObject *)var_name, EXPR_TYPES::expr_const);
-    NameExpr *name_expr_node = new NameExpr((Expr *)var_name_const_node, (Expr *)value, EXPR_TYPES::expr_nameexpr);
-    return name_expr_node;
+        var = var_rule(p);
+        Const *var_const = new Const((MeowObject *)var, EXPR_TYPES::expr_const);
+
+        //std::cout << "TOok val -> " << ((Var *)var)->value << "\n";
+        consume_token(p, _TOKEN_SQRBRAOPEN);
+        idx = expression_rule(p, 1);
+
+        //std::cout << ((Expr *)idx)->getKind() << "\n";
+        consume_token(p, _TOKEN_SQRBRACLOSE);
+
+        consume_token(p, _TOKEN_EQU);
+
+        //std::cout << p.tokens[p.counter]._TOKEN_VALUE << "\n";
+        value = expression_rule(p, 1);
+        //std::cout << ((Expr *)value)->getKind() << "\n";
+
+        IndexAssignExpr *idxAss = new IndexAssignExpr((Expr *)var_const, (Expr *)idx, (Expr *)value, EXPR_TYPES::expr_indexAssign);
+        return idxAss;
+    }
+
+    else
+    {
+        return NULL;
+    }
+}
+
+void *assign_stmt_rule(Parser &p)
+{
+    void *a = nullptr;
+
+    if(a = name_expr_rule(p))
+    {
+        return a;
+    }
+    if(a = idxass_expr_rule(p))
+    {
+        return a;
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 void *show_stmt_rule(Parser &p)

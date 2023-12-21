@@ -2,7 +2,7 @@
 
 func printTable(tableOf, amount)
 {
-    i = 0
+    i = 1
 
     while i <= amount
     {
@@ -12,12 +12,10 @@ func printTable(tableOf, amount)
     }
 }
 
-printTable(234, 5)
-
 func givetwo()
 {
     a = 5
     return a
 }
 
-print(givetwo() + 3, " alsdjfla ", type("lajdf"))
+print(givetwo() + 3, " ", printTable(11, 10))
