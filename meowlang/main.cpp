@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
-#include <string.h>
 #include <string>
+#include <iomanip>
 
 #include "../include/core.hpp"
 #include "../include/lexer.hpp"
@@ -57,7 +57,7 @@ void printBlock(Block *block)
 
     for(bytecode &bc : block->bytes)
     {
-        std::cout << "Op : " << opcodes_string[(int)bc.op] << "\t" << "Arg : " << "<0x"<< bc.arg <<">" << "\t";
+        std::cout << std::setw(5) << std::left << "Op : " << std::setw(15) << std::left << opcodes_string[(int)bc.op] << std::setw(5) << std::left << "Arg : " << "<0x"<< bc.arg <<">" << std::setw(4) << std::left << "\t";
         if(bc.arg > 1000) val(bc.arg);
         std::cout << "\n";
     }
@@ -119,7 +119,7 @@ int main(int argc, char **argv){
     #ifdef DEBUG
     std::cout << "=====================[ TOKENS ]======================\n";
     for(size_t i = 0; i < tokenized_vector.size(); i ++){
-        std:: cout << "Token Type = " << token_names_for_loging[tokenized_vector[i]._TOKEN_TYPE] << "\t\t\t" << "Token value = " << tokenized_vector[i]._TOKEN_VALUE << "\t\t\t" << "Token Line - " << tokenized_vector[i]._TOKEN_LINE << "\t\t\t" << "Line Number - " << tokenized_vector[i]._TOKEN_LINE_NUMBER << "\t\t\t" << " INDENTATION - " << tokenized_vector[i]._INDENTATION << "\n";
+        std::cout << std::setw(10) << std::left << "Token Type = " << token_names_for_loging[tokenized_vector[i]._TOKEN_TYPE] << "\t" << std::setw(20) << std::left << "Token value = " << tokenized_vector[i]._TOKEN_VALUE << std::setw(10) << std::left << "\t" << "Token Line - " << tokenized_vector[i]._TOKEN_LINE << std::setw(20) << std::left << "Line Number - " << tokenized_vector[i]._TOKEN_LINE_NUMBER << "\n";
     }
     std::cout << "=======================[ PARSING ]===========================\n";
     #endif

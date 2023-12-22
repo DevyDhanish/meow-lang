@@ -1,13 +1,27 @@
-func recursionTest(a)
+func name( name, position )
 {
-    if a == 0
-    {
-        return 0
-    }
-
-    print("This is recursion test -> ", a)
-
-    recursionTest(a - 1)
+    return name[position]
 }
 
-recursionTest(10)
+print(name("Dhanish", 4))
+
+func check_if_correct( name,position,actual)
+{
+    if name[position] == actual
+    {
+        return true
+    }
+
+    else
+    {
+        return false
+    }
+}
+
+if check_if_correct("Dhanish", 1, "h") {
+    print("Yes")
+}
+else
+{
+    print("No")
+}
