@@ -4,6 +4,7 @@
 
 
 void *statment_rule(Parser &p);
+void *expression_rule(Parser &p, int prec);
 
 struct Parser gen_parser(const std::vector<Token> &toks, size_t c, size_t l)
 {
@@ -119,7 +120,7 @@ void *var_rule(Parser &p)
     {
         //std::cout << "Variable\n";
         Var *varname = nullptr;
-        varname = new Var(p.tokens[p.counter]._TOKEN_VALUE, MEOWOBJECTKIND::VarObj); // get the var name
+        varname = new Var(p.tokens[p.counter]._TOKEN_VALUE, MEOWOBJECTKIND::Meow_VarObj); // get the var name
         ++p.counter;
         return varname;
     }
@@ -138,20 +139,20 @@ void *const_rule(Parser &p)
         case _TOKEN_INT:
         {
             long long val = std::stoll(curr_token_value);
-            Integer *mewint = new Integer(val, MEOWOBJECTKIND::IntObj);
+            Integer *mewint = new Integer(val, MEOWOBJECTKIND::Meow_IntObj);
             const_obj = mewint;
             break;
         }
         case _TOKEN_STRING:
         {
-            String *mewstr = new String(curr_token_value, MEOWOBJECTKIND::StringObj);
+            String *mewstr = new String(curr_token_value, MEOWOBJECTKIND::Meow_StringObj);
             const_obj = mewstr;
             break;
         }
         case _TOKEN_FLOAT:
         {
             long double val = std::stold(curr_token_value);
-            Float *mewfloat = new Float(val, MEOWOBJECTKIND::FloatObj);
+            Float *mewfloat = new Float(val, MEOWOBJECTKIND::Meow_FloatObj);
             const_obj = mewfloat;
             break;
         }
@@ -162,21 +163,34 @@ void *const_rule(Parser &p)
         }
         case _TOKEN_NULL:
         {
-            Integer *nullint = new Integer (0, MEOWOBJECTKIND::IntObj);
+            Integer *nullint = new Integer (0, MEOWOBJECTKIND::Meow_IntObj);
             const_obj = nullint;
             break;
         }
         case _TOKEN_TRUE:
         {
-            Integer *trueint = new Integer(1, MEOWOBJECTKIND::IntObj);
+            Integer *trueint = new Integer(1, MEOWOBJECTKIND::Meow_IntObj);
             const_obj = trueint;
             break;
         }
         case _TOKEN_FALSE:
         {
-            Integer *falseint = new Integer(0, MEOWOBJECTKIND::IntObj);
+            Integer *falseint = new Integer(0, MEOWOBJECTKIND::Meow_IntObj);
             const_obj = falseint;
             break;
+        }
+        case _TOKEN_CURLOPEN:
+        {
+            consume_token(p, _TOKEN_CURLOPEN);
+            ArrayObj *arr = new ArrayObj(MEOWOBJECTKIND::Meow_ArrayObj);
+
+            vals:
+                MeowObject *ele = (MeowObject *) const_rule(p);
+                consume_token(p, _TOKEN_COMMA);
+                if(ele) arr->addElements(ele);
+                if(!consume_token(p, _TOKEN_CURLCLOSE)) goto vals;
+
+            return arr;
         }
         default:
             //std::cout << "Unknow token encountered\n";

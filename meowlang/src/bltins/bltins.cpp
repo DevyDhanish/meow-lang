@@ -18,15 +18,23 @@ MeowObject *meow_print(std::stack<uint64_t> args)
 
     std::cout << "\n";
 
-    Integer *retVal = new Integer(0, MEOWOBJECTKIND::IntObj);
+    Integer *retVal = new Integer(0, MEOWOBJECTKIND::Meow_IntObj);
     return retVal;
 }
 
 MeowObject *meow_len(std::stack<uint64_t> args)
 {
+    MeowObject *ar = (MeowObject *) args.top();
+
+    if(ar->getKind() == MEOWOBJECTKIND::Meow_ArrayObj)
+    {
+        Integer *retVal = new Integer(((ArrayObj *)args.top())->values.size(), MEOWOBJECTKIND::Meow_IntObj);
+        return retVal;
+    }
+
     std::string val = ((String *) args.top())->value;
 
-    Integer *retVal = new Integer(val.size(), MEOWOBJECTKIND::IntObj);
+    Integer *retVal = new Integer(val.size(), MEOWOBJECTKIND::Meow_IntObj);
     return retVal;
 }
 
@@ -46,19 +54,19 @@ MeowObject *meow_input(std::stack<uint64_t> args)
     if(isFloatS(input_val))
     {
         long double val = std::stold(input_val);
-        Float *mewfloat = new Float(val, MEOWOBJECTKIND::FloatObj);
+        Float *mewfloat = new Float(val, MEOWOBJECTKIND::Meow_FloatObj);
         return mewfloat;
     }
     else if(isdigitS(input_val))
     {
         long long val;
         val = std::stoll(input_val);
-        Integer *retVal = new Integer(val, MEOWOBJECTKIND::IntObj);
+        Integer *retVal = new Integer(val, MEOWOBJECTKIND::Meow_IntObj);
         return retVal;
     }
     else
     {
-        String *retVal = new String(input_val, MEOWOBJECTKIND::StringObj);
+        String *retVal = new String(input_val, MEOWOBJECTKIND::Meow_StringObj);
         return retVal;
     }
 
@@ -67,7 +75,7 @@ MeowObject *meow_input(std::stack<uint64_t> args)
 
 MeowObject *meow_type(std::stack<uint64_t> args)
 {
-    String *retVal = new String(((MeowObject *)args.top())->printInfo(), MEOWOBJECTKIND::StringObj);
+    String *retVal = new String(((MeowObject *)args.top())->printInfo(), MEOWOBJECTKIND::Meow_StringObj);
 
     return retVal;
 }

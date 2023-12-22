@@ -1,0 +1,29 @@
+# simple sorting algo in meowlang
+
+
+arr = { 1,31,3,3131, 3424234, 2,342, 31,3,3131, 3424234, 2,342, 31,3,3131, 3424234, 2,342, 31,3,3131, 3424234, 2,342, 31,3,3131, 3424234, 2,342}
+
+
+i = 0
+
+size = len(arr)
+
+print("Before sorting -> ", arr)
+
+while i < size
+{
+    j = 0
+    while j < size
+    {
+        if(arr[i] > arr[j])  # big to small
+        {
+            temp = arr[i]
+            arr[i] = arr[j]
+            arr[j] = temp
+        }
+        j += 1
+    }
+    i += 1
+}
+
+print("After sorting -> ", arr)

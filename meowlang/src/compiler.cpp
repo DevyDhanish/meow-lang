@@ -72,24 +72,28 @@ void compileConstExpr(Const *constExpr, std::vector<bytecode> &bytevect, Block *
     switch (((MeowObject *)constExpr->value)->getKind())
     {
 
-    case MEOWOBJECTKIND::IntObj :
+    case MEOWOBJECTKIND::Meow_IntObj :
         //std::cout << "Integer value: " << ((Integer *) constExpr->value)->value << "\n";
         bytevect.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)((Integer *)constExpr->value)));
         break;
 
-    case MEOWOBJECTKIND::FloatObj :
+    case MEOWOBJECTKIND::Meow_FloatObj :
         //std::cout << "Float value: " << ((Float *) constExpr->value)->value << "\n";
         bytevect.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)((Float *)constExpr->value)));
         break;
 
-    case MEOWOBJECTKIND::StringObj :
+    case MEOWOBJECTKIND::Meow_StringObj :
         //std::cout << "String value: " << ((String *) constExpr->value)->value << "\n";
         bytevect.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)((String *)constExpr->value)));
         break;
 
-    case MEOWOBJECTKIND::VarObj :
+    case MEOWOBJECTKIND::Meow_VarObj :
         //std::cout << "Var : " << ((Var *)constExpr->value)->value << "\n";
         bytevect.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_NAME, (uint64_t)((Var *)constExpr->value)));
+        break;
+
+    case MEOWOBJECTKIND::Meow_ArrayObj:
+        bytevect.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)((ArrayObj *)constExpr->value)));
         break;
 
     default:
@@ -287,7 +291,7 @@ void compileFuncStmt(FuncStmt *fstmt, std::vector<bytecode> &bytevect, Block *bl
     if(fstmt->body.size())
         compileStmts(fstmt->body, fblock->bytes, fblock, offset_table_nblock);
 
-    Integer *retVal = new Integer(0, MEOWOBJECTKIND::IntObj);
+    Integer *retVal = new Integer(0, MEOWOBJECTKIND::Meow_IntObj);
     fblock->bytes.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_CONST, (uint64_t)retVal));
     fblock->bytes.push_back(makeByteCode((uint8_t)OP_CODES::RETURN, (uint64_t)0));
 

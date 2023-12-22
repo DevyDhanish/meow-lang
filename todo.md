@@ -1,8 +1,9 @@
-# function returns  [DONE]
-# poping frame      [DONE]
-# fix vm.cpp        [DONE]
-
-# FOR LOOPS
-# BREAK AND CONTINUE STMTS
-# CLASSES
-# ITER OBJS
+function returns                    [DONE]<br>
+poping frame                        [DONE]<br>
+fix vm.cpp                          [DONE]<br>
+fix the mod issue with floats             <br>
+ARRAYS                              [DONE]<br>
+FOR LOOPS                                 <br>
+BREAK AND CONTINUE STMTS                  <br>
+CLASSES                                   <br>
+ITER OBJS                                 <br>

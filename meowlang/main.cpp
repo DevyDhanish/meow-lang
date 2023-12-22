@@ -19,7 +19,7 @@ using std::vector;
 using std::cout;
 using std::string;
 
-#define DEBUG
+//#define DEBUG
 //#undef DEBUG
 
 void val(uint64_t obj)
@@ -33,17 +33,21 @@ void val(uint64_t obj)
 
     switch (((MeowObject *)obj)->getKind())
     {
-    case MEOWOBJECTKIND::IntObj :
+    case MEOWOBJECTKIND::Meow_IntObj:
         std::cout << ((Integer *)obj)->value;
         break;
-    case MEOWOBJECTKIND::FloatObj:
+    case MEOWOBJECTKIND::Meow_FloatObj:
         std::cout << ((Float *)obj)->value;
 
-    case MEOWOBJECTKIND::StringObj:
+    case MEOWOBJECTKIND::Meow_StringObj:
         std::cout << ((String *)obj)->value;
         break;
-    case MEOWOBJECTKIND::VarObj:
+    case MEOWOBJECTKIND::Meow_VarObj:
         std::cout << ((Var *)obj)->value;
+        break;
+
+    case MEOWOBJECTKIND::Meow_ArrayObj:
+        ((ArrayObj *)obj)->onShow();
         break;
     
     default:

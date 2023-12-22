@@ -1,8 +1,9 @@
 #pragma once
 #include <cstdint>
 #include <iostream>
+#include <vector>
 
-enum MEOWOBJECTKIND { IntObj, StringObj, FloatObj, VarObj};
+enum MEOWOBJECTKIND { Meow_IntObj, Meow_StringObj, Meow_FloatObj, Meow_VarObj, Meow_ArrayObj };
 
 class MeowObject
 {
@@ -33,7 +34,7 @@ public:
     virtual void *getAtIndex(uint64_t idx) = 0;
     virtual void *setAtIndex(uint64_t idx, MeowObject *b) = 0;
 
-    virtual ~MeowObject() = default;
+    //virtual ~MeowObject() = default;
 };
 
 // These are the data types of Meow lang represented as classes in C++
@@ -175,61 +176,66 @@ public:
     void *onOr(MeowObject *b) override;
 };
 
-// class ArrayObj : public MeowObject
-// {
-// public:
-//     MEOWOBJECTKIND kind;
-//     std::vector<MeowObject *> elements;
-//     ArrayObj() {}
-//     ArrayObj(MEOWOBJECTKIND k) : kind(k){}
+class ArrayObj : public MeowObject
+{
+public:
+    MEOWOBJECTKIND kind;
+    std::vector<MeowObject *> values;
 
-//     void addElements(MeowObject *a)
-//     {
-//         elements.push_back(a);
-//     }
+    ArrayObj() {}
+    ArrayObj(MEOWOBJECTKIND k) : kind(k){}
 
-//     std::string printInfo() override
-//     {
-//         return "type <Float>";
-//     }
+    void addElements(MeowObject *a)
+    {
+        values.push_back(a);
+    }
 
-//     int getKind() override
-//     {
-//         return kind;
-//     }
+    std::string printInfo() override
+    {
+        return "type <Array>";
+    }
 
-//     void onShow() override
-//     {
-//         std::cout << "{";
-//         for(MeowObject *e : elements)
-//         {
-//             e->onShow();
-//             std::cout << ",";
-//         }
-//         std::cout << "}";
-//     }
+    int getKind() override
+    {
+        return kind;
+    }
 
-//     void *onAdd(MeowObject *b) override;
-//     void *onSub(MeowObject *b) override;
-//     void *onMod(MeowObject *b) override;
-//     void *onMul(MeowObject *b) override;
-//     void *onDiv(MeowObject *b) override;
+    void onShow() override
+    {
+        std::cout << "{";
+        int i = 0;
+        while (i < values.size())
+        {
+            ((MeowObject *)values[i])->onShow();
+            if((i + 1) != values.size())std::cout << ", ";
+            i++;
+        }
 
-//     void *onCmpE(MeowObject *b) override;
-//     void *onCmpNE(MeowObject *b) override;
-//     void *onCmpL(MeowObject *b) override;
-//     void *onCmpLE(MeowObject *b) override;
-//     void *onCmpG(MeowObject *b) override;
-//     void *onCmpGE(MeowObject *b) override;
+        std::cout << "}";
+    }
 
-//     void *onNegate() override;
-//     void *onNot() override;
+    void *onAdd(MeowObject *b) override;
+    void *onSub(MeowObject *b) override;
+    void *onMod(MeowObject *b) override;
+    void *onMul(MeowObject *b) override;
+    void *onDiv(MeowObject *b) override;
 
-//     void *getAtIndex(uint64_t idx) override;
+    void *onCmpE(MeowObject *b) override;
+    void *onCmpNE(MeowObject *b) override;
+    void *onCmpL(MeowObject *b) override;
+    void *onCmpLE(MeowObject *b) override;
+    void *onCmpG(MeowObject *b) override;
+    void *onCmpGE(MeowObject *b) override;
 
-//     void *onAnd(MeowObject *b) override;
-//     void *onOr(MeowObject *b) override;
-// };
+    void *onNegate() override;
+    void *onNot() override;
+
+    void *getAtIndex(uint64_t idx) override;
+    void *setAtIndex(uint64_t idx,  MeowObject *b) override;
+
+    void *onAnd(MeowObject *b) override;
+    void *onOr(MeowObject *b) override;
+};
 
 class Var : public MeowObject
 {
