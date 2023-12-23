@@ -18,12 +18,12 @@ again:
     case FRAME_EXIT_CODE::FRAME_CALL:
     {
         std::stack<uint64_t> args;
-        uint32_t amout = frame.top()->getByteByIp().arg;
+        uint32_t amount = frame.top()->getByteByIp().arg;
         // store the args
-        while (amout)
+        while (amount)
         {
             args.push(frame.top()->popFromStack());
-            amout--;
+            amount--;
         }
 
         MeowObject *func_name = (MeowObject *) frame.top()->popFromStack();

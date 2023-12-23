@@ -5,7 +5,7 @@
 
 // base class for stmts, does nothing by default
 
-enum STMT_TYPES { stmt_assign, stmt_show, stmt_if, stmt_while, stmt_func, stmt_funcall, stmt_return, stmt_simple };
+enum STMT_TYPES { stmt_assign, stmt_show, stmt_if, stmt_while, stmt_func, stmt_funcall, stmt_return, stmt_for, stmt_simple };
 enum EXPR_TYPES { expr_const, expr_nameexpr, expr_binary, expr_unary, expr_call, expr_indexAssign };
 enum OP_TYPES { Add, Sub, Mul, Div, Mod, Cmp_equ, Cmp_less, Cmp_lessequ, Cmp_great, Cmp_greatequ, Cmp_notequ, negate, logical_and, logical_or, logical_not, indexing };
 
@@ -229,6 +229,33 @@ public:
     std::vector<Stmts *> body;
 
     WhileStmt (Expr *a, STMT_TYPES k) : condition(a), kind(k) {}
+
+    void addBody(Stmts *a)
+    {
+        body.push_back(a);
+    }
+
+    void printInfo() override
+    {
+        std::cout << "Kind:" << kind << "\n";
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
+};
+
+class ForStmt : public Stmts
+{
+public:
+    STMT_TYPES kind;
+    Expr *left;
+    Expr *right;
+
+    std::vector<Stmts *> body;
+
+    ForStmt(Expr *a, Expr *b, STMT_TYPES k) : left(a), right(b), kind(k) {}
 
     void addBody(Stmts *a)
     {

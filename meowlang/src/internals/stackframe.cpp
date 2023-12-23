@@ -26,6 +26,16 @@ uint64_t MEOW_STACKFRAME::popFromStack()
     return toPop;
 }
 
+uint64_t MEOW_STACKFRAME::topOfStack()
+{
+    if(stack.size() == 0)
+    {
+        return 0;
+    }
+
+    return stack.back();
+}
+
 bytecode MEOW_STACKFRAME::getByteByIp()
 {
     return code->bytes[ip];
@@ -158,6 +168,25 @@ FRAME_EXIT_CODE MEOW_STACKFRAME::executeFrame()
 
                 c->setAtIndex((uint64_t)((Integer *)a)->value, b);
                 
+                break;
+            }
+            case OP_CODES::NEXT:
+            {
+                MeowObject *a = (MeowObject *) popFromStack();
+
+                MeowObject *result = (MeowObject *) a->next();
+
+                if(a->getIterStatus())
+                {
+                    ip = ip + ((uint32_t) byte.arg - 1);
+                    a->resetIterInfo();
+                }
+
+                if(result)
+                {
+                    pushToStack((uint64_t) result);
+                }
+
                 break;
             }
             case OP_CODES::CMP_EQU:

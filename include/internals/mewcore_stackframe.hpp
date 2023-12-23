@@ -30,6 +30,7 @@ public:
     uint16_t stack_pointer;
     void pushToStack(uint64_t val);
     uint64_t popFromStack();
+    uint64_t topOfStack();
     // void replaceValInStack(uint16_t idx, uint64_t val);
     // uint64_t getValFromStack(uint16_t idx);
 

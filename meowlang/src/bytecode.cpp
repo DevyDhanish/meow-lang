@@ -41,4 +41,5 @@ std::vector<std::string> opcodes_string
     "RETURN",
     "IDX",
     "SET_IDX",
+    "NEXT",
 };

@@ -34,7 +34,14 @@ public:
     virtual void *getAtIndex(uint64_t idx) = 0;
     virtual void *setAtIndex(uint64_t idx, MeowObject *b) = 0;
 
-    //virtual ~MeowObject() = default;
+    // for iterations
+    virtual void *next() = 0;
+    virtual uint32_t getIterCounter() = 0;
+    virtual bool getIterStatus() = 0;
+    virtual bool getIterAvailability() = 0;
+    virtual void resetIterInfo() = 0;
+
+    virtual ~MeowObject() = default;
 };
 
 // These are the data types of Meow lang represented as classes in C++
@@ -44,7 +51,7 @@ public:
     MEOWOBJECTKIND kind;
     int64_t value;
     Integer() {};
-    Integer(int64_t a, MEOWOBJECTKIND k) : value(a), kind(k) { }
+    Integer(int64_t a, MEOWOBJECTKIND k) : value(a), kind(k) {  }
 
     std::string printInfo() override
     {
@@ -83,6 +90,34 @@ public:
 
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
+
+    bool isIterable = false;
+    uint32_t iterCounter = 0;
+    bool isExhausted = false;
+
+    void *next() override;
+
+    uint32_t getIterCounter() override
+    {
+        return iterCounter;
+    }
+
+    bool getIterStatus() override
+    {
+        return isExhausted;
+    }
+
+    bool getIterAvailability() override
+    {
+        return isIterable;
+    }
+
+    void resetIterInfo() override
+    {
+        isIterable = false;
+        iterCounter = 0;
+        isExhausted = false;
+    }
 };
 
 class String : public MeowObject
@@ -129,6 +164,35 @@ public:
 
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
+
+    bool isIterable = true;
+    uint32_t iterCounter = 0;
+    bool isExhausted = false;
+
+    void *next() override;
+
+    uint32_t getIterCounter() override
+    {
+        return iterCounter;
+    }
+
+    bool getIterStatus() override
+    {
+        return isExhausted;
+    }
+
+    bool getIterAvailability() override
+    {
+        return isIterable;
+    }
+
+    void resetIterInfo() override
+    {
+        isIterable = true;
+        iterCounter = 0;
+        isExhausted = false;
+    }
+
 };
 
 class Float : public MeowObject
@@ -174,6 +238,35 @@ public:
 
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
+
+    bool isIterable = false;
+    uint32_t iterCounter = 0;
+    bool isExhausted = false;
+
+    void *next() override;
+
+    uint32_t getIterCounter() override
+    {
+        return iterCounter;
+    }
+
+    bool getIterStatus() override
+    {
+        return isExhausted;
+    }
+
+    bool getIterAvailability() override
+    {
+        return isIterable;
+    }
+
+    void resetIterInfo() override
+    {
+        isIterable = false;
+        iterCounter = 0;
+        isExhausted = false;
+    }
+
 };
 
 class ArrayObj : public MeowObject
@@ -235,6 +328,35 @@ public:
 
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
+
+    bool isIterable = true;
+    uint32_t iterCounter = 0;
+    bool isExhausted = false;
+
+    void *next() override;
+
+    uint32_t getIterCounter() override
+    {
+        return iterCounter;
+    }
+
+    bool getIterStatus() override
+    {
+        return isExhausted;
+    }
+
+    bool getIterAvailability() override
+    {
+        return isIterable;
+    }
+
+    void resetIterInfo() override
+    {
+        isIterable = true;
+        iterCounter = 0;
+        isExhausted = false;
+    }
+
 };
 
 class Var : public MeowObject
@@ -281,4 +403,33 @@ public:
 
     void *onAnd(MeowObject *b) override { return NULL; };
     void *onOr(MeowObject *b) override { return NULL; };
+
+    bool isIterable = false;
+    uint32_t iterCounter = 0;
+    bool isExhausted = false;
+
+    void *next() override { return NULL; };
+
+    uint32_t getIterCounter() override
+    {
+        return iterCounter;
+    }
+
+    bool getIterStatus() override
+    {
+        return isExhausted;
+    }
+
+    bool getIterAvailability() override
+    {
+        return isIterable;
+    }
+
+    void resetIterInfo() override
+    {
+        isIterable = false;
+        iterCounter = 0;
+        isExhausted = false;
+    }
+
 };

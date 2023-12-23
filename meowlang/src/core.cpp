@@ -36,6 +36,7 @@ std::unordered_map<std::string, TOKEN_T> knowTokens = {
         {"]", _TOKEN_SQRBRACLOSE},
         {"while", _TOKEN_WHILE},
         {"for", _TOKEN_FOR},
+        {"in", _TOKEN_IN},
         {"if", _TOKEN_IF},
         //{"then", _TOKEN_THEN},
         {"elif", _TOKEN_ELIF},

@@ -280,8 +280,6 @@ void *expression_rule(Parser &p, int prec)
         }
     }
 
-    consume_token(p, _TOKEN_SQRBRACLOSE);
-
     while(1)
     {
         // std::cout << p.tokens[p.counter]._TOKEN_VALUE << "\n";
@@ -330,6 +328,7 @@ void *expression_rule(Parser &p, int prec)
         lhs = new BinOpExpr((Expr *)lhs, op, (Expr *)rhs, EXPR_TYPES::expr_binary);
     }
 
+    consume_token(p, _TOKEN_SQRBRACLOSE); // if there is sqr_bracket left out it will be consumed here
     return lhs;
 }
 
@@ -354,32 +353,58 @@ void *name_expr_rule(Parser &p)
 
 void *idxass_expr_rule(Parser &p)
 {
+    
     if(expect_token(p, _TOKEN_VAR) && p.tokens[p.counter + 1]._TOKEN_TYPE == _TOKEN_SQRBRAOPEN)
     {
-        //std::cout << "Parsing herer\n";
-        void *var = nullptr;
-        void *idx = nullptr;
-        void *value = nullptr;
+        BinOpExpr *var = (BinOpExpr *) expression_rule(p, 1);
+        void *idx = var->right;
+        var = (BinOpExpr *) var->left;
 
-        var = var_rule(p);
-        Const *var_const = new Const((MeowObject *)var, EXPR_TYPES::expr_const);
+        //std::cout << ((Var *)var)->value;
+        // while(expect_token(p, _TOKEN_SQRBRAOPEN))
+        // {
+        //     consume_token(p, _TOKEN_SQRBRAOPEN);
 
-        //std::cout << "TOok val -> " << ((Var *)var)->value << "\n";
-        consume_token(p, _TOKEN_SQRBRAOPEN);
-        idx = expression_rule(p, 1);
+        //     void *idx = expression_rule(p, 1);
 
-        //std::cout << ((Expr *)idx)->getKind() << "\n";
-        consume_token(p, _TOKEN_SQRBRACLOSE);
+        //     consume_token(p, _TOKEN_SQRBRACLOSE);
+
+        //     var = new BinOpExpr((Expr *)var, OP_TYPES::indexing, (Expr *)idx, EXPR_TYPES::expr_binary);
+        // }
 
         consume_token(p, _TOKEN_EQU);
 
-        //std::cout << p.tokens[p.counter]._TOKEN_VALUE << "\n";
-        value = expression_rule(p, 1);
-        //std::cout << ((Expr *)value)->getKind() << "\n";
+        void *value = expression_rule(p, 1);
 
-        IndexAssignExpr *idxAss = new IndexAssignExpr((Expr *)var_const, (Expr *)idx, (Expr *)value, EXPR_TYPES::expr_indexAssign);
+        IndexAssignExpr *idxAss = new IndexAssignExpr((Expr *)var, (Expr *)idx, (Expr *)value, EXPR_TYPES::expr_indexAssign);
+
         return idxAss;
     }
+    // {
+    //     //std::cout << "Parsing herer\n";
+    //     void *var = nullptr;
+    //     void *idx = nullptr;
+    //     void *value = nullptr;
+
+    //     var = var_rule(p);
+    //     Const *var_const = new Const((MeowObject *)var, EXPR_TYPES::expr_const);
+
+    //     //std::cout << "TOok val -> " << ((Var *)var)->value << "\n";
+    //     consume_token(p, _TOKEN_SQRBRAOPEN);
+    //     idx = expression_rule(p, 1);
+
+    //     //std::cout << ((Expr *)idx)->getKind() << "\n";
+    //     consume_token(p, _TOKEN_SQRBRACLOSE);
+
+    //     consume_token(p, _TOKEN_EQU);
+
+    //     //std::cout << p.tokens[p.counter]._TOKEN_VALUE << "\n";
+    //     value = expression_rule(p, 1);
+    //     //std::cout << ((Expr *)value)->getKind() << "\n";
+
+    //     IndexAssignExpr *idxAss = new IndexAssignExpr((Expr *)var_const, (Expr *)idx, (Expr *)value, EXPR_TYPES::expr_indexAssign);
+    //     return idxAss;
+    // }
 
     else
     {
@@ -599,6 +624,36 @@ void *funcall_stmt_rule(Parser &p)
     return funcCstmt;
 }
 
+void *for_stmt_rule(Parser &p)
+{
+    if(!consume_token(p, _TOKEN_FOR))
+    {
+        return NULL;
+    }
+
+    void *val = expression_rule(p, 1); // get the left variable;
+    consume_token(p, _TOKEN_IN);       
+    void *r_val = expression_rule(p, 1); // get the right variable;
+
+    ForStmt *for_stmt = new ForStmt((Expr *)val, (Expr *)r_val, STMT_TYPES::stmt_for);
+
+    consume_token(p, _TOKEN_CURLOPEN);
+
+    if(expect_token(p, _TOKEN_CURLCLOSE))
+    {
+        return for_stmt;
+    }
+
+    void *c = nullptr;
+
+body:
+    c = statment_rule(p);
+    for_stmt->addBody((Stmts *)c);
+    if(!consume_token(p, _TOKEN_CURLCLOSE)) goto body;
+
+    return for_stmt;
+}
+
 void *simple_stmt_rule(Parser &p)
 {
     void *a = nullptr;
@@ -644,6 +699,10 @@ void *statment_rule(Parser &p)
         return a;
     }
     else if(a = func_stmt_rule(p))
+    {
+        return a;
+    }
+    else if(a = for_stmt_rule(p))
     {
         return a;
     }
