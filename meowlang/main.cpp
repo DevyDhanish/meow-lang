@@ -19,7 +19,7 @@ using std::vector;
 using std::cout;
 using std::string;
 
-#define DEBUG
+//#define DEBUG
 //#undef DEBUG
 
 void val(uint64_t obj)

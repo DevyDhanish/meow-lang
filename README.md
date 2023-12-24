@@ -1,13 +1,22 @@
-![Meow gif](./Meow.gif)
+<p align="center">
+    <img src="icon.png">
+    <h1 align="center">MEOWLANG<h1>
+</p>
 
-# [Meow Lang]
+<h3 align="center">
+  This is official repository for meowlang, A Stupid programming language written in C++
+</h3>
+<br>
+
+# Extension
+check out the repo for meowlang extension [here](https://github.com/DevyDhanish/meow-lang-extension)<br>
+
 I merged dev branced into prod : ( <br>
 Follow meowlang on insgram [@meow__lang](https://www.instagram.com/meow__lang/)<br>
+
 I might finish this idk, here are all the details if you want to contribute. And I know this code is ugly as fuck i'm going to fix it, I think.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-
-# BUILD v1.6.11 (First Version)
 
 # CONTRIBUTIONS
 # if you are using mingw use `mingw32-make` anything else use `make`

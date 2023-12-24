@@ -1,0 +1,49 @@
+# this is for testing
+# solving the Best Time to Buy and Sell Stock question on leetcode
+# url -> https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/
+# status -> solved
+
+prices = {7,6,4,3,1}
+
+func BTTBS(prices_array)
+{
+    if (len(prices_array) == 0)
+    {
+        return 0
+    }
+
+    lowest_price = prices_array[0]
+    highest_price = 0
+
+    i = 0
+    j = 1
+
+    while i < len(prices_array) and j < len(prices_array)
+    {
+        if prices_array[i] < lowest_price
+        {
+            lowest_price = prices_array[i]
+        }
+
+        if i < j and prices_array[j] > prices_array[i]
+        {
+            highest_price = prices_array[j]
+        }
+
+        i += 1
+        j += 1
+    }
+
+    result = highest_price - lowest_price
+
+    if result < 0
+    {
+        result = 0
+    }
+
+    return result
+}
+
+ans = BTTBS(prices)
+
+print("Total profit -> ", ans)
