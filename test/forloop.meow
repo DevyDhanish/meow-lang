@@ -32,3 +32,16 @@ for num in num_array
         print(num, " is Odd")
     }
 }
+
+x = "dan"
+
+
+for i in x
+{
+    func j()
+    {
+        return 10
+    }
+
+    print(i, j())
+}
