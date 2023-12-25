@@ -61,7 +61,7 @@ void printBlock(Block *block)
 
     for(bytecode &bc : block->bytes)
     {
-        std::cout << std::setw(5) << std::left << "Op : " << std::setw(15) << std::left << opcodes_string[(int)bc.op] << std::setw(5) << std::left << "Arg : " << "<0x"<< std::hex << bc.arg <<">" << std::setw(4) << std::left << "\t";
+        std::cout << std::setw(5) << std::left << "Op : " << std::setw(15) << std::left << opcodes_string[(int)bc.op] << std::setw(5) << std::left << "Arg : " << "<0x" << bc.arg <<">" << std::setw(4) << std::left << "\t";
         if(bc.arg > 1000) val(bc.arg);
         std::cout << "\n";
     }

@@ -274,20 +274,34 @@ void compileWhileStmt(WhileStmt *wstmt, std::vector<bytecode> &bytevect,  Block 
 
 void compileForStmt(ForStmt *fstmt, std::vector<bytecode> &bytevect, Block *block, std::unordered_map<uint32_t, uint32_t> &offset_table)
 {
-    uint32_t forstart = bytevect.size() - 1;
-
     if(fstmt->right) compileExpr(fstmt->right, bytevect, block, offset_table);
+    
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::FOR_ITER, (uint64_t)0));
 
-    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::NEXT, (uint64_t)0));
+    std::string var = "iter_$" + ((Var *)((Const *)fstmt->left)->value)->value;
+
+    void *iter_var = new Var(var, MEOWOBJECTKIND::Meow_VarObj);
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::STORE, (uint64_t)((Var *)iter_var)));
+
+    uint32_t jmp_b_offset = bytevect.size() - 1;
+
+    iter_var = new Var(var, MEOWOBJECTKIND::Meow_VarObj);
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::LOAD_NAME, (uint64_t)((Var *)iter_var)));
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::GET_NEXT, (uint64_t)0));
 
     uint32_t pos = bytevect.size() - 1;
     uint32_t jump_offset = bytevect.size() - 1;
 
     bytevect.push_back(makeByteCode((uint8_t)OP_CODES::STORE, (uint64_t)(Var *)((Const *)fstmt->left)->value));
 
+    // bytevect.push_back(makeByteCode((uint8_t)OP_CODES::NEXT, (uint64_t)0));
+
+    // uint32_t pos = bytevect.size() - 1;
+
+
     if(fstmt->body.size()) compileStmts(fstmt->body, bytevect, block, offset_table);
 
-    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::JUMP_BACK, (bytevect.size() - forstart)));
+    bytevect.push_back(makeByteCode((uint8_t)OP_CODES::JUMP_BACK, (bytevect.size() - jmp_b_offset)));
 
     jump_offset = bytevect.size() - jump_offset;
 

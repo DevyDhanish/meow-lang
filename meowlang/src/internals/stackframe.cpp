@@ -68,7 +68,9 @@ FRAME_EXIT_CODE MEOW_STACKFRAME::executeFrame()
             }
             case OP_CODES::STORE :
             {
-                put_const(pool, (MeowObject *)byte.arg, (MeowObject *)popFromStack());
+                MeowObject *val = (MeowObject *) popFromStack();
+                //std::cout << "kind -> " << val->getKind() << "\n";
+                put_const(pool, (MeowObject *)byte.arg, val);
                 break;
             }
             case OP_CODES::LOAD_NAME :
@@ -170,22 +172,36 @@ FRAME_EXIT_CODE MEOW_STACKFRAME::executeFrame()
                 
                 break;
             }
-            case OP_CODES::NEXT:
+            case OP_CODES::FOR_ITER:
             {
-                MeowObject *a = (MeowObject *) popFromStack();
+                MeowObject *a = (MeowObject *) popFromStack(); // iterable value
 
-                MeowObject *result = (MeowObject *) a->next();
+                if(!a->isIterable())
+                {
+                    std::cout << a->printInfo() << " cannot be iterated\n";
+                    exit(0);
+                }
+                
+                Iter *iter_obj = new Iter(a);
+                pushToStack((uint64_t)((MeowObject *)iter_obj));
 
-                if(a->getIterStatus())
+                break;
+            }
+            case OP_CODES::GET_NEXT:
+            {
+                MeowObject *iter_obj = (MeowObject *) popFromStack();
+
+                if(iter_obj->getKind() != MEOWOBJECTKIND::Meow_iterObj)
+                {
+                    std::cout << "Value at the top of the stack was not a iterator\n";
+                }
+
+                if(((Iter *)iter_obj)->isExhausted)
                 {
                     ip = ip + ((uint32_t) byte.arg - 1);
-                    a->resetIterInfo();
                 }
 
-                if(result)
-                {
-                    pushToStack((uint64_t) result);
-                }
+                pushToStack( (uint64_t)((Iter *)iter_obj)->next());
 
                 break;
             }

@@ -35,7 +35,8 @@ enum OP_CODES
     RETURN,         // 25
     IDX,            // 26
     SET_IDX,        // 27
-    NEXT,           // 28
+    FOR_ITER,       // 29
+    GET_NEXT,       // 30
 };
 
 extern std::vector<std::string> opcodes_string;

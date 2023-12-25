@@ -1,0 +1,25 @@
+# no for loop : (
+# how the fuck do i implement for loop 
+
+func retArray(a)
+{
+    if a == "array"
+    {
+        return {1, "dakjsdf", 2, 2.1, "laksdf"}
+    }
+    else
+    {
+        return 0
+    }
+}
+
+
+a = retArray("not array")
+
+print("This the thing that is returned -> ", a)
+
+print("Type of returned thing is -> ", type(a))
+
+
+
+# fuck it

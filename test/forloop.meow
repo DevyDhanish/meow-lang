@@ -1,8 +1,34 @@
-x = {"Dhanish", 2,4,2,34,2}
+# for loops are working 
+# this is a test file for "for loops"
 
-c = 0
-for i in x[0]
+x = {1,2,3,4,2,4,2,1,31}
+
+for i in x
 {
-    print( len(i) + c )
-    c += 1
+    print("First loop -> ", i)
+
+    for z in x
+    {
+        print(z)
+    }
+}
+
+for y in x
+{
+    print("Third for loop -> ", y)
+}
+
+num_array = {1,2,3,4,5,6,7,8,9,0}
+
+
+for num in num_array
+{
+    if num % 2 == 0
+    {
+        print(num, " is Even")
+    }
+    else
+    {
+        print(num, " is Odd")
+    }
 }

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-enum MEOWOBJECTKIND { Meow_IntObj, Meow_StringObj, Meow_FloatObj, Meow_VarObj, Meow_ArrayObj };
+enum MEOWOBJECTKIND { Meow_IntObj, Meow_StringObj, Meow_FloatObj, Meow_VarObj, Meow_ArrayObj, Meow_iterObj };
 
 class MeowObject
 {
@@ -31,15 +31,12 @@ public:
     virtual void *onAnd(MeowObject *b) = 0;
     virtual void *onOr(MeowObject *b) = 0;
 
+    virtual bool isIterable() = 0;
+
+    virtual uint32_t getSize() = 0;
+
     virtual void *getAtIndex(uint64_t idx) = 0;
     virtual void *setAtIndex(uint64_t idx, MeowObject *b) = 0;
-
-    // for iterations
-    virtual void *next() = 0;
-    virtual uint32_t getIterCounter() = 0;
-    virtual bool getIterStatus() = 0;
-    virtual bool getIterAvailability() = 0;
-    virtual void resetIterInfo() = 0;
 
     virtual ~MeowObject() = default;
 };
@@ -88,36 +85,12 @@ public:
     void *getAtIndex(uint64_t idx) override;
     void *setAtIndex(uint64_t idx,  MeowObject *b) override;
 
+    bool isIterable() override { return false; } // int can't be iterated so false
+
+    uint32_t getSize() override { return 0; }
+
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
-
-    bool isIterable = false;
-    uint32_t iterCounter = 0;
-    bool isExhausted = false;
-
-    void *next() override;
-
-    uint32_t getIterCounter() override
-    {
-        return iterCounter;
-    }
-
-    bool getIterStatus() override
-    {
-        return isExhausted;
-    }
-
-    bool getIterAvailability() override
-    {
-        return isIterable;
-    }
-
-    void resetIterInfo() override
-    {
-        isIterable = false;
-        iterCounter = 0;
-        isExhausted = false;
-    }
 };
 
 class String : public MeowObject
@@ -165,33 +138,9 @@ public:
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
 
-    bool isIterable = true;
-    uint32_t iterCounter = 0;
-    bool isExhausted = false;
+    bool isIterable() override { return true; }
 
-    void *next() override;
-
-    uint32_t getIterCounter() override
-    {
-        return iterCounter;
-    }
-
-    bool getIterStatus() override
-    {
-        return isExhausted;
-    }
-
-    bool getIterAvailability() override
-    {
-        return isIterable;
-    }
-
-    void resetIterInfo() override
-    {
-        isIterable = true;
-        iterCounter = 0;
-        isExhausted = false;
-    }
+    uint32_t getSize() override { return value.size(); }
 
 };
 
@@ -239,33 +188,9 @@ public:
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
 
-    bool isIterable = false;
-    uint32_t iterCounter = 0;
-    bool isExhausted = false;
+    bool isIterable() override { return false; }
 
-    void *next() override;
-
-    uint32_t getIterCounter() override
-    {
-        return iterCounter;
-    }
-
-    bool getIterStatus() override
-    {
-        return isExhausted;
-    }
-
-    bool getIterAvailability() override
-    {
-        return isIterable;
-    }
-
-    void resetIterInfo() override
-    {
-        isIterable = false;
-        iterCounter = 0;
-        isExhausted = false;
-    }
+    uint32_t getSize() override { return 0; }
 
 };
 
@@ -329,34 +254,9 @@ public:
     void *onAnd(MeowObject *b) override;
     void *onOr(MeowObject *b) override;
 
-    bool isIterable = true;
-    uint32_t iterCounter = 0;
-    bool isExhausted = false;
+    bool isIterable() override { return true; }
 
-    void *next() override;
-
-    uint32_t getIterCounter() override
-    {
-        return iterCounter;
-    }
-
-    bool getIterStatus() override
-    {
-        return isExhausted;
-    }
-
-    bool getIterAvailability() override
-    {
-        return isIterable;
-    }
-
-    void resetIterInfo() override
-    {
-        isIterable = true;
-        iterCounter = 0;
-        isExhausted = false;
-    }
-
+    uint32_t getSize() override { return values.size(); }
 };
 
 class Var : public MeowObject
@@ -404,32 +304,80 @@ public:
     void *onAnd(MeowObject *b) override { return NULL; };
     void *onOr(MeowObject *b) override { return NULL; };
 
-    bool isIterable = false;
-    uint32_t iterCounter = 0;
-    bool isExhausted = false;
+    bool isIterable() override { return false; }
 
-    void *next() override { return NULL; };
+    uint32_t getSize() override { return 0; }
+};
 
-    uint32_t getIterCounter() override
+class Iter : public MeowObject
+{
+public:
+    MEOWOBJECTKIND kind;
+    MeowObject *value;
+
+    Iter(MeowObject *a) : value(a) 
     {
-        return iterCounter;
-    }
-
-    bool getIterStatus() override
-    {
-        return isExhausted;
-    }
-
-    bool getIterAvailability() override
-    {
-        return isIterable;
-    }
-
-    void resetIterInfo() override
-    {
-        isIterable = false;
-        iterCounter = 0;
+        kind = MEOWOBJECTKIND::Meow_iterObj;
         isExhausted = false;
+        iter_couter = 0;
+        iterable_size = value->getSize();
     }
 
+    std::string printInfo() override
+    {
+        return "type <Iter>";
+    }
+
+    int getKind() override
+    {
+        return kind;
+    }
+
+    void onShow() override
+    {
+        std::cout << "Var Iter\n";
+    }
+
+    void *onAdd(MeowObject *b) override { return NULL; }
+    void *onSub(MeowObject *b) override { return NULL; }
+    void *onMod(MeowObject *b) override { return NULL; }
+    void *onDiv(MeowObject *b) override { return NULL; }
+    void *onMul(MeowObject *b) override { return NULL; }
+
+    void *onCmpE(MeowObject *b) override { return NULL; };
+    void *onCmpNE(MeowObject *b) override { return NULL; };
+    void *onCmpL(MeowObject *b) override { return NULL; };
+    void *onCmpLE(MeowObject *b) override { return NULL; };
+    void *onCmpG(MeowObject *b) override { return NULL; };
+    void *onCmpGE(MeowObject *b) override { return NULL; };
+
+    void *onNegate() override { return NULL; };
+    void *onNot() override { return NULL; };
+
+    void *getAtIndex(uint64_t idx) { return NULL; }
+    void *setAtIndex(uint64_t idx,  MeowObject *b) { return NULL; }
+
+    void *onAnd(MeowObject *b) override { return NULL; };
+    void *onOr(MeowObject *b) override { return NULL; };
+
+    bool isIterable() override { return false; }
+
+    uint32_t getSize() override { return 0; }
+
+    uint64_t iter_couter;
+    bool isExhausted;
+    uint64_t iterable_size;
+
+    MeowObject *next()
+    {
+        MeowObject *val = (MeowObject *)value->getAtIndex(iter_couter);
+        iter_couter += 1;
+
+        if(iter_couter >= iterable_size)
+        {
+            isExhausted = true;
+        }
+
+        return val;
+    }
 };

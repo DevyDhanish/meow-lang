@@ -391,11 +391,11 @@ void *Integer::setAtIndex(uint64_t idx, MeowObject *b)
     exit(0);
 }
 
-void *Integer::next()
-{
-    std::cout << "Integer object cannot be iterated\n";
-    exit(0);
-}
+// void *Integer::next()
+// {
+//     std::cout << "Integer object cannot be iterated\n";
+//     exit(0);
+// }
 /*
 **************************************************************************************
 *                                                                                    *   
@@ -800,19 +800,19 @@ void *String::setAtIndex(uint64_t idx,  MeowObject *b)
     return NULL;
 }
 
-void *String::next()
-{
-    if(iterCounter < 0 || iterCounter >= value.size())
-    {
-        isExhausted = true;
-        return NULL;
-    }
+// void *String::next()
+// {
+//     if(iterCounter < 0 || iterCounter >= value.size())
+//     {
+//         isExhausted = true;
+//         return NULL;
+//     }
 
-    std::string val = std::string(1, value[iterCounter]);
-    String *retVal = new String(val, MEOWOBJECTKIND::Meow_StringObj);
-    iterCounter++;
-    return retVal;
-}
+//     std::string val = std::string(1, value[iterCounter]);
+//     String *retVal = new String(val, MEOWOBJECTKIND::Meow_StringObj);
+//     iterCounter++;
+//     return retVal;
+// }
 
 /*
 **************************************************************************************
@@ -1200,11 +1200,11 @@ void *Float::setAtIndex(uint64_t idx, MeowObject *b)
     exit(0);
 }
 
-void *Float::next()
-{
-    std::cout << "Float cannot be iterated\n";
-    exit(0);
-}
+// void *Float::next()
+// {
+//     std::cout << "Float cannot be iterated\n";
+//     exit(0);
+// }
 
 /*
 ***********************************************************************************
@@ -1486,15 +1486,15 @@ void *ArrayObj::onOr(MeowObject *b)
     exit(0);
 }
 
-void *ArrayObj::next()
-{
-    if(iterCounter < 0 || iterCounter >= values.size())
-    {
-        isExhausted = true;
-        return NULL;
-    }
+// void *ArrayObj::next()
+// {
+//     if(iterCounter < 0 || iterCounter >= values.size())
+//     {
+//         isExhausted = true;
+//         return NULL;
+//     }
 
-    MeowObject *retVal = values[iterCounter];
-    iterCounter++;
-    return retVal;
-}
+//     MeowObject *retVal = values[iterCounter];
+//     iterCounter++;
+//     return retVal;
+// }

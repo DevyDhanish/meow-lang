@@ -39,3 +39,9 @@ echo "test 13 passed"
 
 meowlang.exe test\forloop.meow
 echo "test 14 passed"
+
+meowlang.exe test\something.meow
+echo "test 15 passed"
+
+
+echo "All test passed"

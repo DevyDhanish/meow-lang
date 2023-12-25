@@ -1,0 +1,29 @@
+class Dan
+{
+    builder # constructor
+    {
+        print("Constructor was called")
+    }
+
+    public
+    {
+        func sayHello()
+        {
+            print("HELLO")
+        }
+    }
+
+    private
+    {
+
+    }
+
+    override
+    {
+
+    }
+}
+
+a = Dan()
+
+a.sayHello()
