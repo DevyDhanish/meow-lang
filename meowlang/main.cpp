@@ -14,13 +14,13 @@
 #include "../include/vm.hpp"
 #include "../include/error.hpp"
 #include "../include/byteblocks.hpp"
+#include "../include/audit.hpp"
 
 using std::vector;
 using std::cout;
 using std::string;
 
-//#define DEBUG
-//#undef DEBUG
+#define DEBUG
 
 void val(uint64_t obj)
 {
@@ -85,7 +85,7 @@ int main(int argc, char **argv){
 
     if(!isMeowFile(argv[1]))
     {
-        std::cout << "Wrong file type, make sure the files ends with `.meow`\n";
+        std::cout << "Wrong file type, make sure the file ends with `.meow`\n";
         return 0;
     }
     
@@ -120,6 +120,9 @@ int main(int argc, char **argv){
     }
     tokenized_vector.push_back(makeToken(_TOKEN_EOT, "end of token", "none", 0));
     
+    Auditor audit(tokenized_vector);
+    audit.meowAudit();
+
     #ifdef DEBUG
     std::cout << "=====================[ TOKENS ]======================\n";
     for(size_t i = 0; i < tokenized_vector.size(); i ++){

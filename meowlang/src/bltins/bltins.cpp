@@ -6,8 +6,6 @@
 #include <string>
 #include "../../../include/lexer.hpp"
 
-
-
 MeowObject *meow_print(std::stack<uint64_t> args)
 {
     while (!args.empty())

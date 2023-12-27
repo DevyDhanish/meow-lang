@@ -1,7 +1,13 @@
+/*
+
+This Parser.cpp files assumes that the tokens given to is are correct as in syntax wise
+syntax checks and error display happens in audit.cpp
+
+*/
+
 #include "parser.hpp"
 #include "../include/internals/mewcore_ast.hpp"
 #include "../include/internals/mewcore_obj.hpp"
-
 
 void *statment_rule(Parser &p);
 void *expression_rule(Parser &p, int prec);
@@ -420,10 +426,6 @@ void *assign_stmt_rule(Parser &p)
     {
         return a;
     }
-    // if(a = idxass_expr_rule(p))
-    // {
-    //     return a;
-    // }
     else
     {
         return NULL;
