@@ -56,10 +56,6 @@ int getPrecedence(TOKEN_T optype)
             return 0;
             break;
 
-        // case _TOKEN_EQU:
-        //     return 2;
-        //     break;
-
         case _TOKEN_AND:
         case _TOKEN_OR:
             return 3;
@@ -213,7 +209,6 @@ void *expression_rule(Parser &p, int prec)
     void *lhs = nullptr;
 
     a = const_rule(p);
-    //std::cout << "a -> " << ((MeowObject *)a)->getKind() << "\n";
     if(a != NULL)
     {
         lhs = new Const((MeowObject *)a, EXPR_TYPES::expr_const);
@@ -232,27 +227,6 @@ void *expression_rule(Parser &p, int prec)
         a = expression_rule(p, getPrecedence(_TOKEN_NOT));
         lhs = new UnaryExpr((Expr *)a, OP_TYPES::logical_not, EXPR_TYPES::expr_unary);
     }
-
-    // if(expect_token(p, _TOKEN_SQRBRAOPEN))
-    // {
-    //     if(p.tokens[p.counter - 1]._TOKEN_TYPE == _TOKEN_VAR)
-    //     {
-    //         ++p.counter;
-
-    //         Expr *val = (Expr *)expression_rule(p, 1);
-    //         consume_token(p, _TOKEN_SQRBRACLOSE);
-
-    //         IndexExpr *indexexpr = new IndexExpr(val, (Expr *) lhs, EXPR_TYPES::expr_index);
-
-    //         lhs = indexexpr;
-    //     }
-
-    //     else
-    //     {
-    //         std::cout << "bad use of `[]`\n";
-    //         exit(0);
-    //     }
-    // }
 
     if(expect_token(p, _TOKEN_BRAOPEN))
     {
@@ -277,7 +251,6 @@ void *expression_rule(Parser &p, int prec)
             {
                 lhs = funcallexpr;
             }
-
         }
         else{
             ++p.counter;
@@ -288,10 +261,6 @@ void *expression_rule(Parser &p, int prec)
 
     while(1)
     {
-        // std::cout << p.tokens[p.counter]._TOKEN_VALUE << "\n";
-        // std::cout << "Current prec -> " << prec << "\n";
-        // std::cout << "Next prev -> " << getPrecedence(p.tokens[p.counter]._TOKEN_TYPE) << "\n"; 
-
         if(getPrecedence(p.tokens[p.counter]._TOKEN_TYPE) < prec) break;
 
         OP_TYPES op;

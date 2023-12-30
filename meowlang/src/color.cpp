@@ -1,5 +1,7 @@
 #include "../../include/color.hpp"
 #include <iostream>
+
+#ifdef WIN32
 #include <windows.h>
 
 void printColoredTextWIN(MEOW_COLORS color, std::string text)
@@ -40,3 +42,5 @@ void printColoredText(MEOW_COLORS color, std::string text)
 {
     printColoredTextWIN(color, text);
 }
+
+#endif

@@ -121,7 +121,11 @@ int main(int argc, char **argv){
     tokenized_vector.push_back(makeToken(_TOKEN_EOT, "end of token", "none", 0));
     
     Auditor audit(tokenized_vector);
-    audit.meowAudit();
+
+    // keeping the auditor off for debug builds
+    #ifdef DEBUG
+        //audit.meowAudit();
+    #endif
 
     #ifdef DEBUG
     std::cout << "=====================[ TOKENS ]======================\n";

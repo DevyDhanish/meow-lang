@@ -152,22 +152,22 @@ void compileBinopExpr(BinOpExpr *expr, std::vector<bytecode> &bytevect, Block *b
 
     switch (expr->op)
     {
-    case OP_TYPES::Add : op = OP_CODES::ADD; break;
-    case OP_TYPES::Sub : op = OP_CODES::SUB; break;
-    case OP_TYPES::Mul : op = OP_CODES::MUL; break;
-    case OP_TYPES::Div : op = OP_CODES::DIV; break;
-    case OP_TYPES::Mod : op = OP_CODES::MOD; break;
-
-    case OP_TYPES::Cmp_equ: op = OP_CODES::CMP_EQU; break;
-    case OP_TYPES::Cmp_notequ: op = OP_CODES::CMP_NOTEQU; break;
-    case OP_TYPES::Cmp_less: op = OP_CODES::CMP_LESS; break;
-    case OP_TYPES::Cmp_lessequ: op = OP_CODES::CMP_LESSEQU; break;
-    case OP_TYPES::Cmp_great: op = OP_CODES::CMP_GREAT; break;
-    case OP_TYPES::Cmp_greatequ: op = OP_CODES::CMP_GREATEQU; break;
-    case OP_TYPES::logical_and: op = OP_CODES::AND; break;
-    case OP_TYPES::logical_or: op = OP_CODES::OR; break;
-    case OP_TYPES::indexing: op = OP_CODES::IDX; break;
-    default : std::cout << "Bad opcode\n";   break;
+        case OP_TYPES::Add : op = OP_CODES::ADD; break;
+        case OP_TYPES::Sub : op = OP_CODES::SUB; break;
+        case OP_TYPES::Mul : op = OP_CODES::MUL; break;
+        case OP_TYPES::Div : op = OP_CODES::DIV; break;
+        case OP_TYPES::Mod : op = OP_CODES::MOD; break;
+    
+        case OP_TYPES::Cmp_equ: op = OP_CODES::CMP_EQU; break;
+        case OP_TYPES::Cmp_notequ: op = OP_CODES::CMP_NOTEQU; break;
+        case OP_TYPES::Cmp_less: op = OP_CODES::CMP_LESS; break;
+        case OP_TYPES::Cmp_lessequ: op = OP_CODES::CMP_LESSEQU; break;
+        case OP_TYPES::Cmp_great: op = OP_CODES::CMP_GREAT; break;
+        case OP_TYPES::Cmp_greatequ: op = OP_CODES::CMP_GREATEQU; break;
+        case OP_TYPES::logical_and: op = OP_CODES::AND; break;
+        case OP_TYPES::logical_or: op = OP_CODES::OR; break;
+        case OP_TYPES::indexing: op = OP_CODES::IDX; break;
+        default : std::cout << "Bad opcode\n";   break;
     }
 
     bytevect.push_back(makeByteCode((uint8_t)op, (uint64_t)0));

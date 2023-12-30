@@ -1,5 +1,6 @@
 #include "../../../include/internals/mewcore_obj.hpp"
 #include <string>
+#include <cmath>
 
 /*
 **************************************************************************************
@@ -109,7 +110,8 @@ void *Integer::onDiv(MeowObject *b)
     {
         case MEOWOBJECTKIND::Meow_IntObj:
         {
-            Float *newVal = new Float((((Integer *)b)->value / value), MEOWOBJECTKIND::Meow_FloatObj);
+            long double bval = ((Integer *)b)->value;
+            Float *newVal = new Float((bval / value), MEOWOBJECTKIND::Meow_FloatObj);
             return newVal;
             break;
         }
@@ -147,7 +149,9 @@ void *Integer::onMod(MeowObject *b)
         // this ( / ) is just a place holder needs to be changed with %
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
-            Float *newVal = new Float((((Float *)b)->value / value), MEOWOBJECTKIND::Meow_FloatObj);
+            long double bval = ((Float *)b)->value;
+            long double result = std::fmod(bval, value);
+            Float *newVal = new Float(result, MEOWOBJECTKIND::Meow_FloatObj);
             return newVal;
             break;
         }
@@ -176,7 +180,7 @@ void *Integer::onCmpE(MeowObject *b)
             return newVal;
             break;
         }
-        // this ( / ) is just a place holder needs to be changed with %
+     
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
             Float *newVal = new Float(( ((Float *)b)->value == value ), MEOWOBJECTKIND::Meow_FloatObj);
@@ -208,7 +212,7 @@ void *Integer::onCmpNE(MeowObject *b)
             return newVal;
             break;
         }
-        // this ( / ) is just a place holder needs to be changed with %
+        
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
             Integer *newVal = new Integer(( ((Float *)b)->value != value ), MEOWOBJECTKIND::Meow_IntObj);
@@ -240,7 +244,7 @@ void *Integer::onCmpL(MeowObject *b)
             return newVal;
             break;
         }
-        // this ( / ) is just a place holder needs to be changed with %
+        
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
             Integer *newVal = new Integer(( ((Float *)b)->value < value ), MEOWOBJECTKIND::Meow_IntObj);
@@ -272,7 +276,7 @@ void *Integer::onCmpLE(MeowObject *b)
             return newVal;
             break;
         }
-        // this ( / ) is just a place holder needs to be changed with %
+        
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
             Integer *newVal = new Integer(( ((Float *)b)->value <= value ), MEOWOBJECTKIND::Meow_IntObj);
@@ -304,7 +308,7 @@ void *Integer::onCmpG(MeowObject *b)
             return newVal;
             break;
         }
-        // this ( / ) is just a place holder needs to be changed with %
+     
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
             Integer *newVal = new Integer(( ((Float *)b)->value > value ), MEOWOBJECTKIND::Meow_IntObj);
@@ -336,7 +340,7 @@ void *Integer::onCmpGE(MeowObject *b)
             return newVal;
             break;
         }
-        // this ( / ) is just a place holder needs to be changed with %
+       
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
             Integer *newVal = new Integer(( ((Float *)b)->value >= value ), MEOWOBJECTKIND::Meow_IntObj);
@@ -958,12 +962,12 @@ void *Float::onMod(MeowObject *b)
             return newVal;
             break;
         }
-        // this ( / ) is just a place holder needs to be changed with %
+
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
-            Float *newVal = new Float((((Float *)b)->value / value), MEOWOBJECTKIND::Meow_FloatObj);
-            return newVal;
-            break;
+            long double bval = ((Float *)b)->value;
+            long double result = std::fmod(bval, value);
+            Float *newVal = new Float(result, MEOWOBJECTKIND::Meow_FloatObj);
         }
         case MEOWOBJECTKIND :: Meow_StringObj:
         {
