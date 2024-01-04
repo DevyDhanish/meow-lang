@@ -2,7 +2,7 @@ UNAME := $(shell uname)
 BUILD := build
 
 ifeq ($(UNAME), Linux)
-TARGET := meowlang_linux 
+TARGET := meowlang
 else
 TARGET := meowlang.exe
 endif

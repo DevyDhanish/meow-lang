@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <iostream>
 
 enum MEOW_COLORS
 {
@@ -9,7 +10,7 @@ enum MEOW_COLORS
     M_BLUE,
 };
 
-#ifdef WIN32
+#ifdef __win32
 #include <windows.h>
 void printColoredTextWIN(MEOW_COLORS color, std::string text);
 void printColoredText(MEOW_COLORS color, std::string text);

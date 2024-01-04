@@ -20,7 +20,7 @@ using std::vector;
 using std::cout;
 using std::string;
 
-#define DEBUG
+//#define DEBUG
 
 void val(uint64_t obj)
 {
@@ -121,7 +121,7 @@ int main(int argc, char **argv){
     tokenized_vector.push_back(makeToken(_TOKEN_EOT, "end of token", "none", 0));
     
     Auditor audit(tokenized_vector);
-    audit.meowAudit();
+    //audit.meowAudit();
 
     #ifdef DEBUG
     std::cout << "=====================[ TOKENS ]======================\n";
