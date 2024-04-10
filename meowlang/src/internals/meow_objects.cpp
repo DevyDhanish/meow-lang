@@ -147,8 +147,9 @@ void *Integer::onMod(MeowObject *b)
         // this ( / ) is just a place holder needs to be changed with %
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
-            Float *newVal = new Float((((Float *)b)->value / value), MEOWOBJECTKIND::Meow_FloatObj);
-            return newVal;
+            std::cout << "Not implemented yet\n";
+            // Float *newVal = new Float((((Float *)b)->value / value), MEOWOBJECTKIND::Meow_FloatObj);
+            // return newVal;
             break;
         }
         case MEOWOBJECTKIND :: Meow_StringObj:
@@ -176,7 +177,7 @@ void *Integer::onCmpE(MeowObject *b)
             return newVal;
             break;
         }
-        // this ( / ) is just a place holder needs to be changed with %
+
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
             Float *newVal = new Float(( ((Float *)b)->value == value ), MEOWOBJECTKIND::Meow_FloatObj);
@@ -208,7 +209,6 @@ void *Integer::onCmpNE(MeowObject *b)
             return newVal;
             break;
         }
-        // this ( / ) is just a place holder needs to be changed with %
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
             Integer *newVal = new Integer(( ((Float *)b)->value != value ), MEOWOBJECTKIND::Meow_IntObj);
@@ -240,7 +240,6 @@ void *Integer::onCmpL(MeowObject *b)
             return newVal;
             break;
         }
-        // this ( / ) is just a place holder needs to be changed with %
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
             Integer *newVal = new Integer(( ((Float *)b)->value < value ), MEOWOBJECTKIND::Meow_IntObj);
@@ -272,7 +271,6 @@ void *Integer::onCmpLE(MeowObject *b)
             return newVal;
             break;
         }
-        // this ( / ) is just a place holder needs to be changed with %
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
             Integer *newVal = new Integer(( ((Float *)b)->value <= value ), MEOWOBJECTKIND::Meow_IntObj);
@@ -411,7 +409,7 @@ void *String::onAdd(MeowObject *b)
     {
         case MEOWOBJECTKIND::Meow_IntObj:
         {
-            std::cout << "Cannon add type<Integer> to type<String>\n";
+            std::cout << "Cannot add type<Integer> to type<String>\n";
             return NULL;
             break;
         }
@@ -442,13 +440,13 @@ void *String::onSub(MeowObject *b)
     {
         case MEOWOBJECTKIND::Meow_IntObj:
         {
-            std::cout << "Cannon substrace type<Integer> to type<String>\n";
+            std::cout << "Cannot substract type<Integer> to type<String>\n";
             return NULL;
             break;
         }
         case MEOWOBJECTKIND::Meow_FloatObj:
         {
-            std::cout << "Cannot substrace type<Float> to type<String>\n";
+            std::cout << "Cannot substract type<Float> to type<String>\n";
             return NULL;
             break;
         }
@@ -473,7 +471,7 @@ void *String::onMul(MeowObject *b)
     {
         case MEOWOBJECTKIND::Meow_IntObj:
         {
-            std::cout << "Cannon multiply type<Integer> to type<String>\n";
+            std::cout << "Cannot multiply type<Integer> to type<String>\n";
             return NULL;
             break;
         }
@@ -504,7 +502,7 @@ void *String::onDiv(MeowObject *b)
     {
         case MEOWOBJECTKIND::Meow_IntObj:
         {
-            std::cout << "Cannon div type<Integer> to type<String>\n";
+            std::cout << "Cannot div type<Integer> to type<String>\n";
             return NULL;
             break;
         }
@@ -534,7 +532,7 @@ void *String::onMod(MeowObject *b)
     switch(b->getKind())
     {
         case MEOWOBJECTKIND::Meow_IntObj:
-            std::cout << "Cannon add type<Integer> to type<String>\n";
+            std::cout << "Cannot add type<Integer> to type<String>\n";
             return NULL;
             break;
         case MEOWOBJECTKIND::Meow_FloatObj:
@@ -558,7 +556,7 @@ void *String::onCmpE(MeowObject *b)
     {
         case MEOWOBJECTKIND::Meow_IntObj:
         {
-            std::cout << "Cannon add type<Integer> to type<String>\n";
+            std::cout << "Cannot add type<Integer> to type<String>\n";
             return NULL;
             break;
         }
@@ -589,7 +587,7 @@ void *String::onCmpL(MeowObject *b)
     {
         case MEOWOBJECTKIND::Meow_IntObj:
         {
-            std::cout << "Cannon add type<Integer> to type<String>\n";
+            std::cout << "Cannot add type<Integer> to type<String>\n";
             return NULL;
             break;
         }
@@ -620,7 +618,7 @@ void *String::onCmpLE(MeowObject *b)
     {
         case MEOWOBJECTKIND::Meow_IntObj:
         {
-            std::cout << "Cannon add type<Integer> to type<String>\n";
+            std::cout << "Cannot add type<Integer> to type<String>\n";
             return NULL;
             break;
         }
@@ -651,7 +649,7 @@ void *String::onCmpG(MeowObject *b)
     {
         case MEOWOBJECTKIND::Meow_IntObj:
         {
-            std::cout << "Cannon add type<Integer> to type<String>\n";
+            std::cout << "Cannot add type<Integer> to type<String>\n";
             return NULL;
             break;
         }
@@ -682,7 +680,7 @@ void *String::onCmpGE(MeowObject *b)
     {
         case MEOWOBJECTKIND::Meow_IntObj:
         {
-            std::cout << "Cannon add type<Integer> to type<String>\n";
+            std::cout << "Cannot add type<Integer> to type<String>\n";
             return NULL;
             break;
         }
@@ -713,7 +711,7 @@ void *String::onCmpNE(MeowObject *b)
     {
         case MEOWOBJECTKIND::Meow_IntObj:
         {
-            std::cout << "Cannon add type<Integer> to type<String>\n";
+            std::cout << "Cannot add type<Integer> to type<String>\n";
             return NULL;
             break;
         }

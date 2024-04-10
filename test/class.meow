@@ -1,0 +1,23 @@
+class test
+{
+    constructor
+    {
+        print("Hello")
+    }
+
+    # body
+
+    func s()
+    {
+        print("s")
+    }
+
+    func a()
+    {
+        print("a")
+    }
+}
+
+# t = test()
+# t.s()
+# t.a()

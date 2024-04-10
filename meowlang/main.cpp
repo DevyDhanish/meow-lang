@@ -120,7 +120,7 @@ int main(int argc, char **argv){
     }
     tokenized_vector.push_back(makeToken(_TOKEN_EOT, "end of token", "none", 0));
     
-    Auditor audit(tokenized_vector);
+    //Auditor audit(tokenized_vector);
     //audit.meowAudit();
 
     #ifdef DEBUG
@@ -133,7 +133,7 @@ int main(int argc, char **argv){
 
     //std::vector<Token> extoks = { makeToken(_TOKEN_VAR, "x", "none", 0, 0),  makeToken(_TOKEN_EQU, "=", "none", 0, 0),  makeToken(_TOKEN_FLOAT, "1.232", "none", 0, 0),  makeToken(_TOKEN_SEMI_COL, ";", "none", 0, 0)};
 
-    Module *module = (Module *) parse(tokenized_vector, File_Rule);
+    Module *module = (Module *) parse(tokenized_vector, _rule::File_Rule);
 
     #ifdef DEBUG
     std::cout << "Parsed sucessfully\n";
@@ -155,7 +155,7 @@ int main(int argc, char **argv){
 
 
         #ifdef DEBUG
-        std::cout << "======================[ EXECUTION ]======================\n";
+        std::cout << "=============================[ EXECUTION ]=======================\n";
         #endif
 
         interpreter->Execute();

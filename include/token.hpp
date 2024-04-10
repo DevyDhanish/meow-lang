@@ -71,6 +71,7 @@ typedef enum _STRUCT_TOKEN_TYPE{
     _TOKEN_GLOBAL,          // 60
     _TOKEN_IN,              // 61
     _TOKEN_CLASS,           // 62
+    _TOKEN_CONSTRUCTOR      // 63
 }TOKEN_T;
 
 /// @brief No actual use of this vector, just for seeing the names of the token type when printing the debug info in main.cpp 
@@ -83,6 +84,7 @@ typedef struct _STRUCT_TOKEN{
     size_t          _TOKEN_LINE_NUMBER;
     int             _INDENTATION;
 
+    // no more use of this operator overloading.
     bool operator==(const struct _STRUCT_TOKEN &n){
         return (
             _TOKEN_TYPE == n._TOKEN_TYPE &&
@@ -92,5 +94,5 @@ typedef struct _STRUCT_TOKEN{
 }Token;
 
 
-// @brief returns a token made out of given arguments, `Token_type` can only have values difined in this TOKEN_T enum.
+/// @brief returns a token made out of given arguments, `Token_type` can only have values difined in this TOKEN_T enum.
 Token makeToken(TOKEN_T _token_type, std::string _token_value, std::string _token_line, size_t _token_line_number);
