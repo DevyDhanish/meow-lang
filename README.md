@@ -17,9 +17,9 @@ Follow meowlang on insgram [@meow__lang](https://www.instagram.com/meow__lang/)<
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 # BUILD
-`mkdir build lib` <br>
-In the root directory of the project type `make` if using mingw type `mingw32-make` <br>
-After building `meowlang.exe` or `meowlang` will be present in the `build` directory.
+First make 2 folders named `lib` and `build` keep the names same <br>
+then in the root directory type `make` or if using mingw type `mingw32-make` <br>
+the binaries will be created in the `build` folder. you can delete the lib folder it's only need for compilation. <br>
 
 # HOW TO USE
 ## 1 - Variables 🔢
